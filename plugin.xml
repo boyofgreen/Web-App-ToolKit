@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
+    id="com.microsoft.webapptoolkit"
+    version="0.0.1">
+    <name>WebAppToolkit</name>
+    <description>Web Applicaton Toolkit Plugin</description>
+    <license>Apache 2.0</license>
+    <keywords>cordova,manifest,hosted,web</keywords>
+    <repo></repo>
+
+    <dependency id="com.microsoft.hostedwebapp" version=">=0.0.1" />
+
+    <js-module src="www/webAppToolkit.js" name="webapptoolkit">
+        <clobbers target="webapptoolkit" />
+    </js-module>
+
+    <!-- android -->
+    <platform name="android">
+        <config-file target="res/xml/config.xml" parent="/*">
+            <feature name="WAT" >
+                <param name="android-package" value="com.microsoft.webapptoolkit.WebAppToolkit"/>
+            </feature>
+        </config-file>
+
+        <source-file src="src/android/WebAppToolkit.java" target-dir="src/com/microsoft/webapptoolkit" />
+    </platform>
+
+    <!-- windows -->
+    <platform name="windows">
+      <js-module src="src/windows/WebAppToolkitPluginProxy.js" name="WebAppToolkitPluginProxy">
+        <merges target="" />
+      </js-module>
+    </platform>
+
+  <!-- ios -->
+  <platform name="ios">
+
+    <config-file target="config.xml" parent="/*">
+      <feature name="WebAppToolkit">
+        <param name="ios-package" value="CDVWebAppToolkit"/>
+      </feature>
+    </config-file>
+
+    <header-file src="src/ios/CDVWebAppToolkit.h" />
+    <source-file src="src/ios/CDVWebAppToolkit.m" />
+
+  </platform>
+
+</plugin>
