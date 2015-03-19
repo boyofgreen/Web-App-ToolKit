@@ -2,6 +2,7 @@ package com.microsoft.webapptoolkit;
 
 import android.content.Intent;
 import android.os.Build;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.Window;
@@ -32,6 +33,12 @@ public class WebAppToolkit extends CordovaPlugin {
   public void initialize(CordovaInterface cordova, CordovaWebView webView) {
     super.initialize(cordova, webView);
     this.activity = (CordovaActivity)cordova.getActivity();
+
+    Window window = this.activity.getWindow();
+    if(!window.hasFeature(Window.FEATURE_ACTION_BAR))
+    {
+      Log.e("WAT-Initialization","ActionBar feature not available, Window.FEATURE_ACTION_BAR must be enabled!. Try changing the theme.");
+    }
 
     this.activity.runOnUiThread(new Runnable() {
       @Override
