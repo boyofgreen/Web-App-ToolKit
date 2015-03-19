@@ -20,6 +20,7 @@
             <feature name="WAT" >
                 <param name="android-package" value="com.microsoft.webapptoolkit.WebAppToolkit"/>
             </feature>
+            <preference name="ShowTitle" value="true"/>
         </config-file>
 
         <source-file src="src/android/WebAppToolkit.java" target-dir="src/com/microsoft/webapptoolkit" />

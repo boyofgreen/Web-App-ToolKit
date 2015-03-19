@@ -1,13 +1,14 @@
 package com.microsoft.webapptoolkit;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Build;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.Window;
 import android.widget.ShareActionProvider;
 
 import org.apache.cordova.CallbackContext;
+import org.apache.cordova.CordovaActivity;
 import org.apache.cordova.CordovaInterface;
 import org.apache.cordova.CordovaPlugin;
 import org.apache.cordova.CordovaWebView;
@@ -20,7 +21,7 @@ import org.json.JSONException;
 */
 public class WebAppToolkit extends CordovaPlugin {
 
-  private Activity activity;
+  private CordovaActivity activity;
 
   private ShareActionProvider mShareActionProvider;
   private int mShareItemId = 99;
@@ -28,7 +29,9 @@ public class WebAppToolkit extends CordovaPlugin {
   @Override
   public void initialize(CordovaInterface cordova, CordovaWebView webView) {
     super.initialize(cordova, webView);
-    this.activity = cordova.getActivity();
+    this.activity = (CordovaActivity)cordova.getActivity();
+    this.activity.invalidateOptionsMenu();
+    this.activity.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
 
     this.activity.runOnUiThread(new Runnable() {
       @Override
