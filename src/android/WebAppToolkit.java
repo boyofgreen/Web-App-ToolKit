@@ -8,6 +8,9 @@ import android.view.MenuItem;
 import android.view.Window;
 import android.widget.ShareActionProvider;
 
+import com.microsoft.webapptoolkit.model.Manifest;
+import com.microsoft.webapptoolkit.model.ManifestShare;
+
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.CordovaActivity;
 import org.apache.cordova.CordovaInterface;
@@ -27,7 +30,7 @@ public class WebAppToolkit extends CordovaPlugin {
 
   private ShareActionProvider mShareActionProvider;
   private int mShareItemId = 99;
-  private JSONObject manifestObject;
+  private Manifest manifest;
 
   @Override
   public void initialize(CordovaInterface cordova, CordovaWebView webView) {
@@ -76,7 +79,7 @@ public class WebAppToolkit extends CordovaPlugin {
     }
 
     if (id.equals("hostedWebApp_manifestLoaded") && data != null) {
-      this.manifestObject = (JSONObject)data;
+      this.manifest = new Manifest((JSONObject)data);
       this.activity.invalidateOptionsMenu();
     }
 
@@ -86,7 +89,7 @@ public class WebAppToolkit extends CordovaPlugin {
   private void onCreateOptionsMenu(Menu menu) {
     int groupId = 0;
 
-    if (this.manifestObject != null && this.manifestObject.has("wat_share")) {
+    if (this.manifest != null && this.manifest.getShare().isEnabled()) {
       appendShareActionsToActionBarMenu(menu, groupId);
     }
   }
@@ -106,24 +109,19 @@ public class WebAppToolkit extends CordovaPlugin {
   // Share intent TODO: would need to implement special cases for sharing across various social media, at the moment it's the lowest common denominator - URL only.
   private Intent doShare(String url) {
     // share text
-    String shareURL = "{currentURL}";
+    String shareURL = ManifestShare.CurrentURL;
 
     if (url != null && !url.isEmpty()) {
       shareURL = url;
     } else {
-      if (this.manifestObject != null && this.manifestObject.has("wat_share")) {
-        // TODO read the share url from the manifest
-        try {
-          JSONObject shareOptions = this.manifestObject.getJSONObject("wat_share");
-          shareURL = shareOptions.getString("url");
-        } catch (JSONException e) {
-          e.printStackTrace();
-        }
+      if (this.manifest != null && this.manifest.getShare().isEnabled()) {
+        ManifestShare shareOptions = this.manifest.getShare();
+        shareURL = shareOptions.getUrl();
       }
     }
 
     // share link
-    if( shareURL.equalsIgnoreCase("{currentURL}")) {
+    if( shareURL.equalsIgnoreCase(ManifestShare.CurrentURL)) {
       shareURL = this.webView.getUrl();
     }
 
@@ -139,11 +137,14 @@ public class WebAppToolkit extends CordovaPlugin {
   }
 
   private void appendShareActionsToActionBarMenu(Menu menu, int groupId) {
-    // Easy Share Action requires API Level 14
-    if (Build.VERSION.SDK_INT > 13) {
-      menu.add(groupId, mShareItemId, mShareItemId, "Share");
-      MenuItem menuItem = menu.findItem(mShareItemId);
-      mShareActionProvider = (ShareActionProvider) menuItem.getActionProvider();
+    if (this.manifest != null && this.manifest.getShare().isEnabled()) {
+      ManifestShare manifestShare = this.manifest.getShare();
+      // Easy Share Action requires API Level 14
+      if (Build.VERSION.SDK_INT > 13) {
+        menu.add(groupId, mShareItemId, mShareItemId, manifestShare.getButtonText());
+        MenuItem menuItem = menu.findItem(mShareItemId);
+        mShareActionProvider = (ShareActionProvider) menuItem.getActionProvider();
+      }
     }
   }
 }

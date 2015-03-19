@@ -25,6 +25,8 @@
         </config-file>
 
         <source-file src="src/android/WebAppToolkit.java" target-dir="src/com/microsoft/webapptoolkit" />
+        <source-file src="src/android/model/Manifest.java" target-dir="src/com/microsoft/webapptoolkit/model" />
+        <source-file src="src/android/model/ManifestShare.java" target-dir="src/com/microsoft/webapptoolkit/model" />
     </platform>
 
     <!-- windows -->
