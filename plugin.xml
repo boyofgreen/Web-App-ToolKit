@@ -19,6 +19,7 @@
         <config-file target="res/xml/config.xml" parent="/*">
             <feature name="WAT" >
                 <param name="android-package" value="com.microsoft.webapptoolkit.WebAppToolkit"/>
+                <param name="onload" value="true" />
             </feature>
             <preference name="ShowTitle" value="true"/>
         </config-file>
@@ -39,6 +40,7 @@
     <config-file target="config.xml" parent="/*">
       <feature name="WebAppToolkit">
         <param name="ios-package" value="CDVWebAppToolkit"/>
+        <param name="onload" value="true" />
       </feature>
     </config-file>
 
