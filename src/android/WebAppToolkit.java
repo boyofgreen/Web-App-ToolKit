@@ -15,6 +15,7 @@ import org.apache.cordova.CordovaWebView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
 * This class ...
@@ -25,6 +26,7 @@ public class WebAppToolkit extends CordovaPlugin {
 
   private ShareActionProvider mShareActionProvider;
   private int mShareItemId = 99;
+  private JSONObject manifestObject;
 
   @Override
   public void initialize(CordovaInterface cordova, CordovaWebView webView) {
@@ -35,15 +37,20 @@ public class WebAppToolkit extends CordovaPlugin {
       @Override
       public void run() {
         WebAppToolkit me = WebAppToolkit.this;
-
       }
     });
   }
 
   @Override
   public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
-    if (action.equals("initialize")) {
-      // TODO
+    if (action.equals("share")) {
+      if (args.length() > 0) {
+        doShare(args.getString(0));
+      } else {
+        doShare();
+      }
+    } else if (action.equals("initialize")) {
+      this.activity.invalidateOptionsMenu();
     } else {
       return false;
     }
@@ -61,11 +68,17 @@ public class WebAppToolkit extends CordovaPlugin {
       this.onOptionsItemSelected((MenuItem)data);
     }
 
+    if (id.equals("hostedWebApp_manifestLoaded") && data != null) {
+      this.manifestObject = (JSONObject)data;
+      this.activity.invalidateOptionsMenu();
+    }
+
     return null;
   }
 
   private void onCreateOptionsMenu(Menu menu) {
     int groupId = 0;
+
     appendShareActionsToActionBarMenu(menu, groupId);
   }
 
@@ -77,10 +90,22 @@ public class WebAppToolkit extends CordovaPlugin {
     }
   }
 
+  private Intent doShare() {
+    return this.doShare(null);
+  }
+
   // Share intent TODO: would need to implement special cases for sharing across various social media, at the moment it's the lowest common denominator - URL only.
-  public Intent doShare() {
+  private Intent doShare(String url) {
     // share text
     String shareURL = "{currentURL}";
+
+    if (url != null && !url.isEmpty()) {
+      shareURL = url;
+    } else {
+      if (this.manifestObject != null) {
+        // TODO read the share url from the manifest
+      }
+    }
 
     // share link
     if( shareURL.equalsIgnoreCase("{currentURL}")) {
