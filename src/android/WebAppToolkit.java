@@ -30,8 +30,6 @@ public class WebAppToolkit extends CordovaPlugin {
   public void initialize(CordovaInterface cordova, CordovaWebView webView) {
     super.initialize(cordova, webView);
     this.activity = (CordovaActivity)cordova.getActivity();
-    this.activity.invalidateOptionsMenu();
-    this.activity.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
 
     this.activity.runOnUiThread(new Runnable() {
       @Override
@@ -55,16 +53,8 @@ public class WebAppToolkit extends CordovaPlugin {
 
   @Override
   public Object onMessage(String id, Object data) {
-    if (id.equals("networkconnection") && data != null) {
-      //handleNetworkConnectionChange(data.toString());
-    }
-
     if (id.equals("onCreateOptionsMenu") && data != null) {
       this.onCreateOptionsMenu((Menu)data);
-    }
-
-    if (id.equals("onPrepareOptionsMenu") && data != null) {
-      this.onPrepareOptionsMenu((Menu)data);
     }
 
     if (id.equals("onOptionsItemSelected") && data != null) {
@@ -77,9 +67,6 @@ public class WebAppToolkit extends CordovaPlugin {
   private void onCreateOptionsMenu(Menu menu) {
     int groupId = 0;
     appendShareActionsToActionBarMenu(menu, groupId);
-  }
-
-  private void onPrepareOptionsMenu(Menu menu) {
   }
 
   private void onOptionsItemSelected(MenuItem item) {
