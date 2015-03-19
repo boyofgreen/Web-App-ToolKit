@@ -1,6 +1,7 @@
 var webapptoolkit = {
-  createActionBar: function(options, successCB, errorCallback) {
-  },
+  share: function (url) {
+    cordova.exec(undefined, undefined, "WebAppToolkit", "share", [url]);
+  }
 }
 
 module.exports = webapptoolkit;
