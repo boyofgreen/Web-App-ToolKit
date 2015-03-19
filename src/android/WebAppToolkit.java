@@ -79,7 +79,9 @@ public class WebAppToolkit extends CordovaPlugin {
   private void onCreateOptionsMenu(Menu menu) {
     int groupId = 0;
 
-    appendShareActionsToActionBarMenu(menu, groupId);
+    if (this.manifestObject != null && this.manifestObject.has("wat_share")) {
+      appendShareActionsToActionBarMenu(menu, groupId);
+    }
   }
 
   private void onOptionsItemSelected(MenuItem item) {
@@ -102,8 +104,14 @@ public class WebAppToolkit extends CordovaPlugin {
     if (url != null && !url.isEmpty()) {
       shareURL = url;
     } else {
-      if (this.manifestObject != null) {
+      if (this.manifestObject != null && this.manifestObject.has("wat_share")) {
         // TODO read the share url from the manifest
+        try {
+          JSONObject shareOptions = this.manifestObject.getJSONObject("wat_share");
+          shareURL = shareOptions.getString("url");
+        } catch (JSONException e) {
+          e.printStackTrace();
+        }
       }
     }
 
