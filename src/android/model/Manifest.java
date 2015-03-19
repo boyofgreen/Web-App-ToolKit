@@ -6,10 +6,10 @@ import org.json.JSONObject;
 public class Manifest
 {
   private String startUrl;
-  private ManifestShare share;
+  private ShareConfig share;
 
   public Manifest() {
-    this.share = new ManifestShare();
+    this.share = new ShareConfig();
   }
 
   public Manifest(JSONObject manifestObject) {
@@ -20,9 +20,9 @@ public class Manifest
         }
 
         if (manifestObject.has("wat_share")) {
-          this.share = new ManifestShare(manifestObject.getJSONObject("wat_share"));
+          this.share = new ShareConfig(manifestObject.getJSONObject("wat_share"));
         } else {
-          this.share = new ManifestShare();
+          this.share = new ShareConfig();
         }
       } catch (JSONException e) {
         e.printStackTrace();
@@ -34,7 +34,7 @@ public class Manifest
     return this.startUrl;
   }
 
-  public ManifestShare getShare() {
+  public ShareConfig getShare() {
     return this.share;
   }
 }

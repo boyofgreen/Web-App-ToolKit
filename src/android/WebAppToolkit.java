@@ -9,7 +9,7 @@ import android.view.Window;
 import android.widget.ShareActionProvider;
 
 import com.microsoft.webapptoolkit.model.Manifest;
-import com.microsoft.webapptoolkit.model.ManifestShare;
+import com.microsoft.webapptoolkit.model.ShareConfig;
 
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.CordovaActivity;
@@ -33,22 +33,14 @@ public class WebAppToolkit extends CordovaPlugin {
   private Manifest manifest;
 
   @Override
-  public void initialize(CordovaInterface cordova, CordovaWebView webView) {
-    super.initialize(cordova, webView);
-    this.activity = (CordovaActivity)cordova.getActivity();
+  public void pluginInitialize() {
+    this.activity = (CordovaActivity)this.cordova.getActivity();
 
     Window window = this.activity.getWindow();
     if(!window.hasFeature(Window.FEATURE_ACTION_BAR))
     {
       Log.e("WAT-Initialization","ActionBar feature not available, Window.FEATURE_ACTION_BAR must be enabled!. Try changing the theme.");
     }
-
-    this.activity.runOnUiThread(new Runnable() {
-      @Override
-      public void run() {
-        WebAppToolkit me = WebAppToolkit.this;
-      }
-    });
   }
 
   @Override
@@ -109,19 +101,19 @@ public class WebAppToolkit extends CordovaPlugin {
   // Share intent TODO: would need to implement special cases for sharing across various social media, at the moment it's the lowest common denominator - URL only.
   private Intent doShare(String url) {
     // share text
-    String shareURL = ManifestShare.CurrentURL;
+    String shareURL = ShareConfig.CURRENT_URL;
 
     if (url != null && !url.isEmpty()) {
       shareURL = url;
     } else {
       if (this.manifest != null && this.manifest.getShare().isEnabled()) {
-        ManifestShare shareOptions = this.manifest.getShare();
+        ShareConfig shareOptions = this.manifest.getShare();
         shareURL = shareOptions.getUrl();
       }
     }
 
     // share link
-    if( shareURL.equalsIgnoreCase(ManifestShare.CurrentURL)) {
+    if (shareURL.equalsIgnoreCase(ShareConfig.CURRENT_URL)) {
       shareURL = this.webView.getUrl();
     }
 
@@ -138,10 +130,10 @@ public class WebAppToolkit extends CordovaPlugin {
 
   private void appendShareActionsToActionBarMenu(Menu menu, int groupId) {
     if (this.manifest != null && this.manifest.getShare().isEnabled()) {
-      ManifestShare manifestShare = this.manifest.getShare();
+      ShareConfig shareConfig = this.manifest.getShare();
       // Easy Share Action requires API Level 14
       if (Build.VERSION.SDK_INT > 13) {
-        menu.add(groupId, mShareItemId, mShareItemId, manifestShare.getButtonText());
+        menu.add(groupId, mShareItemId, mShareItemId, shareConfig.getButtonText());
         MenuItem menuItem = menu.findItem(mShareItemId);
         mShareActionProvider = (ShareActionProvider) menuItem.getActionProvider();
       }

@@ -3,21 +3,21 @@ package com.microsoft.webapptoolkit.model;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class ManifestShare
+public class ShareConfig
 {
-  public static final String CurrentURL = "{currentURL}";
+  public static final String CURRENT_URL = "{currentURL}";
 
   private boolean enabled = false;
   private String buttonText = "Share";
   private String title = null;
-  private String url = ManifestShare.CurrentURL;
+  private String url = ShareConfig.CURRENT_URL;
   private boolean screenshot = false;
   private String message = null;
 
-  public ManifestShare() {
+  public ShareConfig() {
   }
 
-  public ManifestShare(JSONObject manifestObject) {
+  public ShareConfig(JSONObject manifestObject) {
     if (manifestObject != null) {
       this.enabled = true;
 
