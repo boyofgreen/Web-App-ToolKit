@@ -6,6 +6,6 @@
 
 - (void)share:(CDVInvokedUrlCommand*)command;
 
-- (void)shareUrl:(NSString *)url;
+- (void)shareUrl:(NSString *)url :(NSString *)message;
 
 @end

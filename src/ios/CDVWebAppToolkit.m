@@ -10,7 +10,7 @@
 
 - (void)pluginInitialize
 {
-  [super pluginInitialize];
+    [super pluginInitialize];
 
     [self addActionBar];
 
@@ -28,14 +28,32 @@
 - (void)share:(CDVInvokedUrlCommand *)command {
 }
 
-- (void)shareUrl:(NSString *)url {
+- (void)shareUrl:(NSString *)url :(NSString *)message {
+    NSURL *myWebsite = [NSURL URLWithString:url];
 
+    NSArray *objectsToShare = @[message, myWebsite];
+
+    UIActivityViewController *activityVC = [[UIActivityViewController alloc] initWithActivityItems:objectsToShare applicationActivities:nil];
+
+    NSArray *excludeActivities = @[UIActivityTypeAirDrop,
+                                   UIActivityTypePrint,
+                                   UIActivityTypeAssignToContact,
+                                   UIActivityTypeSaveToCameraRoll,
+                                   UIActivityTypeAddToReadingList,
+                                   UIActivityTypePostToFlickr,
+                                   UIActivityTypePostToVimeo];
+
+    activityVC.excludedActivityTypes = excludeActivities;
+
+    [[self viewController] presentViewController:activityVC animated:YES completion:nil];
 }
 
 - (void)shareAction {
     NSString *currentURL = self.webView.request.URL.absoluteString;
 
-    [self shareUrl:currentURL];
+    NSString *textToShare = @"Look at this awesome website!";
+
+    [self shareUrl:currentURL :textToShare];
 }
 
 - (void)addActionBar {
@@ -46,9 +64,9 @@
                                                                   action:@selector(navigateBack)];
 
     UIBarButtonItem *rightButton = [[UIBarButtonItem alloc] initWithTitle:@"Share"
-                                                                   style:UIBarButtonItemStyleDone
-                                                                  target:self
-                                                                  action:@selector(shareAction)];
+                                                                    style:UIBarButtonItemStyleDone
+                                                                   target:self
+                                                                   action:@selector(shareAction)];
 
     UINavigationItem *item = [[UINavigationItem alloc] initWithTitle:@"App Title"];
     item.leftBarButtonItem = leftButton;
@@ -58,9 +76,7 @@
 
     [navBar pushNavigationItem:item animated:NO];
 
-
     [[[self viewController] view] addSubview: navBar];
-
 }
 
 - (void) navigateBack {
