@@ -1,8 +1,11 @@
 #import "CDVWebAppToolkit.h"
 #import <Cordova/CDV.h>
-#import "CDVConnection.h"
+#import "CDVHostedWebApp.h"
+#import "Model/WATManifest.h"
 
 @interface CDVWebAppToolkit ()
+
+@property WATManifest* manifest;
 
 @end
 
@@ -12,26 +15,59 @@
 {
     [super pluginInitialize];
 
+    // observe notifications from hosted app plugin to detect when manifest is loaded
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(initializeFromManifestNotification:)
+                                                 name:kManifestLoadedNotification
+                                               object:nil];
+
+    CDVHostedWebApp *plugin = [self.commandDelegate getCommandInstance:@"HostedWebApp"];
+
+    [self initializeWithManifest:[plugin manifest]];
+
     [self addActionBar];
 
-    // observe notifications from network-information plugin to detect when device is offline
-    //[[NSNotificationCenter defaultCenter] addObserver:self
-    //                                         selector:@selector(updateConnectivityStatus:)
-    //                                             name:kReachabilityChangedNotification
-    //                                           object:nil];
 }
 
-// receives the parsed manifest from the Javascript side - not implemented
-- (void)initialize:(CDVInvokedUrlCommand *)command {
+// Handles notifications from the Hosted app plugin
+- (void)initializeFromManifestNotification:(NSNotification*)notification
+{
+    NSDictionary* manifestData = [notification object];
+
+    if ([[notification name] isEqualToString:kManifestLoadedNotification]) {
+        NSLog (@"Received a manifest loaded notification.");
+
+        if ((manifestData != nil) && [manifestData isKindOfClass:[NSDictionary class]]) {
+            [self initializeWithManifest:manifestData];
+        }
+    }
+}
+
+- (void)initializeWithManifest:(NSDictionary*)manifestData {
+    self.manifest = [[WATManifest alloc] initFromManifest:manifestData];
 }
 
 - (void)share:(CDVInvokedUrlCommand *)command {
+    CDVPluginResult* pluginResult = nil;
+
+    NSString* url = [command.arguments objectAtIndex:0];
+    NSString* message = [command.arguments objectAtIndex:1];
+
+    [self shareUrl:url withMessage:message];
+        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
+
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
 
-- (void)shareUrl:(NSString *)url :(NSString *)message {
+- (void)shareUrl:(NSString *)url withMessage:(NSString *)message {
     NSURL *myWebsite = [NSURL URLWithString:url];
 
-    NSArray *objectsToShare = @[message, myWebsite];
+    NSArray *objectsToShare;
+    if (message) {
+         objectsToShare = @[message, myWebsite];
+    } else {
+        objectsToShare = @[myWebsite];
+    }
 
     UIActivityViewController *activityVC = [[UIActivityViewController alloc] initWithActivityItems:objectsToShare applicationActivities:nil];
 
@@ -49,30 +85,42 @@
 }
 
 - (void)shareAction {
-    NSString *currentURL = self.webView.request.URL.absoluteString;
+    WATShareConfig* shareConfig = [[self manifest] shareConfig];
 
-    NSString *textToShare = @"Look at this awesome website!";
+    if (shareConfig && [shareConfig enabled]) {
+        NSString *currentURL;
 
-    [self shareUrl:currentURL :textToShare];
+        if ([kCurrentURL isEqualToString:[shareConfig url]]) {
+            currentURL = self.webView.request.URL.absoluteString;
+        } else {
+            currentURL = [shareConfig url];
+        }
+
+        [self shareUrl:currentURL withMessage:[shareConfig message]];
+    }
 }
 
 - (void)addActionBar {
     UINavigationBar *navBar = [[UINavigationBar alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 55.0)];
+
+    UINavigationItem *item = [[UINavigationItem alloc] initWithTitle:@"App Title"];
+    item.hidesBackButton = YES;
+
     UIBarButtonItem *leftButton = [[UIBarButtonItem alloc] initWithTitle:@"Back"
                                                                    style:UIBarButtonItemStyleDone
                                                                   target:self
                                                                   action:@selector(navigateBack)];
 
-    UIBarButtonItem *rightButton = [[UIBarButtonItem alloc] initWithTitle:@"Share"
-                                                                    style:UIBarButtonItemStyleDone
-                                                                   target:self
-                                                                   action:@selector(shareAction)];
-
-    UINavigationItem *item = [[UINavigationItem alloc] initWithTitle:@"App Title"];
     item.leftBarButtonItem = leftButton;
-    item.rightBarButtonItem = rightButton;
 
-    item.hidesBackButton = YES;
+    WATShareConfig* shareConfig = [[self manifest] shareConfig];
+    if (shareConfig && [shareConfig enabled]) {
+        UIBarButtonItem *rightButton = [[UIBarButtonItem alloc] initWithTitle:[shareConfig buttonText]
+                                                                        style:UIBarButtonItemStyleDone
+                                                                       target:self
+                                                                       action:@selector(shareAction)];
+        item.rightBarButtonItem = rightButton;
+    }
 
     [navBar pushNavigationItem:item animated:NO];
 

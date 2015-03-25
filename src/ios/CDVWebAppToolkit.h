@@ -2,10 +2,8 @@
 
 @interface CDVWebAppToolkit : CDVPlugin
 
-- (void)initialize:(CDVInvokedUrlCommand*)command;
-
 - (void)share:(CDVInvokedUrlCommand*)command;
 
-- (void)shareUrl:(NSString *)url :(NSString *)message;
+- (void)shareUrl:(NSString *)url withMessage:(NSString *)message;
 
 @end
