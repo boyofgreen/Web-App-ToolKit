@@ -1,7 +1,7 @@
 #import "CDVWebAppToolkit.h"
 #import <Cordova/CDV.h>
 #import "CDVHostedWebApp.h"
-#import "Model/WATManifest.h"
+#import "WATManifest.h"
 
 @interface CDVWebAppToolkit ()
 

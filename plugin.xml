@@ -49,6 +49,11 @@
     <header-file src="src/ios/CDVWebAppToolkit.h" />
     <source-file src="src/ios/CDVWebAppToolkit.m" />
 
+    <header-file src="src/ios/Model/WATManifest.h" />
+    <source-file src="src/ios/Model/WATManifest.m" />
+    <header-file src="src/ios/Model/WATShareConfig.h" />
+    <source-file src="src/ios/Model/WATShareConfig.m" />
+
   </platform>
 
 </plugin>
