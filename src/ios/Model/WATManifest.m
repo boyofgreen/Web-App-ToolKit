@@ -2,7 +2,7 @@
 
 @implementation WATManifest
 
-@synthesize startURL,shareConfig;
+@synthesize startURL,name,shareConfig;
 
 - (id)initFromManifest:(NSDictionary*)manifest
 {
@@ -12,6 +12,8 @@
     {
         if (manifest) {
             startURL = [manifest objectForKey:@"start_url"];
+
+            name = [manifest objectForKey:@"name"];
 
             NSDictionary* shareData = [manifest objectForKey:@"wat_share"];
 

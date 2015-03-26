@@ -3,9 +3,12 @@
 #import "CDVHostedWebApp.h"
 #import "WATManifest.h"
 
+#define kNavigationBarHeight 55.0
+
 @interface CDVWebAppToolkit ()
 
 @property WATManifest* manifest;
+@property UINavigationItem *item;
 
 @end
 
@@ -19,6 +22,18 @@
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(initializeFromManifestNotification:)
                                                  name:kManifestLoadedNotification
+                                               object:nil];
+
+    // observe notifications from webview when page starts loading
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(webViewDidStartLoad:)
+                                                 name:kCDVHostedWebAppWebViewDidStartLoad
+                                               object:nil];
+
+    // observe notifications from webview when page starts loading
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(webViewDidFinishLoad:)
+                                                 name:kCDVHostedWebAppWebViewDidFinishLoad
                                                object:nil];
 
     CDVHostedWebApp *plugin = [self.commandDelegate getCommandInstance:@"HostedWebApp"];
@@ -100,18 +115,29 @@
     }
 }
 
+- (void)webViewDidStartLoad:(NSNotification*)notification
+{
+    if ([[notification name] isEqualToString:kCDVHostedWebAppWebViewDidStartLoad]) {
+
+    }
+}
+
+
+- (void)webViewDidFinishLoad:(NSNotification*)notification
+{
+    if ([[notification name] isEqualToString:kCDVHostedWebAppWebViewDidFinishLoad]) {
+        [self showBackButton:[self.webView canGoBack]];
+    }
+}
+
+
 - (void)addActionBar {
-    UINavigationBar *navBar = [[UINavigationBar alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 55.0)];
+    UINavigationBar *navBar = [[UINavigationBar alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, kNavigationBarHeight)];
 
-    UINavigationItem *item = [[UINavigationItem alloc] initWithTitle:@"App Title"];
-    item.hidesBackButton = YES;
+    self.item = [[UINavigationItem alloc] initWithTitle:[self manifest].name];
+    self.item.hidesBackButton = YES;
 
-    UIBarButtonItem *leftButton = [[UIBarButtonItem alloc] initWithTitle:@"Back"
-                                                                   style:UIBarButtonItemStyleDone
-                                                                  target:self
-                                                                  action:@selector(navigateBack)];
-
-    item.leftBarButtonItem = leftButton;
+    [self.webView layoutMarginsDidChange];
 
     WATShareConfig* shareConfig = [[self manifest] shareConfig];
     if (shareConfig && [shareConfig enabled]) {
@@ -119,12 +145,29 @@
                                                                         style:UIBarButtonItemStyleDone
                                                                        target:self
                                                                        action:@selector(shareAction)];
-        item.rightBarButtonItem = rightButton;
+        self.item.rightBarButtonItem = rightButton;
     }
 
-    [navBar pushNavigationItem:item animated:NO];
+    [navBar pushNavigationItem:self.item animated:NO];
 
     [[[self viewController] view] addSubview: navBar];
+
+    [self.webView sizeToFit];
+    [self.webView setFrame:CGRectMake(self.webView.frame.origin.x, self.webView.frame.origin.y + kNavigationBarHeight, self.webView.frame.size.width, self.webView.frame.size.height - kNavigationBarHeight)];
+}
+
+- (void) showBackButton:(BOOL)show {
+    if (show) {
+        UIBarButtonItem *backButton = [[UIBarButtonItem alloc] initWithTitle:@"Back"
+                                                                        style:UIBarButtonItemStyleDone
+                                                                       target:self
+                                                                       action:@selector(navigateBack)];
+
+        self.item.leftBarButtonItem = backButton;
+
+    } else {
+        self.item.leftBarButtonItem = nil;
+    }
 }
 
 - (void) navigateBack {
