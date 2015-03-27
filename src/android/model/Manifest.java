@@ -6,6 +6,7 @@ import org.json.JSONObject;
 public class Manifest
 {
   private String startUrl;
+  private String name;
   private ShareConfig share;
 
   public Manifest() {
@@ -17,6 +18,10 @@ public class Manifest
       try {
         if (manifestObject.has("start_url")) {
           this.startUrl = manifestObject.getString("start_url");
+        }
+
+        if (manifestObject.has("name")) {
+          this.name = manifestObject.getString("name");
         }
 
         if (manifestObject.has("wat_share")) {
@@ -32,6 +37,10 @@ public class Manifest
 
   public String getStartUrl() {
     return this.startUrl;
+  }
+
+  public String getName() {
+    return this.name;
   }
 
   public ShareConfig getShare() {

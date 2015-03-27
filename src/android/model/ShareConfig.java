@@ -22,6 +22,10 @@ public class ShareConfig
       this.enabled = true;
 
       try {
+        if (manifestObject.has("enabled")) {
+          this.enabled = manifestObject.getBoolean("enabled");
+        }
+
         if (manifestObject.has("buttonText")) {
           this.buttonText = manifestObject.getString("buttonText");
         }
