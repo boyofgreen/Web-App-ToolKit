@@ -9,6 +9,7 @@
 
 @property WATManifest* manifest;
 @property UINavigationItem *item;
+@property UIBarButtonItem *backButton;
 
 @end
 
@@ -62,39 +63,34 @@
     self.manifest = [[WATManifest alloc] initFromManifest:manifestData];
 }
 
-- (void)share:(CDVInvokedUrlCommand *)command {
-    CDVPluginResult* pluginResult = nil;
-
-    NSString* url = [command.arguments objectAtIndex:0];
-    NSString* message = [command.arguments objectAtIndex:1];
-
-    [self shareUrl:url withMessage:message];
-        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
-
-    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
-}
-
-- (void)shareUrl:(NSString *)url withMessage:(NSString *)message {
+- (void)shareUrl:(NSString *)url withMessage:(NSString *)message withImage:(BOOL) addImage {
     NSURL *myWebsite = [NSURL URLWithString:url];
 
-    NSArray *objectsToShare;
+    NSMutableArray *objectsToShare = [[NSMutableArray alloc] init];
+
     if (message) {
-         objectsToShare = @[message, myWebsite];
-    } else {
-        objectsToShare = @[myWebsite];
+        [objectsToShare addObject:message];
+    }
+
+    [objectsToShare addObject:myWebsite];
+
+    if (addImage) {
+        UIView* view = [[self viewController] view];
+        UIGraphicsBeginImageContextWithOptions(view.bounds.size, NO, 0);
+        [view drawViewHierarchyInRect:view.bounds afterScreenUpdates:YES];
+        UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+        UIGraphicsEndImageContext();
+        [objectsToShare addObject:image];
     }
 
     UIActivityViewController *activityVC = [[UIActivityViewController alloc] initWithActivityItems:objectsToShare applicationActivities:nil];
 
-    NSArray *excludeActivities = @[UIActivityTypeAirDrop,
-                                   UIActivityTypePrint,
-                                   UIActivityTypeAssignToContact,
-                                   UIActivityTypeSaveToCameraRoll,
-                                   UIActivityTypeAddToReadingList,
-                                   UIActivityTypePostToFlickr,
-                                   UIActivityTypePostToVimeo];
+    //NSArray *excludeActivities = @[UIActivityTypeAirDrop,
+    //                               UIActivityTypePrint,
+    //                               UIActivityTypeAssignToContact,
+    //                               UIActivityTypePostToVimeo];
 
-    activityVC.excludedActivityTypes = excludeActivities;
+    //activityVC.excludedActivityTypes = excludeActivities;
 
     [[self viewController] presentViewController:activityVC animated:YES completion:nil];
 }
@@ -111,14 +107,27 @@
             currentURL = [shareConfig url];
         }
 
-        [self shareUrl:currentURL withMessage:[shareConfig message]];
+        [self shareUrl:currentURL withMessage:[shareConfig message] withImage:[shareConfig screenshot]];
     }
+}
+
+- (void)share:(CDVInvokedUrlCommand *)command {
+    CDVPluginResult* pluginResult = nil;
+
+    NSString* url = [command.arguments objectAtIndex:0];
+    NSString* message = [command.arguments objectAtIndex:1];
+    bool addImage = [[command.arguments objectAtIndex:2] boolValue];
+
+    [self shareUrl:url withMessage:message withImage:addImage];
+
+    pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
+
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
 
 - (void)webViewDidStartLoad:(NSNotification*)notification
 {
     if ([[notification name] isEqualToString:kCDVHostedWebAppWebViewDidStartLoad]) {
-
     }
 }
 
@@ -139,6 +148,7 @@
 
     [self.webView layoutMarginsDidChange];
 
+    // Add share button if its enabled
     WATShareConfig* shareConfig = [[self manifest] shareConfig];
     if (shareConfig && [shareConfig enabled]) {
         UIBarButtonItem *rightButton = [[UIBarButtonItem alloc] initWithTitle:[shareConfig buttonText]
@@ -152,18 +162,21 @@
 
     [[[self viewController] view] addSubview: navBar];
 
+    // Resize the webview
     [self.webView sizeToFit];
     [self.webView setFrame:CGRectMake(self.webView.frame.origin.x, self.webView.frame.origin.y + kNavigationBarHeight, self.webView.frame.size.width, self.webView.frame.size.height - kNavigationBarHeight)];
 }
 
 - (void) showBackButton:(BOOL)show {
     if (show) {
-        UIBarButtonItem *backButton = [[UIBarButtonItem alloc] initWithTitle:@"Back"
-                                                                        style:UIBarButtonItemStyleDone
-                                                                       target:self
-                                                                       action:@selector(navigateBack)];
+        if (!self.backButton){
+            self.backButton = [[UIBarButtonItem alloc] initWithTitle:@"Back"
+                                                          style:UIBarButtonItemStyleDone
+                                                         target:self
+                                                         action:@selector(navigateBack)];
+        }
 
-        self.item.leftBarButtonItem = backButton;
+        self.item.leftBarButtonItem = self.backButton;
 
     } else {
         self.item.leftBarButtonItem = nil;
@@ -175,6 +188,5 @@
         [self.webView goBack];
     }
 }
-
 
 @end

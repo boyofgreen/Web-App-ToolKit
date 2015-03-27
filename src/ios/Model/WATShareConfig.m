@@ -16,7 +16,7 @@
 
         if (manifestData) {
             if ([manifestData objectForKey:@"enabled"]) {
-                enabled = [manifestData objectForKey:@"enabled"];
+                enabled = [[manifestData objectForKey:@"enabled"] boolValue];
             }
 
             if ([manifestData objectForKey:@"buttonText"]) {
@@ -28,11 +28,11 @@
             }
 
             if ([manifestData objectForKey:@"url"]) {
-                url = [manifestData objectForKey:@"url"];
+                url = [manifestData objectForKey:@"url"] ;
             }
 
             if ([manifestData objectForKey:@"screenshot"]) {
-                screenshot = [manifestData objectForKey:@"screenshot"];
+                screenshot = [[manifestData objectForKey:@"screenshot"] boolValue];
             }
 
             if ([manifestData objectForKey:@"message"]) {
