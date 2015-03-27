@@ -135,6 +135,7 @@ public class WebAppToolkit extends CordovaPlugin {
       if (Build.VERSION.SDK_INT > 13) {
         menu.add(groupId, mShareItemId, mShareItemId, shareConfig.getButtonText());
         MenuItem menuItem = menu.findItem(mShareItemId);
+        menuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
         mShareActionProvider = (ShareActionProvider) menuItem.getActionProvider();
       }
     }
