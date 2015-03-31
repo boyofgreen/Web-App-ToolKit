@@ -34,6 +34,9 @@
       <js-module src="src/windows/WebAppToolkitPluginProxy.js" name="WebAppToolkitPluginProxy">
         <merges target="" />
       </js-module>
+      <js-module src="src/windows/WATShare.js" name="WATShare">
+        <merges target="" />
+      </js-module>
     </platform>
 
   <!-- ios -->
