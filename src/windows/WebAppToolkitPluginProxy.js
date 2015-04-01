@@ -42,7 +42,7 @@ function initialize() {
     WAT.components.webView = hostedWebApp.getWebView();
     if (WAT.components.webView) {
       var share = require('com.microsoft.webapptoolkit.WATShare');
-      share.start(WAT);
+      share.init(WAT);
     }
   }
 }
