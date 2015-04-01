@@ -2,7 +2,7 @@
 "use strict";
 
 // Private method declaration
-var setupShare, addShareButton, handleShareRequest, getScreenshot, processScreenshot, sharePage,
+var addShareButton, handleShareRequest, getScreenshot, processScreenshot, sharePage,
 logger = window.console;
 
 var WAT, shareConfig;
@@ -10,30 +10,25 @@ var WAT, shareConfig;
 // Public API
 var self = {
   init: function (WATref) {
-    setupShare(WATref);
+    WAT = WATref;
+    shareConfig = WAT.manifest.wat_share;
+
+    if (!shareConfig || shareConfig.enabled !== true) {
+      return;
+    }
+
+    var dataTransferManager = Windows.ApplicationModel.DataTransfer.DataTransferManager.getForCurrentView();
+    dataTransferManager.addEventListener("datarequested", handleShareRequest);
+
+    if (shareConfig.showButton && WAT.environment.isWindowsPhone) {
+      addShareButton();
+    }
   }
 };
 
 // Private methods
 
-setupShare = function (WATref) {
-  WAT = WATref;
-  shareConfig = WAT.manifest.wat_share;
-
-  if (!shareConfig || shareConfig.enabled !== true) {
-    return;
-  }
-
-  var dataTransferManager = Windows.ApplicationModel.DataTransfer.DataTransferManager.getForCurrentView();
-  dataTransferManager.addEventListener("datarequested", handleShareRequest);
-
-  if (shareConfig.showButton && WAT.environment.isWindowsPhone) {
-    addShareButton();
-  }
-};
-
-addShareButton = function ()
-{
+addShareButton = function () {
   var btn,
   buttonText = (shareConfig.buttonText || "Share");
 
