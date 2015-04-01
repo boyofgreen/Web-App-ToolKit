@@ -86,6 +86,9 @@ setupAppBar = function () {
       appBarEl.appendChild(btn);
     }
   });
+
+  WAT.components.appBar.winControl.disabled = true;
+  WAT.components.appBar.winControl.disabled = false;
 };
 
 setButtonAction = function (btn, menuItem) {
@@ -100,8 +103,8 @@ setButtonAction = function (btn, menuItem) {
   }
 
   //if (!WAT.isFunction(handler)) {
-    // This is a non-operational bar item (maybe nested nav?)
-    //return;
+  // This is a non-operational bar item (maybe nested nav?)
+  //return;
   //}
 
   if (data === "home") {

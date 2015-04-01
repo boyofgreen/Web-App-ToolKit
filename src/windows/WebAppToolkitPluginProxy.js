@@ -1,4 +1,6 @@
 
+"use strict";
+
 var hostedWebApp = require('com.microsoft.hostedwebapp.HostedWebAppPluginProxy');
 
 var WAT = {
@@ -55,12 +57,12 @@ cordova.commandProxy.add("WebAppToolkit", module.exports);
   document.head.appendChild(scriptElem);
 })(function () {
   document.addEventListener('manifestLoaded', function (evt) {
-      WAT.manifest = evt.manifest;
-      initialize();
-    }, false);
+    WAT.manifest = evt.manifest;
+    initialize();
+  }, false);
   document.addEventListener('webviewCreated', function () {
-      initialize();
-    }, false);
+    initialize();
+  }, false);
 
   if (!WAT.manifest) {
     hostedWebApp.getManifest(function successCallback(manifestData) {

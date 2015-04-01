@@ -49,6 +49,9 @@ addShareButton = function () {
   new WinJS.UI.AppBarCommand(btn, { id: 'shareButton', label: buttonText, icon: 'url(/images/share.png)', section: section });
 
   WAT.components.appBar.appendChild(btn);
+
+  WAT.components.appBar.winControl.disabled = true;
+  WAT.components.appBar.winControl.disabled = false;
 };
 
 handleShareRequest = function (e) {
