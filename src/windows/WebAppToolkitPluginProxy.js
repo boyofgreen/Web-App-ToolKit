@@ -5,8 +5,8 @@ var WAT = {
   manifest: undefined,
   components: {  },
   environment: {
-    isWindowsPhone: !!(cordova.platformId === 'windows' && navigator.userAgent.match(/Windows Phone/)),
-    isWindows: !!(cordova.platformId === 'windows' && !navigator.userAgent.match(/Windows Phone/))
+    isWindowsPhone: !!(cordova.platformId === 'windows' && navigator.appVersion.indexOf("Windows Phone 8.1;") !== -1),
+    isWindows: !!(cordova.platformId === 'windows' && navigator.appVersion.indexOf("Windows Phone 8.1;") === -1)
   }
 };
 
@@ -16,33 +16,68 @@ module.exports = {
   //  }
 }; // exports
 
-function manifestLoaded(evt) {
-  WAT.manifest = evt.manifest;
-  initialize();
-}
-
-function webviewCreated() {
-  initialize();
-}
-
 cordova.commandProxy.add("WebAppToolkit", module.exports);
 
-document.addEventListener('manifestLoaded', manifestLoaded, false);
-document.addEventListener('webviewCreated', webviewCreated, false);
+// The following code loads WinJS ui modules
+(function(onReady) {
+  function loadWinJScss () {
+    var linkElem = document.createElement("link");
+    linkElem.setAttribute("rel", "stylesheet");
 
-if (!WAT.manifest) {
-  hostedWebApp.getManifest(function successCallback(manifestData) {
-    WAT.manifest = manifestData;
-    initialize();
-  });
-}
+    if (navigator.appVersion.indexOf("Windows Phone 8.1;") !== -1) {
+      // windows phone 8.1 + Mobile IE 11
+      linkElem.href = "//Microsoft.Phone.WinJS.2.1/css/ui-dark.css";
+    } else if (navigator.appVersion.indexOf("MSAppHost/2.0;") !== -1) {
+      // windows 8.1 + IE 11
+      linkElem.href = "//Microsoft.WinJS.2.0/css/ui-dark.css";
+    } else {
+      // windows 8.0 + IE 10
+      linkElem.href = "//Microsoft.WinJS.1.0/css/ui-dark.css";
+    }
+
+    linkElem.addEventListener("load", onReady);
+    document.head.appendChild(linkElem);
+  }
+
+  var scriptElem = document.createElement("script");
+
+  if (navigator.appVersion.indexOf("Windows Phone 8.1;") !== -1) {
+    // windows phone 8.1 + Mobile IE 11
+    scriptElem.src = "//Microsoft.Phone.WinJS.2.1/js/ui.js";
+  } else if (navigator.appVersion.indexOf("MSAppHost/2.0;") !== -1) {
+    // windows 8.1 + IE 11
+    scriptElem.src = "//Microsoft.WinJS.2.0/js/ui.js";
+  } else {
+    // windows 8.0 + IE 10
+    scriptElem.src = "//Microsoft.WinJS.1.0/js/ui.js";
+  }
+  scriptElem.addEventListener("load", loadWinJScss);
+  document.head.appendChild(scriptElem);
+})(function () {
+  document.addEventListener('manifestLoaded', function (evt) {
+      WAT.manifest = evt.manifest;
+      initialize();
+    }, false);
+  document.addEventListener('webviewCreated', function () {
+      initialize();
+    }, false);
+
+  if (!WAT.manifest) {
+    hostedWebApp.getManifest(function successCallback(manifestData) {
+      WAT.manifest = manifestData;
+      initialize();
+    });
+  }
+});
+
 
 function initialize() {
   if (WAT.manifest) {
     WAT.components.webView = hostedWebApp.getWebView();
     if (WAT.components.webView) {
-      var share = require('com.microsoft.webapptoolkit.WATShare');
-      share.init(WAT);
+      require('com.microsoft.webapptoolkit.WATAppBar').init(WAT);
+      require('com.microsoft.webapptoolkit.WATShare').init(WAT);
+      require('com.microsoft.webapptoolkit.WATNavigation').init(WAT);
     }
   }
 }

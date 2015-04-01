@@ -10,18 +10,20 @@ var WAT, shareConfig;
 // Public API
 var self = {
   init: function (WATref) {
-    WAT = WATref;
-    shareConfig = WAT.manifest.wat_share;
+    if (!WAT) {
+      WAT = WATref;
+      shareConfig = WAT.manifest.wat_share;
 
-    if (!shareConfig || shareConfig.enabled !== true) {
-      return;
-    }
+      if (!shareConfig || shareConfig.enabled !== true) {
+        return;
+      }
 
-    var dataTransferManager = Windows.ApplicationModel.DataTransfer.DataTransferManager.getForCurrentView();
-    dataTransferManager.addEventListener("datarequested", handleShareRequest);
+      var dataTransferManager = Windows.ApplicationModel.DataTransfer.DataTransferManager.getForCurrentView();
+      dataTransferManager.addEventListener("datarequested", handleShareRequest);
 
-    if (shareConfig.showButton && WAT.environment.isWindowsPhone) {
-      addShareButton();
+      if (shareConfig.showButton && WAT.environment.isWindowsPhone) {
+        addShareButton();
+      }
     }
   }
 };
@@ -32,7 +34,7 @@ addShareButton = function () {
   var btn,
   buttonText = (shareConfig.buttonText || "Share");
 
-  if (!WAT.components.appBar || !WAT.manifest.appBar.enabled) {
+  if (!WAT.components.appBar || !WAT.manifest.wat_appBar.enabled) {
     return;
   }
 

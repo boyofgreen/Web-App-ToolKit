@@ -37,6 +37,12 @@
       <js-module src="src/windows/WATShare.js" name="WATShare">
         <merges target="" />
       </js-module>
+      <js-module src="src/windows/WATNav.js" name="WATNavigation">
+        <merges target="" />
+      </js-module>
+      <js-module src="src/windows/WATAppBar.js" name="WATAppBar">
+        <merges target="" />
+      </js-module>
     </platform>
 
   <!-- ios -->
