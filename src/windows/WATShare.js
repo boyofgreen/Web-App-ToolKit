@@ -2,7 +2,7 @@
 "use strict";
 
 // Private method declaration
-var setupShare, addShareButton, shareClickHandler, handleShareRequest, getScreenshot, processScreenshot, sharePage,
+var setupShare, addShareButton, handleShareRequest, getScreenshot, processScreenshot, sharePage,
 logger = window.console;
 
 var WAT, shareConfig;
@@ -37,221 +37,211 @@ addShareButton = function ()
   var btn,
   buttonText = (shareConfig.buttonText || "Share");
 
-  if (!WAT.components.appBar || !WAT.manifest.appBar.enabled)
-    {
+  if (!WAT.components.appBar || !WAT.manifest.appBar.enabled) {
+    return;
+  }
+
+  var section = (shareConfig.buttonSection || "global");
+
+  btn = document.createElement("button");
+  btn.setAttribute("style", "-ms-high-contrast-adjust:none");
+  btn.addEventListener("click", function shareClickHandler() {
+    Windows.ApplicationModel.DataTransfer.DataTransferManager.showShareUI();
+  });
+
+  new WinJS.UI.AppBarCommand(btn, { id: 'shareButton', label: buttonText, icon: 'url(/images/share.png)', section: section });
+
+  WAT.components.appBar.appendChild(btn);
+};
+
+handleShareRequest = function (e) {
+  var deferral = e.request.getDeferral();
+  var dataReq = e.request;
+  var op = WAT.components.webView.invokeScriptAsync("eval", "document.body.innerHTML.length.toString();");
+  op.oncomplete = function (e) {
+    if (e.target.result === "0") {
+      // No page is loaded in the webview
+      sharePage(dataReq, deferral, null);
+    }
+    else {
+      if (shareConfig.screenshot) {
+        getScreenshot().then(
+          function (imageFile) {
+            sharePage(dataReq, deferral, imageFile);
+          },
+          function (err) {
+            // There was an error capturing, but we still want to share
+            logger.warn("Error capturing screenshot, sharing anyway", err);
+            sharePage(dataReq, deferral, null);
+          }
+        );
+      } else {
+        sharePage(dataReq, deferral, null);
+      }
+    }
+  }
+  op.start();
+};
+
+getScreenshot = function () {
+  var screenshotFile;
+
+  return new WinJS.Promise(function (complete, error) {
+
+    if (!WAT.components.webView.capturePreviewToBlobAsync) {
+      // screen capturing not available, but we still want to share...
+      error(new Error("The capturing method (capturePreviewToBlobAsync) does not exist on the webview element"));
       return;
     }
 
-    var section = (shareConfig.buttonSection || "global");
+    // we create the screenshot file first...
+    Windows.Storage.ApplicationData.current.temporaryFolder.createFileAsync("screenshot.jpg", Windows.Storage.CreationCollisionOption.replaceExisting)
+    .then(
+      function (file) {
+        // open the file for reading...
+        screenshotFile = file;
+        return file.openAsync(Windows.Storage.FileAccessMode.readWrite);
+      },
+      error
+    )
+    .then(processScreenshot, error)
+    .then(
+      function () {
+        complete(screenshotFile);
+      },
+      error
+    );
+  });
+};
 
-    btn = document.createElement("button");
-    btn.setAttribute("style", "-ms-high-contrast-adjust:none");
-    btn.addEventListener("click", shareClickHandler);
+processScreenshot = function (fileStream) {
+  return new WinJS.Promise(function (complete, error) {
+    var captureOperation = WAT.components.webView.capturePreviewToBlobAsync();
 
-    new WinJS.UI.AppBarCommand(btn, { id: 'shareButton', label: buttonText, icon: 'url(/images/share.png)', section: section });
+    captureOperation.addEventListener("complete", function (e) {
+      // Get the screenshot
+      var inputStream = e.target.result.msDetachStream();
 
-    WAT.components.appBar.appendChild(btn);
-  };
+      // Create a temporary working file
+      Windows.Storage.ApplicationData.current.temporaryFolder.createFileAsync("out.png", Windows.Storage.CreationCollisionOption.replaceExisting).then(function (file) {
+        // Open the working file
+        file.openAsync(Windows.Storage.FileAccessMode.readWrite).then(function (newFileStream) {
+          // Copy the screenshot to the working file
+          Windows.Storage.Streams.RandomAccessStream.copyAsync(inputStream, newFileStream).then(function () {
+            // Write the working file
+            newFileStream.flushAsync().done(function () {
+              // Create a Bitmap decoder to read the screenshot
+              Windows.Graphics.Imaging.BitmapDecoder.createAsync(newFileStream).then(function (dec) {
+                // Gets the original picture size
+                var originalWidth = dec.pixelWidth;
+                var originalHeight = dec.pixelHeight;
+                var minPixelSize = originalHeight < originalWidth ? originalHeight : originalWidth;
 
-  shareClickHandler = function ()
-  {
-    Windows.ApplicationModel.DataTransfer.DataTransferManager.showShareUI();
-  };
+                // Create a Bitmap encoder to resize the screenshot, using the fileStream received by param
+                Windows.Graphics.Imaging.BitmapEncoder.createForTranscodingAsync(fileStream, dec).then(function (encoder) {
+                  var newHeight = originalHeight;
+                  var newWidth = originalWidth;
 
-  handleShareRequest = function (e) {
-    var deferral = e.request.getDeferral();
-    var dataReq = e.request;
-    var op = WAT.components.webView.invokeScriptAsync("eval", "document.body.innerHTML.length.toString();");
-    op.oncomplete = function (e) {
-      if (e.target.result === "0") {
-        // No page is loaded in the webview
-        sharePage(dataReq, deferral, null);
-      }
-      else {
-        if (shareConfig.screenshot) {
-          getScreenshot().then(
-            function (imageFile) {
-              sharePage(dataReq, deferral, imageFile);
-            },
-            function (err) {
-              // There was an error capturing, but we still want to share
-              logger.warn("Error capturing screenshot, sharing anyway", err);
-              sharePage(dataReq, deferral, null);
-            }
-          );
-        } else {
-          sharePage(dataReq, deferral, null);
-        }
-      }
-    }
-    op.start();
-  };
-
-  getScreenshot = function () {
-    var screenshotFile;
-
-    return new WinJS.Promise(function (complete, error) {
-
-      if (!WAT.components.webView.capturePreviewToBlobAsync) {
-        // screen capturing not available, but we still want to share...
-        error(new Error("The capturing method (capturePreviewToBlobAsync) does not exist on the webview element"));
-        return;
-      }
-
-      // we create the screenshot file first...
-      Windows.Storage.ApplicationData.current.temporaryFolder.createFileAsync("screenshot.jpg", Windows.Storage.CreationCollisionOption.replaceExisting)
-      .then(
-        function (file) {
-          // open the file for reading...
-          screenshotFile = file;
-          return file.openAsync(Windows.Storage.FileAccessMode.readWrite);
-        },
-        error
-      )
-      .then(processScreenshot, error)
-      .then(
-        function () {
-          complete(screenshotFile);
-        },
-        error
-      );
-    });
-  };
-
-  processScreenshot = function (fileStream) {
-    return new WinJS.Promise(function (complete, error) {
-      var captureOperation = WAT.components.webView.capturePreviewToBlobAsync();
-
-      captureOperation.addEventListener("complete", function (e) {
-        // Get the screenshot
-        var inputStream = e.target.result.msDetachStream();
-
-        // Create a temporary working file
-        Windows.Storage.ApplicationData.current.temporaryFolder.createFileAsync("out.png", Windows.Storage.CreationCollisionOption.replaceExisting).then(function (file) {
-          // Open the working file
-          file.openAsync(Windows.Storage.FileAccessMode.readWrite).then(function (newFileStream) {
-            // Copy the screenshot to the working file
-            Windows.Storage.Streams.RandomAccessStream.copyAsync(inputStream, newFileStream).then(
-              function () {
-                // Write the working file
-                newFileStream.flushAsync().done(
-                  function () {
-                    // Create a Bitmap decoder to read the screenshot
-                    Windows.Graphics.Imaging.BitmapDecoder.createAsync(newFileStream).then(function (dec) {
-                      // Gets the original picture size
-                      var originalWidth = dec.pixelWidth;
-                      var originalHeight = dec.pixelHeight;
-                      var minPixelSize = originalHeight < originalWidth ? originalHeight : originalWidth;
-
-                      // Create a Bitmap encoder to resize the screenshot, using the fileStream received by param
-                      Windows.Graphics.Imaging.BitmapEncoder.createForTranscodingAsync(fileStream, dec).then(function (encoder) {
-                        var newHeight = originalHeight;
-                        var newWidth = originalWidth;
-
-                        // The image needs to be scaled
-                        if (minPixelSize > 580) {
-                          var scaleRatio = 580.0 / minPixelSize;
-                          newHeight = originalHeight * scaleRatio;
-                          newWidth = originalWidth * scaleRatio;
-                        }
-
-                        // Scale the image
-                        encoder.bitmapTransform.scaledWidth = newWidth;
-                        encoder.bitmapTransform.scaledHeight = newHeight;
-
-                        // trim black margins
-                        encoder.bitmapTransform.bounds = {
-                          x: 0,
-                          y: 0,
-                          width: newWidth - newWidth * 0.085,
-                          height: newHeight - newHeight * 0.09
-                        };
-
-                        dec.getFrameAsync(0).then(
-                          function(bitmapFrame) {
-                            bitmapFrame.getPixelDataAsync(bitmapFrame.bitmapPixelFormat,
-                              bitmapFrame.bitmapAlphaMode,
-                              encoder.bitmapTransform,
-                              Windows.Graphics.Imaging.ExifOrientationMode.ignoreExifOrientation,
-                              Windows.Graphics.Imaging.ColorManagementMode.doNotColorManage)
-                              .then(
-                                function (pixelData) {
-                                  // change dimensions and save as JPG
-                                  encoder.setPixelData(
-                                    bitmapFrame.bitmapPixelFormat,
-                                    Windows.Graphics.Imaging.BitmapAlphaMode.ignore,
-                                    encoder.bitmapTransform.bounds.width,
-                                    encoder.bitmapTransform.bounds.height,
-                                    bitmapFrame.dpiX,
-                                    bitmapFrame.dpiY,
-                                    pixelData.detachPixelData());
-
-                                    // Write the file
-                                    encoder.flushAsync().then(function () {
-                                      newFileStream.close();
-                                      inputStream.close();
-                                      fileStream.close();
-                                      complete();
-                                    });
-                                  }
-                                );
-                              }
-                            );
-                          });
-                        });
-                      }
-                    );
+                  // The image needs to be scaled
+                  if (minPixelSize > 580) {
+                    var scaleRatio = 580.0 / minPixelSize;
+                    newHeight = originalHeight * scaleRatio;
+                    newWidth = originalWidth * scaleRatio;
                   }
-                );
+
+                  // Scale the image
+                  encoder.bitmapTransform.scaledWidth = newWidth;
+                  encoder.bitmapTransform.scaledHeight = newHeight;
+
+                  // trim black margins
+                  encoder.bitmapTransform.bounds = {
+                    x: 0,
+                    y: 0,
+                    width: newWidth - newWidth * 0.085,
+                    height: newHeight - newHeight * 0.09
+                  };
+
+                  dec.getFrameAsync(0).then(function(bitmapFrame) {
+                    bitmapFrame.getPixelDataAsync(bitmapFrame.bitmapPixelFormat,
+                      bitmapFrame.bitmapAlphaMode,
+                      encoder.bitmapTransform,
+                      Windows.Graphics.Imaging.ExifOrientationMode.ignoreExifOrientation,
+                      Windows.Graphics.Imaging.ColorManagementMode.doNotColorManage)
+                    .then(function (pixelData) {
+                      // change dimensions and save as JPG
+                      encoder.setPixelData(
+                        bitmapFrame.bitmapPixelFormat,
+                        Windows.Graphics.Imaging.BitmapAlphaMode.ignore,
+                        encoder.bitmapTransform.bounds.width,
+                        encoder.bitmapTransform.bounds.height,
+                        bitmapFrame.dpiX,
+                        bitmapFrame.dpiY,
+                        pixelData.detachPixelData());
+
+                      // Write the file
+                      encoder.flushAsync().then(function () {
+                        newFileStream.close();
+                        inputStream.close();
+                        fileStream.close();
+                        complete();
+                      });
+                    });
+                  });
+                });
               });
             });
           });
-
-          captureOperation.start();
         });
-      };
+      });
+    });
 
-      sharePage = function (dataReq, deferral, imageFile) {
-        function makeLink (url, content) {
-          return "<a href=\"" + url + "\">" + content || url + "</a>";
-        }
+    captureOperation.start();
+  });
+};
 
-        var msg = shareConfig.message,
-          shareUrl = WAT.components.webView.src, //WatExtensions.SuperCacheManager.resolveTargetUri(WAT.components.webView.src),
-          currentURL = shareConfig.url.replace("{currentURL}", shareUrl),
-          html = shareConfig.message;
+sharePage = function (dataReq, deferral, imageFile) {
+  function makeLink (url, content) {
+    return "<a href=\"" + url + "\">" + (content || url) + "</a>";
+  }
 
-        var displayName = (WAT.manifest.displayName || "");
-        var currentApp = Windows.ApplicationModel.Store.CurrentApp;
-        var appUri;
-        if (currentApp.appId != "00000000-0000-0000-0000-000000000000")
-          appUri = currentApp.linkUri.absoluteUri;
-          else
-            appUri = "Unplublished App, no Store link is available";
+  var msg = shareConfig.message,
+    shareUrl = WAT.components.webView.src, //WatExtensions.SuperCacheManager.resolveTargetUri(WAT.components.webView.src),
+    currentURL = shareConfig.url.replace("{currentURL}", shareUrl),
+    html = shareConfig.message;
 
-            msg = msg.replace("{url}", shareConfig.url).replace("{currentURL}", shareUrl).replace("{appUrl}", appUri).replace("{appLink}", displayName);
-            html = html.replace("{currentUrl}", makeLink(shareConfig.url)).replace("{url}", makeLink(shareUrl)).replace("{appUrl}", makeLink(appUri)).replace("{appLink}", makeLink(appUri, displayName));
+  var displayName = (WAT.manifest.displayName || "");
+  var currentApp = Windows.ApplicationModel.Store.CurrentApp;
+  var appUri;
 
-            var htmlFormat = Windows.ApplicationModel.DataTransfer.HtmlFormatHelper.createHtmlFormat(html);
+  if (currentApp.appId != "00000000-0000-0000-0000-000000000000") {
+    appUri = currentApp.linkUri.absoluteUri;
+  } else {
+    appUri = "Unplublished App, no Store link is available";
+  }
 
-            dataReq.data.properties.title = shareConfig.title;
+  msg = msg.replace("{url}", shareConfig.url).replace("{currentURL}", shareUrl).replace("{appUrl}", appUri).replace("{appLink}", displayName);
+  html = html.replace("{currentUrl}", makeLink(shareConfig.url)).replace("{url}", makeLink(shareUrl)).replace("{appUrl}", makeLink(appUri)).replace("{appLink}", makeLink(appUri, displayName));
 
-            dataReq.data.setText(msg);
+  var htmlFormat = Windows.ApplicationModel.DataTransfer.HtmlFormatHelper.createHtmlFormat(html);
 
-            // TODO: Windows Phone is having problems processing HTML during a share right now - JB - 2014-05-15
-            if (!WAT.environment.isWindowsPhone) {
-              dataReq.data.setHtmlFormat(htmlFormat);
-            }
+  dataReq.data.properties.title = shareConfig.title;
 
-            // Not doing this as it always includes a link which may not be what
-            // the user desired. - JB - 2014-05-15
-            // dataReq.data.setWebLink(new Windows.Foundation.Uri(currentURL));
+  dataReq.data.setText(msg);
 
-            if (imageFile) {
-              dataReq.data.setStorageItems([imageFile], true);
-            }
+  // TODO: Windows Phone is having problems processing HTML during a share right now - JB - 2014-05-15
+  if (!WAT.environment.isWindowsPhone) {
+    dataReq.data.setHtmlFormat(htmlFormat);
+  }
 
-            deferral.complete();
-          };
+  // Not doing this as it always includes a link which may not be what
+  // the user desired. - JB - 2014-05-15
+  // dataReq.data.setWebLink(new Windows.Foundation.Uri(currentURL));
 
-          module.exports = self; // exports
+  if (imageFile) {
+    dataReq.data.setStorageItems([imageFile], true);
+  }
+
+  deferral.complete();
+};
+
+module.exports = self; // exports
