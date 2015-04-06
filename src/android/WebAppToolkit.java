@@ -8,6 +8,8 @@ import android.view.MenuItem;
 import android.view.Window;
 import android.widget.ShareActionProvider;
 
+import com.microsoft.hostedwebapp.HostedWebApp;
+
 import com.microsoft.webapptoolkit.model.Manifest;
 import com.microsoft.webapptoolkit.model.ShareConfig;
 
@@ -40,6 +42,15 @@ public class WebAppToolkit extends CordovaPlugin {
     if(!window.hasFeature(Window.FEATURE_ACTION_BAR))
     {
       Log.e("WAT-Initialization","ActionBar feature not available, Window.FEATURE_ACTION_BAR must be enabled!. Try changing the theme.");
+    }
+
+    HostedWebApp hostedAppPlugin = (HostedWebApp)this.webView.pluginManager.getPlugin("HostedWebApp");
+    if (hostedAppPlugin != null) {
+      JSONObject manifestObject = hostedAppPlugin.getManifest();
+
+      if(manifestObject != null) {
+        this.manifest = new Manifest(manifestObject);
+      }
     }
   }
 
