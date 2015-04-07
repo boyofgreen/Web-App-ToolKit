@@ -27,6 +27,11 @@
         <source-file src="src/android/WebAppToolkit.java" target-dir="src/com/microsoft/webapptoolkit" />
         <source-file src="src/android/model/Manifest.java" target-dir="src/com/microsoft/webapptoolkit/model" />
         <source-file src="src/android/model/ShareConfig.java" target-dir="src/com/microsoft/webapptoolkit/model" />
+        <source-file src="src/android/model/CustomScriptConfig.java" target-dir="src/com/microsoft/webapptoolkit/model" />
+        <source-file src="src/android/model/StylesConfig.java" target-dir="src/com/microsoft/webapptoolkit/model" />
+        <source-file src="src/android/model/MenuItem.java" target-dir="src/com/microsoft/webapptoolkit/model" />
+        <source-file src="src/android/model/NavBarConfig.java" target-dir="src/com/microsoft/webapptoolkit/model" />
+        <source-file src="src/android/model/AppBarConfig.java" target-dir="src/com/microsoft/webapptoolkit/model" />
     </platform>
 
     <!-- windows -->

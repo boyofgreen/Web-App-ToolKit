@@ -21,32 +21,28 @@ public class ShareConfig
     if (manifestObject != null) {
       this.enabled = true;
 
-      try {
-        if (manifestObject.has("enabled")) {
-          this.enabled = manifestObject.getBoolean("enabled");
-        }
+      if (manifestObject.has("enabled")) {
+        this.enabled = manifestObject.optBoolean("enabled");
+      }
 
-        if (manifestObject.has("buttonText")) {
-          this.buttonText = manifestObject.getString("buttonText");
-        }
+      if (manifestObject.has("buttonText")) {
+        this.buttonText = manifestObject.optString("buttonText");
+      }
 
-        if (manifestObject.has("title")) {
-          this.title = manifestObject.getString("title");
-        }
+      if (manifestObject.has("title")) {
+        this.title = manifestObject.optString("title");
+      }
 
-        if (manifestObject.has("url")) {
-          this.url = manifestObject.getString("url");
-        }
+      if (manifestObject.has("url")) {
+        this.url = manifestObject.optString("url");
+      }
 
-        if (manifestObject.has("screenshot")) {
-          this.screenshot = manifestObject.getBoolean("screenshot");
-        }
+      if (manifestObject.has("screenshot")) {
+        this.screenshot = manifestObject.optBoolean("screenshot");
+      }
 
-        if (manifestObject.has("message")) {
-          this.message = manifestObject.getString("message");
-        }
-      } catch (JSONException e) {
-        e.printStackTrace();
+      if (manifestObject.has("message")) {
+        this.message = manifestObject.optString("message");
       }
     }
   }
