@@ -73,4 +73,20 @@ public class Manifest {
   public ShareConfig getShare() {
     return this.share;
   }
+
+  public CustomScriptConfig getCustomScript() {
+    return this.customScript;
+  }
+
+  public StylesConfig getStyles() {
+    return this.styles;
+  }
+
+  public NavBarConfig getNavBar() {
+    return this.navBar;
+  }
+
+  public AppBarConfig getAppBar() {
+    return this.appBar;
+  }
 }

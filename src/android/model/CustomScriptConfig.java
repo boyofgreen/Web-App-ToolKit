@@ -22,18 +22,18 @@ public class CustomScriptConfig {
 
   public static final String WTAG = "WTAG: ";
 
-  private static String filePath = "www/files/";
+  private static String filePath = "www/js/";
 
   public static String getFilePath() {
     return CustomScriptConfig.filePath;
   }
 
   public static void setCustomFilePath(String newFilePath) {
-    if (newFilePath != null) {
+    if (validateFilePath(newFilePath)) {
       CustomScriptConfig.filePath = newFilePath;
     } else {
       Log.w(CustomScriptConfig.WTAG,
-        "An invalid or null PathFile received. You can put your files into the default path (/assets/www/files/) .");
+      "An invalid or null PathFile received. You can put your files into the default path (/assets/www/files/) .");
     }
   }
 
@@ -49,7 +49,7 @@ public class CustomScriptConfig {
           enabled = true;
 
           for (int i = 0; i < files.length(); i++) {
-            this.scriptFiles.add(files.optString(i));
+            this.scriptFiles.add(CustomScriptConfig.filePath + files.optString(i));
           }
         }
       }
@@ -71,5 +71,13 @@ public class CustomScriptConfig {
 
   public boolean isEnabled() {
     return this.enabled;
+  }
+
+  private static boolean validateFilePath(String path) {
+    if (path == null || path.equals("")
+    || !path.matches("\\A(?:[0-9a-zA-Z\\_\\-]+\\/)+\\z")) {
+      return false;
+    }
+    return true;
   }
 }

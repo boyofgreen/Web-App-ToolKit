@@ -23,15 +23,15 @@ public class StylesConfig {
 
   public static final String WTAG = "WTAG: ";
 
-  private static String filePath = "www/files/";
+  private static String filePath = "www/css/";
 
   public static String getFilePath() {
     return StylesConfig.filePath;
   }
 
   public static void setCustomFilePath(String newFilePath) {
-    if (newFilePath != null) {
-      StylesConfig.filePath = newFilePath;
+    if (validateFilePath(newFilePath)) {
+      StylesConfig.filePath = "www/" + newFilePath;
     } else {
       Log.w(CustomScriptConfig.WTAG,
       "An invalid or null PathFile received. You can put your files into the default path (/assets/www/files/) .");
@@ -50,7 +50,7 @@ public class StylesConfig {
           this.enabled = true;
 
           for (int i = 0; i < files.length(); i++) {
-            this.styleFiles.add(files.optString(i));
+            this.styleFiles.add(StylesConfig.filePath + files.optString(i));
           }
         }
       }
@@ -72,5 +72,13 @@ public class StylesConfig {
 
   public boolean isEnabled() {
     return this.enabled;
+  }
+
+  private static boolean validateFilePath(String path) {
+    if (path == null || path.equals("")
+    || !path.matches("\\A(?:[0-9a-zA-Z\\_\\-]+\\/)+\\z")) {
+      return false;
+    }
+    return true;
   }
 }

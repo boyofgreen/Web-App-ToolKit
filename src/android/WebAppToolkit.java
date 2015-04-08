@@ -2,6 +2,7 @@ package com.microsoft.webapptoolkit;
 
 import android.content.Intent;
 import android.os.Build;
+import android.util.Base64;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -10,8 +11,11 @@ import android.widget.ShareActionProvider;
 
 import com.microsoft.hostedwebapp.HostedWebApp;
 
+import com.microsoft.webapptoolkit.model.CustomScriptConfig;
 import com.microsoft.webapptoolkit.model.Manifest;
 import com.microsoft.webapptoolkit.model.ShareConfig;
+import com.microsoft.webapptoolkit.model.StylesConfig;
+import com.microsoft.webapptoolkit.utils.Assets;
 
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.CordovaActivity;
@@ -22,6 +26,8 @@ import org.apache.cordova.CordovaWebView;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.List;
 
 /**
 * This class ...
@@ -86,6 +92,11 @@ public class WebAppToolkit extends CordovaPlugin {
       this.activity.invalidateOptionsMenu();
     }
 
+    if (id.equals("onPageFinished") && this.manifest != null) {
+      this.injectCustomScripts();
+      this.injectStyles();
+    }
+
     return null;
   }
 
@@ -105,6 +116,7 @@ public class WebAppToolkit extends CordovaPlugin {
     }
   }
 
+  // Begin Share
   private Intent doShare() {
     return this.doShare(null);
   }
@@ -151,4 +163,84 @@ public class WebAppToolkit extends CordovaPlugin {
       }
     }
   }
+
+  // End Share
+
+  // Begin JS and Styles injection
+
+  private void evalJS(final String action) {
+    if (action != null && action != "") {
+      if (cordova.getActivity().getApplicationInfo().targetSdkVersion < Build.VERSION_CODES.KITKAT) {
+        webView.loadUrl("javascript:" + action);
+      } else {
+        webView.evaluateJavascript(action, null);
+      }
+    }
+  }
+
+  private void injectScript(String scriptContent) {
+    if (scriptContent != null && scriptContent != "") {
+      String script = "(function() {"
+      + "var element = document.createElement('script');"
+      + "element.type = 'text/javascript';"
+      + "element.innerHTML = window.atob('" + scriptContent + "');"
+      + "document.head.appendChild(element)" + "})()";
+
+      this.evalJS(script);
+    }
+  }
+
+  private void injectScriptFile(String fileName) {
+    String fileContent = Assets.readEncoded(fileName, this.cordova.getActivity());
+    this.injectScript(fileContent);
+  }
+
+  private void injectCustomScripts() {
+    CustomScriptConfig config = this.manifest.getCustomScript();
+
+    if (config.isEnabled()){
+      List<String> scriptFiles = config.getScriptFiles();
+      for (String file: scriptFiles) {
+        this.injectScriptFile(file);
+      }
+
+      String customString = config.getCustomString();
+      String encodedScript = Base64.encodeToString(customString.getBytes(), Base64.NO_WRAP);
+      this.injectScript(encodedScript);
+    }
+  }
+
+  private void injectStyle(String styleContent) {
+    if (styleContent != null && styleContent != "") {
+      String script = "(function() {"
+      + "var element = document.createElement('style');"
+      + "element.type = 'text/css';"
+      + "element.innerHTML = window.atob('" + styleContent + "');"
+      + "document.head.appendChild(element)" + "})()";
+
+      this.evalJS(script);
+    }
+  }
+
+  private void injectStyleFile(String fileName) {
+    String fileContent = Assets.readEncoded(fileName, this.cordova.getActivity());
+    this.injectStyle(fileContent);
+  }
+
+  private void injectStyles() {
+    StylesConfig config = this.manifest.getStyles();
+
+    if (config.isEnabled()){
+      List<String> scriptFiles = config.getCssFiles();
+      for (String file: scriptFiles) {
+        this.injectStyleFile(file);
+      }
+
+      String customString = config.getCustomString();
+      String encodedStyles = Base64.encodeToString(customString.getBytes(), Base64.NO_WRAP);
+      this.injectStyle(encodedStyles);
+    }
+  }
+
+  // End JS and Styles injection
 }
