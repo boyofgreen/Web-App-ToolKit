@@ -3,7 +3,8 @@
 
 var WAT;
 var stylesConfig;
-var getCustomCssFile, customCssFileLoadHandler, loadCustomCssFileString, customStylesFromFile, hideElementsFromManifest, scriptString, cssString;
+var getCustomCssFile, customCssFileLoadHandler, loadCustomCssFileString, customStylesFromFile, hideElementsFromManifest, scriptString, cssString,
+logger = window.console;
 
 
 // Public API
@@ -28,14 +29,15 @@ var self = {
 getCustomCssFile = function () {
     var cssFile = "ms-appx://" + ((/^\//.test(stylesConfig.customCssFile)) ? "" : "/") + stylesConfig.customCssFile;
 
-    // TODO: log
+    logger.log("Getting custom css file from " + cssFile);
 
     var url = new Windows.Foundation.Uri(cssFile);
     Windows.Storage.StorageFile.getFileFromApplicationUriAsync(url)
         .then(
             customCssFileLoadHandler,
             function (err) {
-                // TODO: log this error, but let things proceed anyway
+                // log this error, but let things proceed anyway
+                logger.error("Error getting custom css file", err);
             }
         );
 };
@@ -48,7 +50,8 @@ customCssFileLoadHandler = function (file) {
                 WAT.components.webView.addEventListener("MSWebViewDOMContentLoaded", loadCustomCssFileString);
             },
             function (err) {
-                // TODO: log this error, but let things proceed anyway
+                // log this error, but let things proceed anyway
+                logger.warn("Error reading custom css file", err);
             }
         );
 };
@@ -56,7 +59,7 @@ customCssFileLoadHandler = function (file) {
 loadCustomCssFileString = function () {
     var exec, scriptString;
 
-    // TODO: log
+    logger.log("injecting styles: ", customStylesFromFile.replace(/\r\n/gm, " "));
 
     scriptString = "var cssFileString = '" + customStylesFromFile.replace(/\r\n/gm, " ") + "';" +
         "var cssFileStyleEl = document.createElement('style');" +
