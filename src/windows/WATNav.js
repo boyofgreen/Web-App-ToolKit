@@ -11,11 +11,13 @@ var self = {
       WAT = WATref;
       navConfig = WAT.manifest.wat_navigation || {};
 
-      configureBackButton(WATref);
+      // Build back button only for Windows
+      if (WAT.environment.isWindows) {
+          configureBackButton(WATref);
 
-      WAT.components.webView.addEventListener("MSWebViewNavigationStarting", webViewNavStart);
-      WAT.components.webView.addEventListener("MSWebViewNavigationCompleted", webViewNavComplete);
-
+          WAT.components.webView.addEventListener("MSWebViewNavigationStarting", webViewNavStart);
+          WAT.components.webView.addEventListener("MSWebViewNavigationCompleted", webViewNavComplete);
+      }
     }
   },
 
