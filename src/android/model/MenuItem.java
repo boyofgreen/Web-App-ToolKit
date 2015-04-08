@@ -2,9 +2,9 @@ package com.microsoft.webapptoolkit.model;
 
 public class MenuItem {
   private String label;
-  private int iconResource;
   private String icon;
   private String action;
+  private String data;
 
   public String getLabel() {
     return label;
@@ -12,14 +12,6 @@ public class MenuItem {
 
   public void setLabel(String label) {
     this.label = label;
-  }
-
-  public int getIconResource() {
-    return iconResource;
-  }
-
-  public void setIconResource(int iconResource) {
-    this.iconResource = iconResource;
   }
 
   public String getIcon() {
@@ -38,7 +30,12 @@ public class MenuItem {
     this.action = action;
   }
 
-  public boolean hasAndroidIcon() {
-    return icon != null && icon.startsWith("R.android");
+  public String getData() {
+    return data;
   }
+
+  public void setData(String data) {
+    this.data = data;
+  }
+
 }

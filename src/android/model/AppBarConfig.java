@@ -29,12 +29,13 @@ public class AppBarConfig {
             final JSONObject arg = arguments.optJSONObject(i);
 
             if (arg != null && !arg.optString("label").equals("")) {
-              String icon = arg.optString("icon");
-
               MenuItem menuItem = new MenuItem();
+
               menuItem.setLabel(arg.optString("label"));
-              menuItem.setIcon(icon);
+              menuItem.setIcon(arg.optString("icon"));
               menuItem.setAction(arg.optString("action"));
+              menuItem.setData(arg.optString("data"));
+
               menuItems.add(menuItem);
             }
           }

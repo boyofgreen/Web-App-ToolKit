@@ -36,25 +36,24 @@ public class WebAppToolkit extends CordovaPlugin {
 
   private CordovaActivity activity;
 
-  private ShareActionProvider mShareActionProvider;
-  private int mShareItemId = 99;
   private Manifest manifest;
 
   @Override
   public void pluginInitialize() {
-    this.activity = (CordovaActivity)this.cordova.getActivity();
+    this.activity = (CordovaActivity) this.cordova.getActivity();
 
     Window window = this.activity.getWindow();
-    if(!window.hasFeature(Window.FEATURE_ACTION_BAR))
-    {
-      Log.e("WAT-Initialization","ActionBar feature not available, Window.FEATURE_ACTION_BAR must be enabled!. Try changing the theme.");
+    if (Build.VERSION.SDK_INT > 10) {
+      if (!window.hasFeature(Window.FEATURE_ACTION_BAR)) {
+        Log.e("WAT-Initialization", "ActionBar feature not available, Window.FEATURE_ACTION_BAR must be enabled!. Try changing the theme.");
+      }
     }
 
-    HostedWebApp hostedAppPlugin = (HostedWebApp)this.webView.pluginManager.getPlugin("HostedWebApp");
+    HostedWebApp hostedAppPlugin = (HostedWebApp) this.webView.pluginManager.getPlugin("HostedWebApp");
     if (hostedAppPlugin != null) {
       JSONObject manifestObject = hostedAppPlugin.getManifest();
 
-      if(manifestObject != null) {
+      if (manifestObject != null) {
         this.manifest = new Manifest(manifestObject);
       }
     }
@@ -80,15 +79,15 @@ public class WebAppToolkit extends CordovaPlugin {
   @Override
   public Object onMessage(String id, Object data) {
     if (id.equals("onCreateOptionsMenu") && data != null) {
-      this.onCreateOptionsMenu((Menu)data);
+      this.onCreateOptionsMenu((Menu) data);
     }
 
     if (id.equals("onOptionsItemSelected") && data != null) {
-      this.onOptionsItemSelected((MenuItem)data);
+      this.onOptionsItemSelected((MenuItem) data);
     }
 
     if (id.equals("hostedWebApp_manifestLoaded") && data != null) {
-      this.manifest = new Manifest((JSONObject)data);
+      this.manifest = new Manifest((JSONObject) data);
       this.activity.invalidateOptionsMenu();
     }
 
@@ -101,19 +100,17 @@ public class WebAppToolkit extends CordovaPlugin {
   }
 
   private void onCreateOptionsMenu(Menu menu) {
-    int groupId = 0;
+    if (this.manifest != null) {
+      //Clear menu to remove any old entities
+      menu.clear();
 
-    if (this.manifest != null && this.manifest.getShare().isEnabled()) {
-      appendShareActionsToActionBarMenu(menu, groupId);
+      addAppBarButtonsToActionBarMenu(menu);
+      appendShareActionsToActionBarMenu(menu);
     }
   }
 
   private void onOptionsItemSelected(MenuItem item) {
     int id = item.getItemId();
-
-    if (id == mShareItemId) {
-      doShare();
-    }
   }
 
   // Begin Share
@@ -146,20 +143,25 @@ public class WebAppToolkit extends CordovaPlugin {
     // sharing intent
     Intent intent = new Intent(Intent.ACTION_SEND);
     intent.setType("text/plain"); // "text/plain" "text/html" "image/*" "*/*"
-    intent.putExtra(Intent.EXTRA_TEXT, shareURL ); // shareMessage // only a link is supported by FaceBook! (See bug report: https://developers.facebook.com/x/bugs/332619626816423/ and http://stackoverflow.com/questions/13286358/sharing-to-facebook-twitter-via-share-intent-android)
+    intent.putExtra(Intent.EXTRA_TEXT, shareURL); // shareMessage // only a link is supported by FaceBook! (See bug report: https://developers.facebook.com/x/bugs/332619626816423/ and http://stackoverflow.com/questions/13286358/sharing-to-facebook-twitter-via-share-intent-android)
     this.activity.startActivity(Intent.createChooser(intent, "Share via")); // Share via
     return intent;
   }
 
-  private void appendShareActionsToActionBarMenu(Menu menu, int groupId) {
+  private void appendShareActionsToActionBarMenu(Menu menu) {
     if (this.manifest != null && this.manifest.getShare().isEnabled()) {
       ShareConfig shareConfig = this.manifest.getShare();
       // Easy Share Action requires API Level 14
       if (Build.VERSION.SDK_INT > 13) {
-        menu.add(groupId, mShareItemId, mShareItemId, shareConfig.getButtonText());
-        MenuItem menuItem = menu.findItem(mShareItemId);
+        MenuItem menuItem = menu.add(shareConfig.getButtonText());
         menuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
-        mShareActionProvider = (ShareActionProvider) menuItem.getActionProvider();
+        menuItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+          @Override
+          public boolean onMenuItemClick(MenuItem arg0) {
+            doShare();
+            return false;
+          }
+        });
       }
     }
   }
@@ -198,9 +200,9 @@ public class WebAppToolkit extends CordovaPlugin {
   private void injectCustomScripts() {
     CustomScriptConfig config = this.manifest.getCustomScript();
 
-    if (config.isEnabled()){
+    if (config.isEnabled()) {
       List<String> scriptFiles = config.getScriptFiles();
-      for (String file: scriptFiles) {
+      for (String file : scriptFiles) {
         this.injectScriptFile(file);
       }
 
@@ -230,9 +232,9 @@ public class WebAppToolkit extends CordovaPlugin {
   private void injectStyles() {
     StylesConfig config = this.manifest.getStyles();
 
-    if (config.isEnabled()){
+    if (config.isEnabled()) {
       List<String> scriptFiles = config.getCssFiles();
-      for (String file: scriptFiles) {
+      for (String file : scriptFiles) {
         this.injectStyleFile(file);
       }
 
@@ -243,4 +245,63 @@ public class WebAppToolkit extends CordovaPlugin {
   }
 
   // End JS and Styles injection
+
+  // Begin AppBar
+  private void addAppBarButtonsToActionBarMenu(Menu menu) {
+    if (manifest != null && manifest.getAppBar() != null && manifest.getAppBar().isEnabled()) {
+      for (final com.microsoft.webapptoolkit.model.MenuItem btn : manifest.getAppBar().getMenuItems()) {
+        MenuItem menuItem = menu.add(btn.getLabel());
+        if (Build.VERSION.SDK_INT > 10) {
+          menuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_WITH_TEXT); // setShowAsAction requires API level 11
+          int resId = this.getDrawableResource("ic_action_" + btn.getIcon()) | this.getDrawableResource(btn.getIcon());
+
+          // Fallback to Android resources
+          if (resId <= 0) {
+            resId = this.getAndroidResource(btn.getIcon());
+          }
+
+          if (resId > 0) {
+            menuItem.setIcon(resId); // R.drawable.ic_action_about
+          }
+
+          menuItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem arg) {
+              doMenuAction(btn);
+              return false;
+            }
+          });
+        }
+      }
+    }
+  }
+
+  private void doMenuAction(com.microsoft.webapptoolkit.model.MenuItem btn) {
+    if( btn.getAction().equalsIgnoreCase("eval") ) {
+      // eval javascript
+      this.evalJS(btn.getData());
+    } else {
+      // handle URL
+      this.webView.loadUrlIntoView(btn.getAction(), false);
+    }
+  }
+
+  public int getAndroidResource(String res) {
+    return getResourceId(res, "drawable", "android");
+  }
+
+  public int getDrawableResource(String imgName) {
+    return getResourceId(imgName, "drawable", activity.getPackageName());
+  }
+
+  public int getResourceId(String variableName, String resourceName, String pPackageName) {
+    try {
+      return activity.getResources().getIdentifier(variableName, resourceName, pPackageName);
+    } catch (Exception e) {
+      e.printStackTrace();
+      return -1;
+    }
+  }
+
+  // End AppBar
 }
