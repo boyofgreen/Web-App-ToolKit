@@ -3,7 +3,7 @@
 
 var WAT;
 var stylesConfig;
-var getCustomCssFile, customCssFileLoadHandler, loadCustomCssFileString, customStylesFromFile, hideElementsFromManifest, scriptString, cssString,
+var getCustomCssFile, customCssFileLoadHandler, loadCustomCssFileString, customStylesFromFile, loadCustomStyleString, scriptString, cssString,
 logger = window.console;
 
 
@@ -15,7 +15,7 @@ var self = {
             stylesConfig = WAT.manifest.wat_styles || {};
 
             // Execute element hiding
-            WAT.components.webView.addEventListener("MSWebViewDOMContentLoaded", hideElementsFromManifest);
+            WAT.components.webView.addEventListener("MSWebViewDOMContentLoaded", loadCustomStyleString);
 
             if (stylesConfig.customCssFile) {
                 getCustomCssFile();
@@ -70,14 +70,18 @@ loadCustomCssFileString = function () {
     exec.start();
 };
 
-hideElementsFromManifest = function () {
-    var i, l, hiddenEls, elements, exec,
+loadCustomStyleString = function () {
+    var i, l, hiddenEls, exec,
         scriptString = "",
         cssString = "";
 
-    if (stylesConfig.hiddenElements && stylesConfig !== "") {
+    if (stylesConfig.suppressTouchAction === true) {
+        cssString += "body{touch-action:none;}";
+    }
+
+    if (stylesConfig.hiddenElements && stylesConfig.hiddenElements !== "") {
         hiddenEls = stylesConfig.hiddenElements;
-        elements = "";
+        var elements = "";
         for (i = 0; i < hiddenEls.length - 1; i++) {
             elements += hiddenEls[i] + ",";
         }
@@ -85,13 +89,19 @@ hideElementsFromManifest = function () {
         cssString += elements + "{display:none !important;}";
     }
 
-    scriptString = "var cssString = '" + cssString + "';" +
-            "var styleEl = document.createElement('style');" +
-            "document.body.appendChild(styleEl);" +
-            "styleEl.innerHTML = cssString;";
+    //custom css string to add whatever you want
+    if (stylesConfig.customCssString) {
+        cssString += stylesConfig.customCssString;
+    }
+
+    scriptString += "var cssString = '" + cssString + "';" +
+        "var styleEl = document.createElement('style');" +
+        "document.body.appendChild(styleEl);" +
+        "styleEl.innerHTML = cssString;";
 
     exec = WAT.components.webView.invokeScriptAsync("eval", scriptString);
     exec.start();
-}
+};
+
 
 module.exports = self; // exports
