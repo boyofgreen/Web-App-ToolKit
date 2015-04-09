@@ -1,6 +1,5 @@
 package com.microsoft.webapptoolkit.model;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 public class ShareConfig
@@ -63,7 +62,7 @@ public class ShareConfig
     return this.url;
   }
 
-  public boolean isScreenshot() {
+  public boolean addScreenshot() {
     return this.screenshot;
   }
 

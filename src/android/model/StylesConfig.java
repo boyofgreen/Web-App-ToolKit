@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.util.Log;
@@ -34,7 +33,7 @@ public class StylesConfig {
     if (validateFilePath(newFilePath)) {
       StylesConfig.filePath = "www/" + newFilePath;
     } else {
-      Log.w(CustomScriptConfig.WTAG,
+      Log.w(StylesConfig.WTAG,
       "An invalid or null PathFile received. You can put your files into the default path (/assets/www/files/) .");
     }
   }

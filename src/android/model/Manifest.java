@@ -1,6 +1,5 @@
 package com.microsoft.webapptoolkit.model;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 public class Manifest {
