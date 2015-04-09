@@ -6,6 +6,7 @@ import android.util.Base64;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.Window;
 import android.widget.ShareActionProvider;
 
@@ -55,6 +56,7 @@ public class WebAppToolkit extends CordovaPlugin {
 
       if (manifestObject != null) {
         this.manifest = new Manifest(manifestObject);
+        this.initialize();
       }
     }
   }
@@ -68,12 +70,29 @@ public class WebAppToolkit extends CordovaPlugin {
         doShare();
       }
     } else if (action.equals("initialize")) {
-      this.activity.invalidateOptionsMenu();
+      this.initialize();
     } else {
       return false;
     }
 
     return true;
+  }
+
+  public void initialize() {
+    if (this.manifest != null) {
+      String name = this.manifest.getShortName();
+      if (name == null || name == "") {
+        name = this.manifest.getName();
+      }
+
+      if (Build.VERSION.SDK_INT > 10) {
+        this.activity.getActionBar().setTitle(name);
+      }
+
+      this.activity.setTitle(name);
+    }
+
+    this.activity.invalidateOptionsMenu();
   }
 
   @Override
@@ -88,7 +107,7 @@ public class WebAppToolkit extends CordovaPlugin {
 
     if (id.equals("hostedWebApp_manifestLoaded") && data != null) {
       this.manifest = new Manifest((JSONObject) data);
-      this.activity.invalidateOptionsMenu();
+      this.initialize();
     }
 
     if (id.equals("onPageFinished") && this.manifest != null) {
@@ -238,7 +257,7 @@ public class WebAppToolkit extends CordovaPlugin {
         this.injectStyleFile(file);
       }
 
-      String customString = config.getCustomString();
+      String customString = config.getInlineStyles();
       String encodedStyles = Base64.encodeToString(customString.getBytes(), Base64.NO_WRAP);
       this.injectStyle(encodedStyles);
     }

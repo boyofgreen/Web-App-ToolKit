@@ -6,6 +6,7 @@ import org.json.JSONObject;
 public class Manifest {
   private String startUrl;
   private String name;
+  private String shortName;
   private ShareConfig share;
   private CustomScriptConfig customScript;
   private StylesConfig styles;
@@ -28,6 +29,10 @@ public class Manifest {
 
       if (manifestObject.has("name")) {
         this.name = manifestObject.optString("name");
+      }
+
+      if (manifestObject.has("short_name")) {
+        this.shortName = manifestObject.optString("short_name");
       }
 
       if (manifestObject.has("wat_share")) {
@@ -68,6 +73,10 @@ public class Manifest {
 
   public String getName() {
     return this.name;
+  }
+
+  public String getShortName() {
+    return this.shortName;
   }
 
   public ShareConfig getShare() {
