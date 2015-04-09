@@ -25,7 +25,7 @@
         </config-file>
 
         <source-file src="src/android/WebAppToolkit.java" target-dir="src/com/microsoft/webapptoolkit" />
-        
+
         <source-file src="src/android/model/Manifest.java" target-dir="src/com/microsoft/webapptoolkit/model" />
         <source-file src="src/android/model/ShareConfig.java" target-dir="src/com/microsoft/webapptoolkit/model" />
         <source-file src="src/android/model/CustomScriptConfig.java" target-dir="src/com/microsoft/webapptoolkit/model" />
@@ -35,6 +35,8 @@
         <source-file src="src/android/model/AppBarConfig.java" target-dir="src/com/microsoft/webapptoolkit/model" />
 
         <source-file src="src/android/utils/Assets.java" target-dir="src/com/microsoft/webapptoolkit/utils" />
+
+        <source-file src="libs/android/android-support-v4.jar" target-dir="libs/" />
     </platform>
 
     <!-- windows -->
