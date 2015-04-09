@@ -1,10 +1,10 @@
-
 "use strict"
 
 var WAT;
 var stylesConfig;
 var getCustomCssFile, customCssFileLoadHandler, loadCustomCssFileString, customStylesFromFile, loadCustomStyleString, scriptString, cssString,
-logger = window.console;
+    addNavAppBarCustomColorStyles,
+    logger = window.console;
 
 
 // Public API
@@ -13,6 +13,8 @@ var self = {
         if (!WAT) {
             WAT = WATref;
             stylesConfig = WAT.manifest.wat_styles || {};
+
+            addNavAppBarCustomColorStyles();
 
             // Execute element hiding
             WAT.components.webView.addEventListener("MSWebViewDOMContentLoaded", loadCustomStyleString);
@@ -103,5 +105,98 @@ loadCustomStyleString = function () {
     exec.start();
 };
 
+addNavAppBarCustomColorStyles = function () {
+    var navBarScript = "";
+
+    var appBar = WAT.manifest.wat_appBar;
+    if (appBar) {
+        var appBarBackColor = appBar.backgroundColor;
+        var appBarButtonColor = appBar.buttonColor;
+
+        if (appBarBackColor || appBarButtonColor) {
+            /*App Bar custom colors*/
+
+            navBarScript += ".win-appbar.win-bottom.customColor {\n";
+            if (appBarBackColor) {
+                navBarScript += "background-color: " + appBarBackColor + ";\n";
+            }
+
+            navBarScript += "}\n" +
+                ".customColor .win-commandimage{\n";
+
+            if (appBarButtonColor) {
+                navBarScript += "color: " + appBarButtonColor + ";\n";
+            }
+
+            navBarScript += "}\n" +
+                ".customColor button:active .win-commandimage, \n" +
+                ".customColor button:enabled:hover:active .win-commandimage.win-commandimage{ \n";
+
+            if (appBarBackColor) {
+                navBarScript += "color: " + appBarBackColor + " !important;\n";
+            }
+            else {
+                if (appBarButtonColor) {
+                    navBarScript += "color: inherit;\n";
+                }
+            }
+
+            navBarScript += "}\n" +
+                "html.win-hoverable .customColor button:enabled:hover .win-commandimage,\n" +
+                "html.win-hoverable .customColor button[aria-checked=true]:enabled:hover .win-commandimage {\n";
+
+            if (appBarButtonColor) {
+                navBarScript += "color: " + appBarButtonColor + ";\nopacity: .75;\n";
+            }
+
+            navBarScript += "}\n" +
+                ".customColor .win-commandring {\n";
+
+            if (appBarButtonColor) {
+                navBarScript += "border-color: " + appBarButtonColor + ";\n";
+            }
+
+            navBarScript += "}\n" +
+                ".customColor button:active .win-commandring, \n" +
+                ".customColor button:enabled:hover:active .win-commandring.win-commandring{\n";
+
+            if (appBarButtonColor) {
+                navBarScript += "background-color: " + appBarButtonColor + ";\nborder-color: " + appBarButtonColor + ";\n";
+            }
+
+            navBarScript += "}\n" +
+                ".customColor button:enabled:hover .win-commandring{\n";
+            if (appBarButtonColor) {
+                navBarScript += "border-color: " + appBarButtonColor + " !important;\n";
+            }
+            if (appBarBackColor) {
+                navBarScript += "opacity: .75;\n";
+            }
+
+            navBarScript += "}\n" +
+                ".customColor .win-label {\n";
+
+            if (appBarButtonColor) {
+                navBarScript += "color: " + appBarButtonColor + ";\n";
+            }
+
+            navBarScript += "}\n" +
+                ".customColor.win-appbar button:enabled.win-appbar-invokebutton.win-appbar-invokebutton .win-appbar-ellipsis,\n" +
+                ".customColor .submenu{\n";
+
+            if (appBarButtonColor) {
+                navBarScript += "color: " + appBarButtonColor + ";\n";
+            }
+
+            navBarScript += "}";
+        }
+    }
+
+    if (navBarScript != "") {
+        var cssFileStyleEl = document.createElement('style');
+        document.head.appendChild(cssFileStyleEl);
+        cssFileStyleEl.innerHTML = navBarScript;
+    }
+}
 
 module.exports = self; // exports
