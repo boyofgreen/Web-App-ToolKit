@@ -18,6 +18,8 @@ var self = {
           WAT.components.webView.addEventListener("MSWebViewNavigationStarting", webViewNavStart);
           WAT.components.webView.addEventListener("MSWebViewNavigationCompleted", webViewNavComplete);
       }
+
+      WinJS.Application.onbackclick = navigateBack;
     }
   },
 
@@ -39,8 +41,7 @@ configureBackButton = function () {
         // create back button
         createBackButton();
 
-        // Back button
-        WinJS.Application.onbackclick = navigateBack;
+
 
         if (WAT.components.backButton) {
             // handle back button clicks
