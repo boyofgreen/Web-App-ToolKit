@@ -21,7 +21,7 @@ var self = {
         var container = new WinJS.UI.NavBarContainer(WAT.components.navBar);
         container.maxRows = navBarConfig.maxRows;
 
-        // WAT.components.webView.addEventListener("MSWebViewDOMContentLoaded", setStickyBits);
+        WAT.components.webView.addEventListener("MSWebViewDOMContentLoaded", setStickyBits);
     }
   }
 };
@@ -195,8 +195,10 @@ initUIDeclarations = function () {
 };
 
 setStickyBits = function () {
+
+
     var appBarHeight, navHeight,
-        height = (parseInt(WAT.components.stage.offsetHeight) || 0);
+        height = (parseInt(document.body.offsetHeight) || 0);
 
     WAT.components.webView.removeEventListener("MSWebViewDOMContentLoaded", setStickyBits);
 
@@ -214,10 +216,12 @@ setStickyBits = function () {
         height -= navHeight;
         WAT.components.stage.style.paddingTop = '30px';
         WAT.components.stage.style.top = navHeight + "px";
-        WAT.components.backButton.parentNode.style.top = navHeight + "px";
+
+        //TODO: fix for backbutton
+        //WAT.components.backButton.parentNode.style.top = navHeight + "px";
     }
 
-    if (WAT.config.appBar && WAT.config.appBar.enabled === true && WAT.config.appBar.makeSticky) {
+    if (WAT.manifest.wat_appBar && WAT.manifest.wat_appBar.enabled === true && WAT.manifest.wat_appBar.makeSticky) {
         WAT.components.appBar.disabled = false;
         WAT.components.appBar.winControl.sticky = true;
         WAT.components.appBar.winControl.show();
