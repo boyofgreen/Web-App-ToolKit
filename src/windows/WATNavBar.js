@@ -18,7 +18,8 @@ var self = {
 
         // create the navbar controls from the previously created html
         new WinJS.UI.NavBar(WAT.components.navBar.parentNode);
-        new WinJS.UI.NavBarContainer(WAT.components.navBar);
+        var container = new WinJS.UI.NavBarContainer(WAT.components.navBar);
+        container.maxRows = navBarConfig.maxRows;
 
         // WAT.components.webView.addEventListener("MSWebViewDOMContentLoaded", setStickyBits);
     }
@@ -189,8 +190,8 @@ setButtonAction = function (btn, menuItem) {
 
 initUIDeclarations = function () {
     //WAT.components.navBar.parentNode.setAttribute("data-win-control", "WinJS.UI.NavBar");
-    WAT.components.navBar.setAttribute("data-win-control", "WinJS.UI.NavBarContainer");
-    WAT.components.navBar.setAttribute("data-win-options", "{ maxRows: " + navBarConfig.maxRows + " }");
+    //WAT.components.navBar.setAttribute("data-win-control", "WinJS.UI.NavBarContainer");
+    //WAT.components.navBar.setAttribute("data-win-options", "{ maxRows: " + navBarConfig.maxRows + " }");
 };
 
 setStickyBits = function () {
