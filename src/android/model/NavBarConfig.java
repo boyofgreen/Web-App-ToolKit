@@ -33,6 +33,7 @@ public class NavBarConfig {
               menuItem.setLabel(arg.optString("label"));
               menuItem.setIcon(arg.optString("icon"));
               menuItem.setAction(arg.optString("action"));
+              menuItem.setData(arg.optString("data"));
 
               menuItems.add(menuItem);
             }

@@ -1,20 +1,36 @@
 package com.microsoft.webapptoolkit;
 
+import android.app.ActionBar;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
+import android.support.v4.app.ActionBarDrawerToggle;
+import android.support.v4.widget.DrawerLayout;
 import android.util.Base64;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewParent;
 import android.view.Window;
+import android.widget.AdapterView;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
+import android.widget.ListView;
 
 import com.microsoft.hostedwebapp.HostedWebApp;
 
+import com.microsoft.sample.R;
 import com.microsoft.webapptoolkit.model.CustomScriptConfig;
 import com.microsoft.webapptoolkit.model.Manifest;
 import com.microsoft.webapptoolkit.model.ShareConfig;
 import com.microsoft.webapptoolkit.model.StylesConfig;
 import com.microsoft.webapptoolkit.utils.Assets;
+import com.microsoft.webapptoolkit.utils.NavDrawerListAdapter;
+import com.microsoft.webapptoolkit.utils.ResourceHelper;
 
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.CordovaActivity;
@@ -34,6 +50,10 @@ public class WebAppToolkit extends CordovaPlugin {
   private CordovaActivity activity;
 
   private Manifest manifest;
+
+  private DrawerLayout mDrawerLayout;
+  private ListView mDrawerList;
+  private ActionBarDrawerToggle mDrawerToggle;
 
   @Override
   public void pluginInitialize() {
@@ -76,6 +96,10 @@ public class WebAppToolkit extends CordovaPlugin {
 
   public void initialize() {
     if (this.manifest != null) {
+      if (this.manifest.getNavBar().isEnabled()) {
+        this.configureNavBar();
+      }
+
       String name = this.manifest.getShortName();
       if (name == null || name == "") {
         name = this.manifest.getName();
@@ -98,7 +122,7 @@ public class WebAppToolkit extends CordovaPlugin {
     }
 
     if (id.equals("onOptionsItemSelected") && data != null) {
-      this.onOptionsItemSelected((MenuItem) data);
+      return this.onOptionsItemSelected((MenuItem) data);
     }
 
     if (id.equals("hostedWebApp_manifestLoaded") && data != null) {
@@ -124,8 +148,14 @@ public class WebAppToolkit extends CordovaPlugin {
     }
   }
 
-  private void onOptionsItemSelected(MenuItem item) {
+  private boolean onOptionsItemSelected(MenuItem item) {
     int id = item.getItemId();
+
+    if (mDrawerToggle != null && mDrawerToggle.onOptionsItemSelected(item)) {
+      return true;
+    }
+
+    return false;
   }
 
   // Begin Share
@@ -268,12 +298,7 @@ public class WebAppToolkit extends CordovaPlugin {
         MenuItem menuItem = menu.add(btn.getLabel());
         if (Build.VERSION.SDK_INT > 10) {
           menuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_WITH_TEXT); // setShowAsAction requires API level 11
-          int resId = this.getDrawableResource("ic_action_" + btn.getIcon()) | this.getDrawableResource(btn.getIcon());
-
-          // Fallback to Android resources
-          if (resId <= 0) {
-            resId = this.getAndroidResource(btn.getIcon());
-          }
+          int resId = ResourceHelper.getResourceIconId(this.activity, btn.getIcon());
 
           if (resId > 0) {
             menuItem.setIcon(resId); // R.drawable.ic_action_about
@@ -292,31 +317,93 @@ public class WebAppToolkit extends CordovaPlugin {
   }
 
   private void doMenuAction(com.microsoft.webapptoolkit.model.MenuItem btn) {
-    if( btn.getAction().equalsIgnoreCase("eval") ) {
-      // eval javascript
-      this.evalJS(btn.getData());
-    } else {
-      // handle URL
-      this.webView.loadUrlIntoView(btn.getAction(), false);
-    }
-  }
-
-  public int getAndroidResource(String res) {
-    return getResourceId(res, "drawable", "android");
-  }
-
-  public int getDrawableResource(String imgName) {
-    return getResourceId(imgName, "drawable", activity.getPackageName());
-  }
-
-  public int getResourceId(String variableName, String resourceName, String pPackageName) {
-    try {
-      return activity.getResources().getIdentifier(variableName, resourceName, pPackageName);
-    } catch (Exception e) {
-      e.printStackTrace();
-      return -1;
+    String action = btn.getAction();
+    if (action != null && action != ""){
+      if( action.equalsIgnoreCase("eval") ) {
+        // eval javascript
+        this.evalJS(btn.getData());
+      } else {
+        // handle URL
+        this.webView.loadUrlIntoView(action, false);
+      }
     }
   }
 
   // End AppBar
+
+  // Begin NavBar
+
+  public void configureNavBar() {
+    if (this.manifest != null && this.manifest.getNavBar().isEnabled()) {
+      NavDrawerListAdapter adapter = new NavDrawerListAdapter(this.activity, this.manifest.getNavBar().getMenuItems());
+
+      ViewParent parent = this.webView.getParent();
+      if ((parent != null)) {
+        ViewGroup parentGroup = (ViewGroup) parent;
+        parentGroup.removeView(this.webView);
+      }
+
+      final FrameLayout frameLayout = new FrameLayout(this.activity);
+      frameLayout.addView(this.webView);
+
+      DrawerLayout.LayoutParams lp = new DrawerLayout.LayoutParams(700, LinearLayout.LayoutParams.MATCH_PARENT);
+      lp.gravity = Gravity.START;
+
+      mDrawerList = new ListView(this.activity);
+      mDrawerList.setLayoutParams(lp);
+      mDrawerList.setDivider(new ColorDrawable(Color.BLACK));
+      mDrawerList.setDividerHeight(1);
+      mDrawerList.setBackgroundColor(Color.WHITE);
+      mDrawerList.setClickable(true);
+      mDrawerList.setOnItemClickListener(new SlideMenuClickListener());
+      mDrawerList.setAdapter(adapter);
+
+      ActionBar actionBar = this.activity.getActionBar();
+      if (Build.VERSION.SDK_INT > 10) {
+        actionBar.setDisplayHomeAsUpEnabled(true);
+
+        if (Build.VERSION.SDK_INT > 13) {
+          actionBar.setHomeButtonEnabled(true);
+        }
+      }
+
+      mDrawerLayout = new DrawerLayout(this.activity);
+      mDrawerLayout.addView(mDrawerList);
+      mDrawerLayout.addView(frameLayout);
+
+      mDrawerToggle = new ActionBarDrawerToggle(this.activity, mDrawerLayout, R.drawable.ic_drawer, R.string.app_name, R.string.app_name);
+
+      mDrawerToggle.setDrawerIndicatorEnabled(true);
+      mDrawerToggle.syncState();
+
+      mDrawerLayout.setDrawerListener(mDrawerToggle);
+
+      activity.setContentView(mDrawerLayout);
+
+      displayView(0);
+
+      mDrawerList.bringToFront();
+      mDrawerLayout.requestLayout();
+    }
+  }
+
+  private void displayView(int position) {
+    final com.microsoft.webapptoolkit.model.MenuItem menuItem = this.manifest.getNavBar().getMenuItems().get(position);
+
+    this.doMenuAction(menuItem);
+
+    mDrawerList.setItemChecked(position, true);
+    mDrawerList.setSelection(position);
+    mDrawerLayout.closeDrawer(mDrawerList);
+  }
+
+  private class SlideMenuClickListener implements ListView.OnItemClickListener {
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+      ((NavDrawerListAdapter) parent.getAdapter()).setItemSelected(position);
+      displayView(position);
+    }
+  }
+
+  // End nav bar
 }

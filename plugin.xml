@@ -35,8 +35,24 @@
         <source-file src="src/android/model/AppBarConfig.java" target-dir="src/com/microsoft/webapptoolkit/model" />
 
         <source-file src="src/android/utils/Assets.java" target-dir="src/com/microsoft/webapptoolkit/utils" />
+        <source-file src="src/android/utils/NavDrawerListAdapter.java" target-dir="src/com/microsoft/webapptoolkit/utils" />
+        <source-file src="src/android/utils/ResourceHelper.java" target-dir="src/com/microsoft/webapptoolkit/utils" />
 
         <source-file src="libs/android/android-support-v4.jar" target-dir="libs/" />
+
+
+        <!-- icons for drawer -->
+        <source-file src="drawable/mdpi/ic_drawer.png" target-dir="res/drawable-mdpi/" />
+        <source-file src="drawable/mdpi/drawer_shadow.9.png" target-dir="res/drawable-mdpi/" />
+        <source-file src="drawable/hdpi/ic_drawer.png" target-dir="res/drawable-hdpi/" />
+        <source-file src="drawable/hdpi/drawer_shadow.9.png" target-dir="res/drawable-hdpi/" />
+        <source-file src="drawable/xhdpi/ic_drawer.png" target-dir="res/drawable-xhdpi/" />
+        <source-file src="drawable/xhdpi/drawer_shadow.9.png" target-dir="res/drawable-xhdpi/" />
+
+        <source-file src="drawable/layout/drawer_list_item.xml" target-dir="res/layout/" />
+
+        <source-file src="drawable/list_item_selector.xml" target-dir="res/drawable/" />
+        <!-- end of icons for drawer -->
     </platform>
 
     <!-- windows -->
