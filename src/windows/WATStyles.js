@@ -108,6 +108,73 @@ loadCustomStyleString = function () {
 addNavAppBarCustomColorStyles = function () {
     var navBarScript = "";
 
+    var navBar = WAT.components.navBar;
+    if (navBar) {
+        var navBarBackColor = navBar.backgroundColor;
+        var navBarButtonTextColor = navBar.buttonTextColor;
+        var navBarButtonForeColor = navBar.buttonFaceColor;
+
+        if (navBarBackColor || navBarButtonForeColor || navBarButtonTextColor) {
+
+            /*Nav Bar custom colors*/
+            if (navBarBackColor) {
+                navBarScript += ".customColor .win-navbar {\n" +
+                "background-color: " + navBarBackColor + " !important;\n" +
+                "}"
+            }
+
+            navBarScript += ".customColor .win-navbarcontainer-navarrow,\n" +
+                ".customColor .win-navbarcommand-button,\n" +
+                ".customColor .win-navbarcommand-splitbutton{\n";
+
+            if (navBarButtonTextColor) {
+                navBarScript += "color: " + navBarButtonTextColor + ";\n";
+            }
+            if (navBarButtonForeColor) {
+                navBarScript += "background-color: " + navBarButtonForeColor + ";\n";
+            }
+
+            navBarScript +=
+                "}\n.customColor .win-navbarcommand-splitbutton.win-navbarcommand-splitbutton-opened,\n" +
+                ".customColor .win-navbarcommand-button.win-pressed,\n" +
+                ".customColor .win-navbarcommand-splitbutton.win-pressed,\n" +
+                "html.win-hoverable .customColor .win-navbarcommand-splitbutton.win-navbarcommand-splitbutton-opened:hover,\n" +
+                "html.win-hoverable .customColor .win-navbarcommand-button.win-pressed:hover,\n" +
+                "html.win-hoverable .customColor .win-navbarcommand-splitbutton.win-pressed:hover {\n";
+            if (navBarButtonTextColor) {
+                navBarScript += "background-color: " + navBarButtonTextColor + ";\n";
+            }
+            if (navBarButtonForeColor) {
+                navBarScript += "color: " + navBarButtonForeColor + ";\n";
+            }
+
+
+            navBarScript += "}\n" +
+                "html.win-hoverable .customColor .win-navbarcontainer-navarrow:hover,\n" +
+                "html.win-hoverable .customColor .win-navbarcommand-button:hover,\n" +
+                "html.win-hoverable .customColor .win-navbarcommand-splitbutton:hover {\n"
+
+            if (navBarButtonTextColor) {
+                navBarScript += "color: " + navBarButtonTextColor + ";\n";
+            }
+            if (navBarButtonForeColor) {
+                navBarScript += "background-color: " + navBarButtonForeColor + ";\n" +
+                    "opacity: 0.75 !important;\n";
+            }
+            navBarScript += "}\n" +
+                ".customColor .win-navbarcontainer-navarrow:hover:active {\n";
+
+            if (navBarButtonTextColor) {
+                navBarScript += "background-color: " + navBarButtonTextColor + " !important; \n";
+            }
+            if (navBarButtonForeColor) {
+                navBarScript += "color: " + navBarButtonForeColor + " !important; \n";
+            }
+
+            navBarScript += "}\n";
+        }
+    }
+
     var appBar = WAT.manifest.wat_appBar;
     if (appBar) {
         var appBarBackColor = appBar.backgroundColor;
