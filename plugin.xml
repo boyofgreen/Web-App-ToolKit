@@ -48,6 +48,9 @@
         <source-file src="assets/android/drawable/hdpi/drawer_shadow.9.png" target-dir="res/drawable-hdpi/" />
         <source-file src="assets/android/drawable/xhdpi/ic_drawer.png" target-dir="res/drawable-xhdpi/" />
         <source-file src="assets/android/drawable/xhdpi/drawer_shadow.9.png" target-dir="res/drawable-xhdpi/" />
+        <source-file src="assets/android/drawable/xxhdpi/ic_drawer.png" target-dir="res/drawable-xxhdpi/" />
+        <source-file src="assets/android/drawable/xxhdpi/drawer_shadow.9.png" target-dir="res/drawable-xxhdpi/" />
+
 
         <source-file src="assets/android/drawable/layout/drawer_list_item.xml" target-dir="res/layout/" />
 
