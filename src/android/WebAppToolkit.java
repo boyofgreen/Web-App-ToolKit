@@ -106,7 +106,11 @@ public class WebAppToolkit extends CordovaPlugin {
       }
 
       if (Build.VERSION.SDK_INT > 10) {
-        this.activity.getActionBar().setTitle(name);
+        ActionBar actionBar = this.activity.getActionBar();
+
+        if (actionBar != null) {
+          actionBar.setTitle(name);
+        }
       }
 
       this.activity.setTitle(name);
@@ -335,55 +339,57 @@ public class WebAppToolkit extends CordovaPlugin {
 
   public void configureNavBar() {
     if (this.manifest != null && this.manifest.getNavBar().isEnabled()) {
-      NavDrawerListAdapter adapter = new NavDrawerListAdapter(this.activity, this.manifest.getNavBar().getMenuItems());
-
-      ViewParent parent = this.webView.getParent();
-      if ((parent != null)) {
-        ViewGroup parentGroup = (ViewGroup) parent;
-        parentGroup.removeView(this.webView);
-      }
-
-      final FrameLayout frameLayout = new FrameLayout(this.activity);
-      frameLayout.addView(this.webView);
-
-      DrawerLayout.LayoutParams lp = new DrawerLayout.LayoutParams(700, LinearLayout.LayoutParams.MATCH_PARENT);
-      lp.gravity = Gravity.START;
-
-      mDrawerList = new ListView(this.activity);
-      mDrawerList.setLayoutParams(lp);
-      mDrawerList.setDivider(new ColorDrawable(Color.BLACK));
-      mDrawerList.setDividerHeight(1);
-      mDrawerList.setBackgroundColor(Color.WHITE);
-      mDrawerList.setClickable(true);
-      mDrawerList.setOnItemClickListener(new SlideMenuClickListener());
-      mDrawerList.setAdapter(adapter);
-
       ActionBar actionBar = this.activity.getActionBar();
-      if (Build.VERSION.SDK_INT > 10) {
-        actionBar.setDisplayHomeAsUpEnabled(true);
+      if (actionBar != null) {
+        NavDrawerListAdapter adapter = new NavDrawerListAdapter(this.activity, this.manifest.getNavBar().getMenuItems());
 
-        if (Build.VERSION.SDK_INT > 13) {
-          actionBar.setHomeButtonEnabled(true);
+        ViewParent parent = this.webView.getParent();
+        if ((parent != null)) {
+          ViewGroup parentGroup = (ViewGroup) parent;
+          parentGroup.removeView(this.webView);
         }
+
+        final FrameLayout frameLayout = new FrameLayout(this.activity);
+        frameLayout.addView(this.webView);
+
+        DrawerLayout.LayoutParams lp = new DrawerLayout.LayoutParams(700, LinearLayout.LayoutParams.MATCH_PARENT);
+        lp.gravity = Gravity.START;
+
+        mDrawerList = new ListView(this.activity);
+        mDrawerList.setLayoutParams(lp);
+        mDrawerList.setDivider(new ColorDrawable(Color.BLACK));
+        mDrawerList.setDividerHeight(1);
+        mDrawerList.setBackgroundColor(Color.WHITE);
+        mDrawerList.setClickable(true);
+        mDrawerList.setOnItemClickListener(new SlideMenuClickListener());
+        mDrawerList.setAdapter(adapter);
+
+        if (Build.VERSION.SDK_INT > 10) {
+          actionBar.setDisplayHomeAsUpEnabled(true);
+
+          if (Build.VERSION.SDK_INT > 13) {
+            actionBar.setHomeButtonEnabled(true);
+          }
+        }
+
+        mDrawerLayout = new DrawerLayout(this.activity);
+        mDrawerLayout.addView(mDrawerList);
+        mDrawerLayout.addView(frameLayout);
+
+        mDrawerToggle = new ActionBarDrawerToggle(this.activity, mDrawerLayout, R.drawable.ic_drawer, R.string.app_name, R.string.app_name);
+
+        mDrawerToggle.setDrawerIndicatorEnabled(true);
+        mDrawerToggle.syncState();
+
+        mDrawerLayout.setDrawerListener(mDrawerToggle);
+
+        activity.setContentView(mDrawerLayout);
+
+        displayView(0);
+
+        mDrawerList.bringToFront();
+        mDrawerLayout.requestLayout();
       }
-
-      mDrawerLayout = new DrawerLayout(this.activity);
-      mDrawerLayout.addView(mDrawerList);
-      mDrawerLayout.addView(frameLayout);
-
-      mDrawerToggle = new ActionBarDrawerToggle(this.activity, mDrawerLayout, R.drawable.ic_drawer, R.string.app_name, R.string.app_name);
-
-      mDrawerToggle.setDrawerIndicatorEnabled(true);
-      mDrawerToggle.syncState();
-
-      mDrawerLayout.setDrawerListener(mDrawerToggle);
-
-      activity.setContentView(mDrawerLayout);
-
-      displayView(0);
-
-      mDrawerList.bringToFront();
-      mDrawerLayout.requestLayout();
     }
   }
 
