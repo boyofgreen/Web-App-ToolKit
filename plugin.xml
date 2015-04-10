@@ -42,16 +42,16 @@
 
 
         <!-- icons for drawer -->
-        <source-file src="drawable/mdpi/ic_drawer.png" target-dir="res/drawable-mdpi/" />
-        <source-file src="drawable/mdpi/drawer_shadow.9.png" target-dir="res/drawable-mdpi/" />
-        <source-file src="drawable/hdpi/ic_drawer.png" target-dir="res/drawable-hdpi/" />
-        <source-file src="drawable/hdpi/drawer_shadow.9.png" target-dir="res/drawable-hdpi/" />
-        <source-file src="drawable/xhdpi/ic_drawer.png" target-dir="res/drawable-xhdpi/" />
-        <source-file src="drawable/xhdpi/drawer_shadow.9.png" target-dir="res/drawable-xhdpi/" />
+        <source-file src="assets/android/drawable/mdpi/ic_drawer.png" target-dir="res/drawable-mdpi/" />
+        <source-file src="assets/android/drawable/mdpi/drawer_shadow.9.png" target-dir="res/drawable-mdpi/" />
+        <source-file src="assets/android/drawable/hdpi/ic_drawer.png" target-dir="res/drawable-hdpi/" />
+        <source-file src="assets/android/drawable/hdpi/drawer_shadow.9.png" target-dir="res/drawable-hdpi/" />
+        <source-file src="assets/android/drawable/xhdpi/ic_drawer.png" target-dir="res/drawable-xhdpi/" />
+        <source-file src="assets/android/drawable/xhdpi/drawer_shadow.9.png" target-dir="res/drawable-xhdpi/" />
 
-        <source-file src="drawable/layout/drawer_list_item.xml" target-dir="res/layout/" />
+        <source-file src="assets/android/drawable/layout/drawer_list_item.xml" target-dir="res/layout/" />
 
-        <source-file src="drawable/list_item_selector.xml" target-dir="res/drawable/" />
+        <source-file src="assets/android/drawable/list_item_selector.xml" target-dir="res/drawable/" />
         <!-- end of icons for drawer -->
     </platform>
 
