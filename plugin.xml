@@ -43,6 +43,9 @@
       <js-module src="src/windows/WATAppBar.js" name="WATAppBar">
         <merges target="" />
       </js-module>
+      <js-module src="src/windows/WATStyles.js" name="WATStyles">
+        <merges target="" />
+      </js-module>
       <js-module src="src/windows/WATCustomScript.js" name="WATCustomScript">
         <merges target="" />
       </js-module>
