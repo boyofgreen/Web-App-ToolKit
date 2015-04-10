@@ -2,7 +2,7 @@
 
 @implementation WATManifest
 
-@synthesize startURL,name,shareConfig;
+@synthesize startURL, name, shareConfig, styleInjection, scriptInjection;
 
 - (id)initFromManifest:(NSDictionary*)manifest
 {
@@ -16,9 +16,19 @@
             name = [manifest objectForKey:@"name"];
 
             NSDictionary* shareData = [manifest objectForKey:@"wat_share"];
+            NSDictionary* styleData = [manifest objectForKey:@"wat_styles"];
+            NSDictionary* scriptData = [manifest objectForKey:@"wat_customScript"];
 
             if (shareData) {
                 shareConfig = [[WATShareConfig alloc] initFromManifest:shareData];
+            }
+
+            if (styleData) {
+                styleInjection = [[WATStyleInjection alloc] initFromManifest:styleData];
+            }
+
+            if (scriptData) {
+                scriptInjection = [[WATScriptInjection alloc] initFromManifest:scriptData];
             }
         }
     }
