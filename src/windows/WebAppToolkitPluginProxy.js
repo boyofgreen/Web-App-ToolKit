@@ -82,7 +82,7 @@ function initialize() {
       require('com.microsoft.webapptoolkit.WATNavigation').init(WAT);
       require('com.microsoft.webapptoolkit.WATStyles').init(WAT);
       require('com.microsoft.webapptoolkit.WATCustomScript').init(WAT);
-
+      require('com.microsoft.webapptoolkit.WATNavBar').init(WAT);
     }
   }
 }
