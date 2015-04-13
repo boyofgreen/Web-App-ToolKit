@@ -1,8 +1,8 @@
-
 "use strict";
 
 var WAT;
 var navBarConfig, createNavBarElement, setupNavBar, createNavBarButton, setButtonAction, initUIDeclarations, setStickyBits,
+    navDrawerInit, returnToContent, toggleMenu, itemInvokedHandler, disableNavDrawer, barActions, handleBarEval, handleBarNavigate,
     barActions = {};
 var logger = window.console;
 
@@ -11,6 +11,12 @@ var self = {
   init: function(WATRef){
     if (!WAT){
         WAT = WATRef;
+
+        barActions = {
+            eval: handleBarEval,
+            navigate: handleBarNavigate,
+            nested: true
+        };
 
         navBarConfig = (WAT.manifest.wat_navBar || {});
         createNavBarElement();
@@ -170,7 +176,7 @@ setButtonAction = function (btn, menuItem) {
     }
 
     if (data === "home") {
-        data = WAT.config.baseURL;
+        data = WAT.manifest.start_url;
     }
 
     if (action === "back") {
@@ -192,6 +198,69 @@ initUIDeclarations = function () {
     //WAT.components.navBar.parentNode.setAttribute("data-win-control", "WinJS.UI.NavBar");
     //WAT.components.navBar.setAttribute("data-win-control", "WinJS.UI.NavBarContainer");
     //WAT.components.navBar.setAttribute("data-win-options", "{ maxRows: " + navBarConfig.maxRows + " }");
+};
+
+
+disableNavDrawer = function () {
+    // disabling navDrawer
+    var surface = document.getElementById("surface");
+    surface.style.display = "block";
+    surface.style.width = "100%";
+    document.getElementById("hamburger").style.display = "none";
+    document.getElementById("search-box").style.display = "none";
+    WAT.options.navDrawer = null;
+};
+
+    // initializing navdrawer
+navDrawerInit = function () {
+    document.querySelector(".header .hamburger").addEventListener("click", toggleMenu);
+    document.querySelector(".content").addEventListener("click", returnToContent);
+    document.querySelector(".viewport").scrollLeft = _menuWidth;
+    document.addEventListener("iteminvoked", itemInvokedHandler, false);
+};
+
+    // navdrawer scroll
+returnToContent = function (e) {
+    var viewport = document.querySelector(".viewport");
+    if (viewport.scrollLeft < _menuWidth || viewport.scrollLeft >= _menuWidth * 2) {
+        viewport.msZoomTo({
+            contentX: _menuWidth
+        });
+    }
+};
+
+    // toggles navdrawer
+toggleMenu = function (e) {
+    var viewport = document.querySelector(".viewport");
+    var scrollPos = (viewport.scrollLeft > 0) ? 0 : _menuWidth;
+    viewport.msZoomTo({
+        contentX: scrollPos
+    });
+};
+
+    // handles items in the navdrawer
+itemInvokedHandler = function (eventObject) {
+    eventObject.detail.itemPromise.done(function (invokedItem) {
+        switch (invokedItem.data.action) {
+            case "home":
+                WAT.goToLocation(WAT.manifest.start_url);
+                break;
+            case "eval":
+                var scriptString = "(function() { " + invokedItem.data.data + " })();";
+                var exec = WAT.components.webView.invokeScriptAsync("eval", scriptString);
+                exec.start();
+                break;
+            case "back":
+                WAT.components.webView.goBack();
+                break;
+            case "nested":
+                break;
+            default:
+                WAT.goToLocation(invokedItem.data.action);
+                break;
+        }
+        toggleMenu();
+    });
 };
 
 setStickyBits = function () {
@@ -238,6 +307,24 @@ setStickyBits = function () {
     // WAT.components.stage.style.height = height + "px";
     // WAT.components.webView.style.height = height + "px";
     // WAT.components.offlineView.style.height = height + "px";
+};
+
+// app and nav bar action handlers
+
+handleBarEval = function () {
+    var scriptString, exec;
+
+    scriptString = "(function() { " + this.dataset.barActionData + " })();";
+
+    exec = WAT.options.webView.invokeScriptAsync("eval", scriptString);
+    exec.start();
+};
+
+handleBarNavigate = function () {
+    //if dataset doesn't exist, look for parent, becuse it will be a nested button assignment that is a child
+    var url = (this.dataset.barActionData || this.parentNode.dataset.barActionData || WAT.manifest.start_url);
+    var target = new Windows.Foundation.Uri(url);
+    WAT.components.webView.navigate(target.toString());
 };
 
 module.exports = self; // exports
