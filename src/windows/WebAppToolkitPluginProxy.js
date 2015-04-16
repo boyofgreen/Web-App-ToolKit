@@ -83,12 +83,14 @@ function initialize() {
   if (WAT.manifest) {
     WAT.components.webView = hostedWebApp.getWebView();
     if (WAT.components.webView) {
+      require('com.microsoft.webapptoolkit.WATWrapperHtml').init(WAT);
       require('com.microsoft.webapptoolkit.WATAppBar').init(WAT);
       require('com.microsoft.webapptoolkit.WATShare').init(WAT);
       require('com.microsoft.webapptoolkit.WATNavigation').init(WAT);
       require('com.microsoft.webapptoolkit.WATStyles').init(WAT);
       require('com.microsoft.webapptoolkit.WATCustomScript').init(WAT);
       require('com.microsoft.webapptoolkit.WATNavBar').init(WAT);
+      require('com.microsoft.webapptoolkit.WATHeader').init(WAT);
     }
   }
 }
