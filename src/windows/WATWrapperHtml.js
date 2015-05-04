@@ -79,12 +79,14 @@ createHeaderElement = function () {
 createStageElement = function () {
     var stage = document.createElement("div");
     stage.id = "stage";
+    stage.classList.add("stage");
     WAT.components.stage = stage;
     WAT.components.content.appendChild(stage);
 };
 
 moveWebView = function () {
     var webView = WAT.components.webView;
+    webView.id = "main-view";
     WAT.components.stage.appendChild(webView);
 };
 
