@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
-    id="com.microsoft.webapptoolkit"
+    id="com-manifoldjs-webapptoolkit"
     version="0.0.1">
     <name>WebAppToolkit</name>
     <description>Web Applicaton Toolkit Plugin</description>
@@ -8,7 +8,7 @@
     <keywords>cordova,manifest,hosted,web</keywords>
     <repo></repo>
 
-    <dependency id="com.microsoft.hostedwebapp" version=">=0.0.1" />
+    <dependency id="com-manifoldjs-hostedwebapp" url="https://github.com/manifoldjs/ManifoldCordova#v0.1.0" version=">=0.1.0" />
 
     <js-module src="www/webAppToolkit.js" name="webapptoolkit">
         <clobbers target="webapptoolkit" />
@@ -18,15 +18,32 @@
     <platform name="android">
         <config-file target="res/xml/config.xml" parent="/*">
             <feature name="WAT" >
-                <param name="android-package" value="com.microsoft.webapptoolkit.WebAppToolkit"/>
+                <param name="android-package" value="com.manifoldjs.webapptoolkit.WebAppToolkit"/>
                 <param name="onload" value="true" />
             </feature>
             <preference name="ShowTitle" value="true"/>
         </config-file>
 
-        <source-file src="src/android/WebAppToolkit.java" target-dir="src/com/microsoft/webapptoolkit" />
-        <source-file src="src/android/model/Manifest.java" target-dir="src/com/microsoft/webapptoolkit/model" />
-        <source-file src="src/android/model/ShareConfig.java" target-dir="src/com/microsoft/webapptoolkit/model" />
+        <source-file src="src/android/WebAppToolkit.java" target-dir="src/com/manifoldjs/webapptoolkit" />
+        <source-file src="src/android/Constants.java" target-dir="src/com/manifoldjs/webapptoolkit/" />
+        <source-file src="src/android/ModalActivity.java" target-dir="src/com/manifoldjs/webapptoolkit/" />
+        <source-file src="src/android/ModalWebViewClient.java" target-dir="src/com/manifoldjs/webapptoolkit/" />
+
+        <source-file src="src/android/model/Manifest.java" target-dir="src/com/manifoldjs/webapptoolkit/model" />     
+        
+        <source-file src="src/android/config/CustomScriptConfig.java" target-dir="src/com/manifoldjs/webapptoolkit/config" />
+        <source-file src="src/android/config/StylesConfig.java" target-dir="src/com/manifoldjs/webapptoolkit/config" />
+        <source-file src="src/android/config/RedirectsConfig.java" target-dir="src/com/manifoldjs/webapptoolkit/config" />
+        <source-file src="src/android/config/RedirectRulesConfig.java" target-dir="src/com/manifoldjs/webapptoolkit/config" />
+
+        <source-file src="src/android/utils/Assets.java" target-dir="src/com/manifoldjs/webapptoolkit/utils" />
+        <source-file src="src/android/utils/ResourceHelper.java" target-dir="src/com/manifoldjs/webapptoolkit/utils" />
+
+        <source-file src="src/android/modules/IModule.java" target-dir="src/com/manifoldjs/webapptoolkit/modules" />
+        <source-file src="src/android/modules/InjectionModule.java" target-dir="src/com/manifoldjs/webapptoolkit/modules" />
+        <source-file src="src/android/modules/RedirectsModule.java" target-dir="src/com/manifoldjs/webapptoolkit/modules" />
+        
+        <source-file src="libs/android/android-support-v4.jar" target-dir="libs/" />
     </platform>
 
     <!-- windows -->

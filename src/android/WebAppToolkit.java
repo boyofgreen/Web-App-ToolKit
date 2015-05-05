@@ -1,154 +1,153 @@
-package com.microsoft.webapptoolkit;
+package com.manifoldjs.webapptoolkit;
 
-import android.content.Intent;
-import android.os.Build;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.Window;
-import android.widget.ShareActionProvider;
-
-import com.microsoft.hostedwebapp.HostedWebApp;
-
-import com.microsoft.webapptoolkit.model.Manifest;
-import com.microsoft.webapptoolkit.model.ShareConfig;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.CordovaActivity;
-import org.apache.cordova.CordovaInterface;
 import org.apache.cordova.CordovaPlugin;
-import org.apache.cordova.CordovaWebView;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.ActionBar;
+import android.content.Context;
+import android.content.Intent;
+import android.os.Build;
+import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
+import android.view.Menu;
+import android.view.Window;
+import com.manifoldjs.hostedwebapp.HostedWebApp;
+import com.manifoldjs.webapptoolkit.model.Manifest;
+import com.manifoldjs.webapptoolkit.modules.IModule;
+import com.manifoldjs.webapptoolkit.modules.InjectionModule;
+import com.manifoldjs.webapptoolkit.modules.RedirectsModule;
+
 /**
-* This class ...
-*/
+ * This class ...
+ */
 public class WebAppToolkit extends CordovaPlugin {
 
-  private CordovaActivity activity;
+	private CordovaActivity activity;
+	private Manifest manifest;
+	private List<IModule> modules;
+	private Menu menu;
 
-  private ShareActionProvider mShareActionProvider;
-  private int mShareItemId = 99;
-  private Manifest manifest;
+	@Override
+	public void pluginInitialize() {
+		this.activity = (CordovaActivity) this.cordova.getActivity();
 
-  @Override
-  public void pluginInitialize() {
-    this.activity = (CordovaActivity)this.cordova.getActivity();
+		Window window = this.activity.getWindow();
+		if (Build.VERSION.SDK_INT > 10) {
+			if (!window.hasFeature(Window.FEATURE_ACTION_BAR)) {
+				Log.e("WAT-Initialization",
+						"ActionBar feature not available, Window.FEATURE_ACTION_BAR must be enabled!. Try changing the theme.");
+			}
+		}
 
-    Window window = this.activity.getWindow();
-    if(!window.hasFeature(Window.FEATURE_ACTION_BAR))
-    {
-      Log.e("WAT-Initialization","ActionBar feature not available, Window.FEATURE_ACTION_BAR must be enabled!. Try changing the theme.");
-    }
+		HostedWebApp hostedAppPlugin = (HostedWebApp) this.webView.getPluginManager()
+				.getPlugin("HostedWebApp");
+		if (hostedAppPlugin != null) {
+			JSONObject manifestObject = hostedAppPlugin.getManifest();
 
-    HostedWebApp hostedAppPlugin = (HostedWebApp)this.webView.pluginManager.getPlugin("HostedWebApp");
-    if (hostedAppPlugin != null) {
-      JSONObject manifestObject = hostedAppPlugin.getManifest();
+			if (manifestObject != null) {
+				this.manifest = new Manifest(manifestObject);
+				this.initialize();
+			}
+		}
+	}
 
-      if(manifestObject != null) {
-        this.manifest = new Manifest(manifestObject);
-      }
-    }
-  }
+	@Override
+	public void onPause(boolean multitasking) {
+		super.onPause(multitasking);
+		for (IModule m : this.modules) {
+			m.unsubscribe();
+		}
+	}
 
-  @Override
-  public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
-    if (action.equals("share")) {
-      if (args.length() > 0) {
-        doShare(args.getString(0));
-      } else {
-        doShare();
-      }
-    } else if (action.equals("initialize")) {
-      this.activity.invalidateOptionsMenu();
-    } else {
-      return false;
-    }
+	@Override
+	public void onResume(boolean multitasking) {
+		super.onResume(multitasking);
 
-    return true;
-  }
+		for (IModule m : this.modules) {
+			m.subscribe();
+		}
+	}
 
-  @Override
-  public Object onMessage(String id, Object data) {
-    if (id.equals("onCreateOptionsMenu") && data != null) {
-      this.onCreateOptionsMenu((Menu)data);
-    }
+	@Override
+	public boolean execute(String action, JSONArray args,
+			CallbackContext callbackContext) throws JSONException {
 
-    if (id.equals("onOptionsItemSelected") && data != null) {
-      this.onOptionsItemSelected((MenuItem)data);
-    }
+        return false;
+	}
 
-    if (id.equals("hostedWebApp_manifestLoaded") && data != null) {
-      this.manifest = new Manifest((JSONObject)data);
-      this.activity.invalidateOptionsMenu();
-    }
+	public void initialize() {
+		if (this.manifest != null) {
 
-    return null;
-  }
+			/* New Module Implementation */
+			this.modules = new ArrayList<IModule>();
+			this.modules.add(InjectionModule.getInstance(this));
+			this.modules.add(RedirectsModule.getInstance(this));
 
-  private void onCreateOptionsMenu(Menu menu) {
-    int groupId = 0;
+			for (IModule m : this.modules) {
+				m.subscribe();
+			}
 
-    if (this.manifest != null && this.manifest.getShare().isEnabled()) {
-      appendShareActionsToActionBarMenu(menu, groupId);
-    }
-  }
+			/* End New Module Implementation */
 
-  private void onOptionsItemSelected(MenuItem item) {
-    int id = item.getItemId();
+			LocalBroadcastManager.getInstance(this.activity).sendBroadcast(
+					new Intent(Constants.ON_INITIALIZE));
 
-    if (id == mShareItemId) {
-      doShare();
-    }
-  }
+			String name = this.manifest.getShortName();
+			if (name == null || name == "") {
+				name = this.manifest.getName();
+			}
 
-  private Intent doShare() {
-    return this.doShare(null);
-  }
+			if (Build.VERSION.SDK_INT > 10) {
+				ActionBar actionBar = this.activity.getActionBar();
 
-  // Share intent TODO: would need to implement special cases for sharing across various social media, at the moment it's the lowest common denominator - URL only.
-  private Intent doShare(String url) {
-    // share text
-    String shareURL = ShareConfig.CURRENT_URL;
+				if (actionBar != null) {
+					actionBar.setTitle(name);
+				}
+			}
 
-    if (url != null && !url.isEmpty()) {
-      shareURL = url;
-    } else {
-      if (this.manifest != null && this.manifest.getShare().isEnabled()) {
-        ShareConfig shareOptions = this.manifest.getShare();
-        shareURL = shareOptions.getUrl();
-      }
-    }
+			this.activity.setTitle(name);
+		}
 
-    // share link
-    if (shareURL.equalsIgnoreCase(ShareConfig.CURRENT_URL)) {
-      shareURL = this.webView.getUrl();
-    }
+		this.activity.invalidateOptionsMenu();
+	}
 
-    // share image
-    //Uri path = Uri.parse(String.format("android.resource://%s/%s", this.getPackageName(), getResources().getDrawable(R.drawable.ic_launcher) ));
+	@Override
+	public Object onMessage(String id, Object data) {
+		if (id.equals("hostedWebApp_manifestLoaded") && data != null) {
+			this.manifest = new Manifest((JSONObject) data);
+			this.initialize();
+		}
 
-    // sharing intent
-    Intent intent = new Intent(Intent.ACTION_SEND);
-    intent.setType("text/plain"); // "text/plain" "text/html" "image/*" "*/*"
-    intent.putExtra(Intent.EXTRA_TEXT, shareURL ); // shareMessage // only a link is supported by FaceBook! (See bug report: https://developers.facebook.com/x/bugs/332619626816423/ and http://stackoverflow.com/questions/13286358/sharing-to-facebook-twitter-via-share-intent-android)
-    this.activity.startActivity(Intent.createChooser(intent, "Share via")); // Share via
-    return intent;
-  }
+		if (id.equals("onPageFinished") && this.manifest != null) {
+			LocalBroadcastManager.getInstance(this.activity).sendBroadcast(
+					new Intent(Constants.ON_PAGE_FINISHED));
+		}
 
-  private void appendShareActionsToActionBarMenu(Menu menu, int groupId) {
-    if (this.manifest != null && this.manifest.getShare().isEnabled()) {
-      ShareConfig shareConfig = this.manifest.getShare();
-      // Easy Share Action requires API Level 14
-      if (Build.VERSION.SDK_INT > 13) {
-        menu.add(groupId, mShareItemId, mShareItemId, shareConfig.getButtonText());
-        MenuItem menuItem = menu.findItem(mShareItemId);
-        menuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
-        mShareActionProvider = (ShareActionProvider) menuItem.getActionProvider();
-      }
-    }
-  }
+		if (id.equals("onPageStarted") && this.manifest != null) {
+			Intent intent = new Intent(Constants.ON_PAGE_STARTED).putExtra(
+					"message", (String) data);
+			LocalBroadcastManager.getInstance(this.activity).sendBroadcast(
+					intent);
+		}
+
+		return null;
+	}
+
+	// End review Functionality
+
+	public Manifest getManifest() {
+		return this.manifest;
+	}
+
+	public Context getContext() {
+		return this.activity;
+	}
 }
