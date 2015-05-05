@@ -14,6 +14,7 @@ var self = {
                 // build wrapper html for windows
                 var content = document.createElement("div");
                 content.id = "content";
+                content.classList.add("content");
                 document.body.appendChild(content);
                 WAT.components.content = content;
 
