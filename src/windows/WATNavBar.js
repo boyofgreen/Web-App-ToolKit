@@ -1,10 +1,12 @@
-"use strict";
 
+"use strict";
+var navDrawerList = new WinJS.Binding.List();
 var WAT;
 var navBarConfig, createNavBarElement, setupNavBar, createNavBarButton, setButtonAction, initUIDeclarations, setStickyBits,
     navDrawerInit, returnToContent, toggleMenu, itemInvokedHandler, disableNavDrawer, barActions, handleBarEval, handleBarNavigate,
     barActions = {};
 var logger = window.console;
+var _menuWidth = 300;
 
 // Public API
 var self = {
@@ -19,32 +21,54 @@ var self = {
         };
 
         navBarConfig = (WAT.manifest.wat_navBar || {});
+
+        if (!navBarConfig || !navBarConfig.enabled) {
+            if (WAT.environment.isWindowsPhone) {
+                disableNavDrawer();
+            }
+
+            return;
+        }
+
         createNavBarElement();
         setupNavBar();
 
-        // create the navbar controls from the previously created html
-        new WinJS.UI.NavBar(WAT.components.navBar.parentNode);
-        var container = new WinJS.UI.NavBarContainer(WAT.components.navBar);
-        container.maxRows = navBarConfig.maxRows;
+        if (WAT.environment.isWindows) {
+            // create the navbar controls from the previously created html
+            new WinJS.UI.NavBar(WAT.components.navBar.parentNode);
+            var container = new WinJS.UI.NavBarContainer(WAT.components.navBar);
+            container.maxRows = navBarConfig.maxRows;
 
-        WAT.components.webView.addEventListener("MSWebViewDOMContentLoaded", setStickyBits);
+            WAT.components.webView.addEventListener("MSWebViewDOMContentLoaded", setStickyBits);
+        }
     }
   }
 };
 
 // Private methods
 createNavBarElement = function () {
+    if (WAT.environment.isWindows) {
+        var div = document.createElement("div");
+        div.id = "navBar"
+        div.classList.add("customColor");
 
-    var div = document.createElement("div");
-    div.id = "navBar"
-    div.classList.add("customColor");
+        var parent = document.createElement("div");
+        parent.style.zIndex = WAT.components.webView.style.zIndex + 101;
+        parent.appendChild(div);
 
-    var parent = document.createElement("div");
-    parent.style.zIndex = WAT.components.webView.style.zIndex + 101;
-    parent.appendChild(div);
-
-    document.body.appendChild(parent);
-    WAT.components.navBar = div;
+        WAT.components.content.appendChild(parent);
+        WAT.components.navBar = div;
+    }
+    else {
+        var parentDiv = document.createElement("div");
+        parentDiv.style.zIndex = WAT.components.webView.style.zIndex + 101;
+        var navBar = document.createElement("div");
+        navBar.id = "navBar";
+        navBar.classList.add("customColor");
+        parentDiv.appendChild(navBar);
+        WAT.components.stage.appendChild(parentDiv);
+        WAT.components.navBar = navBar;
+    }
 };
 
 setupNavBar = function () {
@@ -195,9 +219,9 @@ setButtonAction = function (btn, menuItem) {
 };
 
 initUIDeclarations = function () {
-    //WAT.components.navBar.parentNode.setAttribute("data-win-control", "WinJS.UI.NavBar");
-    //WAT.components.navBar.setAttribute("data-win-control", "WinJS.UI.NavBarContainer");
-    //WAT.components.navBar.setAttribute("data-win-options", "{ maxRows: " + navBarConfig.maxRows + " }");
+    WAT.components.navBar.parentNode.setAttribute("data-win-control", "WinJS.UI.NavBar");
+    WAT.components.navBar.setAttribute("data-win-control", "WinJS.UI.NavBarContainer");
+    WAT.components.navBar.setAttribute("data-win-options", "{ maxRows: " + navBarConfig.maxRows + " }");
 };
 
 
@@ -208,7 +232,7 @@ disableNavDrawer = function () {
     surface.style.width = "100%";
     document.getElementById("hamburger").style.display = "none";
     document.getElementById("search-box").style.display = "none";
-    WAT.options.navDrawer = null;
+    WAT.components.navDrawer = null;
 };
 
     // initializing navdrawer
