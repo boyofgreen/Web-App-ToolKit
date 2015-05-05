@@ -1,4 +1,3 @@
-
 "use strict";
 
 var WAT;
@@ -10,20 +9,27 @@ var self = {
             if (!WAT) {
                 WAT = WATRef;
 
-            if (WAT.environment.isWindows) {
-                // build wrapper html for windows
-                var content = document.createElement("div");
-                content.id = "content";
-                content.classList.add("content");
-                document.body.appendChild(content);
-                WAT.components.content = content;
+                if (WAT.environment.isWindows) {
+                    // build wrapper html for windows
+                    var content = document.createElement("div");
+                    content.id = "content";
+                    content.classList.add("content");
+                    document.body.appendChild(content);
+                    WAT.components.content = content;
 
-                buildForWindows();
+                    buildForWindows();
                 }
-            else {
-                // build wrapper html for windows phone
-                buildForWindowsPhone();
+                else {
+                    // build wrapper html for windows phone
+                    buildForWindowsPhone();
                 }
+
+                // add base wrapper styles
+                var styles = document.createElement("link");
+                styles.setAttribute("rel", "stylesheet");
+                styles.setAttribute("type", "text/css");
+                styles.href = "css/wrapper-styles.css";
+                document.head.appendChild(styles);
             }
         }
     };
@@ -35,6 +41,13 @@ buildForWindows = function () {
     };
 
 buildForWindowsPhone = function () {
+    // add wrapper styles for windows phone
+        var linkElem = document.createElement("link");
+        linkElem.setAttribute("rel", "stylesheet");
+        linkElem.setAttribute("type", "text/css");
+        linkElem.href = "css/wrapper-phone.css";
+        document.head.appendChild(linkElem);
+
     // hide cordova app div
     document.getElementsByClassName("app")[0].style.display = "none";
 
