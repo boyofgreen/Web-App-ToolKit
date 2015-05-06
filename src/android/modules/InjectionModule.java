@@ -36,15 +36,15 @@ public class InjectionModule implements IModule{
 	private InjectionModule(WebAppToolkit webAppToolkit) {
 		this.webAppToolkit = webAppToolkit;
 		this.activity = (CordovaActivity) this.webAppToolkit.cordova.getActivity();
-        this.updateConfiguration(this.webAppToolkit.getManifest());
 	}
 
 	public static InjectionModule getInstance(WebAppToolkit webAppToolkit){
 		if(instance == null) {
             instance = new InjectionModule(webAppToolkit);
-        } else {
-            instance.updateConfiguration(webAppToolkit.getManifest());
         }
+
+        instance.updateConfiguration(webAppToolkit.getManifest());
+
 		return instance;
 	}
 
