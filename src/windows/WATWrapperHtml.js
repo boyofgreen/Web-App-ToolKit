@@ -51,7 +51,7 @@
        theme.setAttribute("type", "text/css");
        theme.href = "css/ui-themed.theme-dark.css";
        document.head.appendChild(theme);
-       
+
        // add wrapper styles for windows phone
        var linkElem = document.createElement("link");
        linkElem.setAttribute("rel", "stylesheet");
@@ -84,6 +84,9 @@
        searchBox.name = "search-box";
        searchBox.id = "search-box";
        searchBox.classList.add("search-box");
+
+       // TODO: enable search box when wat_search is implemented.
+       searchBox.style.display = "none";
 
        navDrawer.appendChild(searchBox);
        WAT.components.navDrawer = navDrawer;
@@ -153,6 +156,10 @@
        var searchbox = document.createElement("div");
        searchbox.id = "search-box";
        searchbox.classList.add("search-box");
+
+       // TODO: enable search box when wat_search is implemented.
+       searchbox.style.display = "none";
+
        header.appendChild(searchbox);
 
        WAT.components.content.appendChild(header);
