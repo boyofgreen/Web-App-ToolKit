@@ -68,6 +68,46 @@ createNavBarElement = function () {
         parentDiv.appendChild(navBar);
         WAT.components.stage.appendChild(parentDiv);
         WAT.components.navBar = navBar;
+
+        var listview = document.getElementById("navDrawerListView");
+        var navDrawerIconTextTemplate = document.getElementById("navDrawerIconTextTemplate");
+        var template = new WinJS.Binding.Template(navDrawerIconTextTemplate);
+
+        var list = new WinJS.UI.ListView(listview, { itemDataSource: navDrawerList.dataSource, itemTemplate: navDrawerIconTextTemplate, selectionMode: 'none', tapBehavior: 'invoke', layout: { type: WinJS.UI.ListLayout } });
+        list.itemTemplate = function (itemPromise) {
+            return itemPromise.then(function (item) {
+                var navDrawerIconTextTemplate = document.createElement("div");
+                navDrawerIconTextTemplate.id = "navDrawerIconTextTemplate";
+
+                var navDrawerIconTextItem = document.createElement("div");
+                navDrawerIconTextItem.id = "navDrawerIconTextItem";
+                navDrawerIconTextItem.classList.add("navDrawerIconTextItem");
+
+                if (WAT.manifest.wat_navBar.backgroundColor) {
+                    navDrawerIconTextItem.style.backgroundColor = WAT.manifest.wat_navBar.backgroundColor;
+                }
+
+                var navDrawerIconTextImage = document.createElement("img");
+                navDrawerIconTextImage.classList.add("navDrawerIconTextItem-Image");
+                navDrawerIconTextImage.setAttribute("src", item.data.icon);
+
+                var navDrawerIconTextDetail = document.createElement("div");
+                navDrawerIconTextDetail.classList.add("navDrawerIconTextItem-Detail");
+
+                var h4title = document.createElement("h4");
+                h4title.innerText = item.data.label;
+
+                navDrawerIconTextDetail.appendChild(h4title);
+
+                navDrawerIconTextItem.appendChild(navDrawerIconTextImage);
+                navDrawerIconTextItem.appendChild(navDrawerIconTextDetail);
+
+                navDrawerIconTextTemplate.appendChild(navDrawerIconTextItem);
+
+                return navDrawerIconTextTemplate;
+            });
+
+        }
     }
 };
 
@@ -118,7 +158,7 @@ setupNavBar = function () {
             else if (WAT.environment.isWindowsPhone) { // initializing navdrawer for phone
                 navDrawerInit();
                 if (menuItem.icon && menuItem.icon != "" && menuItem.icon.substring(0, 2) != "ms") {
-                    menuItem.icon = "ms-appx:///images/enums/" + menuItem.icon + ".png";
+                    menuItem.icon = "ms-appx:///www/images/enums/" + menuItem.icon + ".png";
                 }
 
                 // adding buttons to the navdrawer list
@@ -267,7 +307,7 @@ itemInvokedHandler = function (eventObject) {
     eventObject.detail.itemPromise.done(function (invokedItem) {
         switch (invokedItem.data.action) {
             case "home":
-                WAT.goToLocation(WAT.manifest.start_url);
+                WAT.components.webView.navigate(WAT.manifest.start_url);
                 break;
             case "eval":
                 var scriptString = "(function() { " + invokedItem.data.data + " })();";
@@ -280,7 +320,7 @@ itemInvokedHandler = function (eventObject) {
             case "nested":
                 break;
             default:
-                WAT.goToLocation(invokedItem.data.action);
+                WAT.components.webView.navigate(invokedItem.data.action);
                 break;
         }
         toggleMenu();

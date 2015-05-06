@@ -1,183 +1,179 @@
+"use strict";
 
-    "use strict";
+   var WAT;
+   var buildForWindows, buildForWindowsPhone;
+   var createHeaderElement, createStageElement, moveWebView;
 
-    var WAT;
-    var buildForWindows, buildForWindowsPhone;
-    var createHeaderElement, createStageElement, moveWebView;
+   var self = {
+       init: function (WATRef) {
+           if (!WAT) {
+               WAT = WATRef;
 
-    var self = {
-        init: function (WATRef) {
-            if (!WAT) {
-                WAT = WATRef;
+               if (WAT.environment.isWindows) {
+                   // build wrapper html for windows
+                   var content = document.createElement("div");
+                   content.id = "content";
+                   content.classList.add("content");
+                   document.body.appendChild(content);
+                   WAT.components.content = content;
 
-                if (WAT.environment.isWindows) {
-                    // build wrapper html for windows
-                    var content = document.createElement("div");
-                    content.id = "content";
-                    content.classList.add("content");
-                    document.body.appendChild(content);
-                    WAT.components.content = content;
+                   buildForWindows();
+               }
+               else {
+                   // build wrapper html for windows phone
+                   buildForWindowsPhone();
+               }
 
-                    buildForWindows();
-                }
-                else {
-                    // build wrapper html for windows phone
-                    buildForWindowsPhone();
-                }
+               // remove cordova's stylesheet
+               var cordovaStyles = document.getElementsByTagName("link")[0];
+               cordovaStyles.parentNode.removeChild(cordovaStyles);
 
-                // add base wrapper styles
-                var styles = document.createElement("link");
-                styles.setAttribute("rel", "stylesheet");
-                styles.setAttribute("type", "text/css");
-                styles.href = "css/wrapper-styles.css";
-                document.head.appendChild(styles);
-            }
-        }
-    };
+               // add base wrapper styles
+               var styles = document.createElement("link");
+               styles.setAttribute("rel", "stylesheet");
+               styles.setAttribute("type", "text/css");
+               styles.href = "css/wrapper-styles.css";
+               document.head.appendChild(styles);
+           }
+       }
+   };
 
-    buildForWindows = function () {
-        createHeaderElement();
-        createStageElement();
-        moveWebView();
-    };
+   buildForWindows = function () {
+       createHeaderElement();
+       createStageElement();
+       moveWebView();
+   };
 
-    buildForWindowsPhone = function () {
-        // add wrapper styles for windows phone
-        var linkElem = document.createElement("link");
-        linkElem.setAttribute("rel", "stylesheet");
-        linkElem.setAttribute("type", "text/css");
-        linkElem.href = "css/wrapper-phone.css";
-        document.head.appendChild(linkElem);
+   buildForWindowsPhone = function () {
+       // add theme styles for Windows Phone
+       var theme = document.createElement("link");
+       theme.setAttribute("rel", "stylesheet");
+       theme.setAttribute("type", "text/css");
+       theme.href = "css/ui-themed.theme-dark.css";
+       document.head.appendChild(theme);
+       
+       // add wrapper styles for windows phone
+       var linkElem = document.createElement("link");
+       linkElem.setAttribute("rel", "stylesheet");
+       linkElem.setAttribute("type", "text/css");
+       linkElem.href = "css/wrapper-phone.css";
+       document.head.appendChild(linkElem);
 
-        // hide cordova app div
-        document.getElementsByClassName("app")[0].style.display = "none";
+       // hide cordova app div
+       document.getElementsByClassName("app")[0].style.display = "none";
 
-        // viewport parent div
-        var viewport = document.createElement("div");
-        viewport.id = "viewport";
-        viewport.classList.add("viewport");
+       // viewport parent div
+       var viewport = document.createElement("div");
+       viewport.id = "viewport";
+       viewport.classList.add("viewport");
 
-        // surface div
-        var surface = document.createElement("div");
-        surface.id = "surface";
-        surface.classList.add("surface");
-        surface.style.zIndex = WAT.components.webView.zIndex + 100;
+       // surface div
+       var surface = document.createElement("div");
+       surface.id = "surface";
+       surface.classList.add("surface");
+       surface.style.zIndex = WAT.components.webView.zIndex + 100;
 
-        // nav drawer div
-        var navDrawer = document.createElement("div");
-        navDrawer.id = "navDrawer";
-        navDrawer.classList.add("navDrawer");
+       // nav drawer div
+       var navDrawer = document.createElement("div");
+       navDrawer.id = "navDrawer";
+       navDrawer.classList.add("navDrawer");
 
-        // search box
-        var searchBox = document.createElement("input");
-        searchBox.type = "text";
-        searchBox.name = "search-box";
-        searchBox.id = "search-box";
-        searchBox.classList.add("search-box");
+       // search box
+       var searchBox = document.createElement("input");
+       searchBox.type = "text";
+       searchBox.name = "search-box";
+       searchBox.id = "search-box";
+       searchBox.classList.add("search-box");
 
-        navDrawer.appendChild(searchBox);
-        WAT.components.navDrawer = navDrawer;
-        surface.appendChild(navDrawer);
+       navDrawer.appendChild(searchBox);
+       WAT.components.navDrawer = navDrawer;
 
-        //TODO: WinJS bindings.
-        var navDrawerIconTextTemplate = document.createElement("div");
-        navDrawerIconTextTemplate.id = "navDrawerIconTextTemplate";
-        navDrawerIconTextTemplate.style.display = "none";
+       // navdrawer list view
+       var listview = document.createElement("div");
+       listview.id = "navDrawerListView";
+       listview.classList.add("win-selectionstylefilled");
 
-        var navDrawerIcontTextItem = document.createElement("div");
-        navDrawerIcontTextItem.id = "navDrawerIconTextItem";
-        navDrawerIcontTextItem.classList.add("navDrawerIconTextItem");
+       navDrawer.appendChild(listview);
 
-        var navDrawerIconTextImage = document.createElement("img");
-        navDrawerIconTextImage.classList.add("navDrawerIconTestItem-Image");
+       surface.appendChild(navDrawer);
 
-        var navDrawerIconTextDetail = document.createElement("div");
-        navDrawerIconTextDetail.classList.add("navDrawerIconTextItem-Detail");
+       // up a level
+       var content = document.createElement("div");
+       content.id = "content";
+       content.classList.add("content");
+       document.body.appendChild(content);
+       WAT.components.content = content;
 
-        navDrawerIcontTextItem.appendChild(navDrawerIconTextImage);
-        navDrawerIcontTextItem.appendChild(navDrawerIconTextDetail);
+       createStageElement();
 
-        navDrawerIconTextTemplate.appendChild(navDrawerIcontTextItem);
-        navDrawer.appendChild(navDrawerIconTextTemplate);
+       surface.appendChild(content);
 
+       viewport.appendChild(surface);
+       document.body.appendChild(viewport);
 
-        // up a level
-        var content = document.createElement("div");
-        content.id = "content";
-        content.classList.add("content");
-        document.body.appendChild(content);
-        WAT.components.content = content;
+       createHeaderElement();
+       moveWebView();
+   };
 
-        createStageElement();
+   // Windows Wrapper HTML functions
+   createHeaderElement = function () {
+       // header div
+       var header = document.createElement("div");
+       header.id = "header";
+       header.classList.add("header");
+       header.style.zIndex = WAT.components.webView.style.zIndex + 100;
 
-        surface.appendChild(content);
+       if (!WAT.environment.isWindows) {
+           // hamburger
+           var hamburger = document.createElement("div");
+           hamburger.id = "hamburger";
+           hamburger.classList.add("hamburger");
+           header.appendChild(hamburger);
+       }
 
-        viewport.appendChild(surface);
-        document.body.appendChild(viewport);
+       // logo div
+       var logoArea = document.createElement("div");
+       logoArea.classList.add("logoarea");
 
-        createHeaderElement();
-        moveWebView();
-    };
+       // logo img
+       var logoImage = document.createElement("img");
+       logoImage.id = "logo";
+       logoArea.appendChild(logoImage);
+       header.appendChild(logoArea);
 
-    // Windows Wrapper HTML functions
-    createHeaderElement = function () {
-        // header div
-        var header = document.createElement("div");
-        header.id = "header";
-        header.classList.add("header");
-        header.style.zIndex = WAT.components.webView.style.zIndex + 100;
-
-        if (!WAT.environment.isWindows) {
-            // hamburger
-            var hamburger = document.createElement("div");
-            hamburger.id = "hamburger";
-            hamburger.classList.add("hamburger");
-            header.appendChild(hamburger);
-        }
-
-        // logo div
-        var logoArea = document.createElement("div");
-        logoArea.classList.add("logoarea");
-
-        // logo img
-        var logoImage = document.createElement("img");
-        logoImage.id = "logo";
-        logoArea.appendChild(logoImage);
-        header.appendChild(logoArea);
-
-        // title
-        var title = document.createElement("h1");
-        title.id = "title";
-        title.classList.add("titlearea");
-        title.classList.add("win-type-ellipsis");
-        header.appendChild(title);
+       // title
+       var title = document.createElement("h1");
+       title.id = "title";
+       title.classList.add("titlearea");
+       title.classList.add("win-type-ellipsis");
+       header.appendChild(title);
 
 
-        // search box
-        var searchbox = document.createElement("div");
-        searchbox.id = "search-box";
-        searchbox.classList.add("search-box");
-        header.appendChild(searchbox);
+       // search box
+       var searchbox = document.createElement("div");
+       searchbox.id = "search-box";
+       searchbox.classList.add("search-box");
+       header.appendChild(searchbox);
 
-        WAT.components.content.appendChild(header);
+       WAT.components.content.appendChild(header);
 
-        WAT.components.header = header;
-        WAT.components.logo = logoArea;
-        WAT.components.title = title;
-    }
+       WAT.components.header = header;
+       WAT.components.logo = logoArea;
+       WAT.components.title = title;
+   }
 
-    createStageElement = function () {
-        var stage = document.createElement("div");
-        stage.id = "stage";
-        stage.classList.add("stage");
-        WAT.components.stage = stage;
-        WAT.components.content.appendChild(stage);
-    };
+   createStageElement = function () {
+       var stage = document.createElement("div");
+       stage.id = "stage";
+       stage.classList.add("stage");
+       WAT.components.stage = stage;
+       WAT.components.content.appendChild(stage);
+   };
 
-    moveWebView = function () {
-        var webView = WAT.components.webView;
-        webView.id = "main-view";
-        WAT.components.stage.appendChild(webView);
-    };
+   moveWebView = function () {
+       var webView = WAT.components.webView;
+       webView.id = "main-view";
+       WAT.components.stage.appendChild(webView);
+   };
 
-    module.exports = self; // export
+   module.exports = self; // export
