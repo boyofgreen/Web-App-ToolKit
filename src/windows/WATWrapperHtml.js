@@ -24,6 +24,9 @@
                    buildForWindowsPhone();
                }
 
+               // hide cordova app div
+               document.getElementsByClassName("app")[0].style.display = "none";
+
                // remove cordova's stylesheet
                var cordovaStyles = document.getElementsByTagName("link")[0];
                cordovaStyles.parentNode.removeChild(cordovaStyles);
@@ -58,9 +61,6 @@
        linkElem.setAttribute("type", "text/css");
        linkElem.href = "css/wrapper-phone.css";
        document.head.appendChild(linkElem);
-
-       // hide cordova app div
-       document.getElementsByClassName("app")[0].style.display = "none";
 
        // viewport parent div
        var viewport = document.createElement("div");
