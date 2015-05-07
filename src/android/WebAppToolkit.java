@@ -11,10 +11,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.ActionBar;
-import android.content.Context;
 import android.os.Build;
 import android.util.Log;
-import android.view.Menu;
 import android.view.Window;
 import com.manifoldjs.hostedwebapp.HostedWebApp;
 import com.manifoldjs.webapptoolkit.model.Manifest;

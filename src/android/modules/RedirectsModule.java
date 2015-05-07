@@ -4,12 +4,8 @@ import java.util.regex.Matcher;
 
 import org.apache.cordova.CordovaActivity;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.net.Uri;
-import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.Gravity;
 import android.widget.LinearLayout;
@@ -25,7 +21,6 @@ import com.manifoldjs.webapptoolkit.config.RedirectsConfig;
 public class RedirectsModule implements IModule {
 
 	private WebAppToolkit webAppToolkit = null;
-	private BroadcastReceiver mRedirectsMessage;
 	private CordovaActivity activity;
 	private static RedirectsModule instance;
 

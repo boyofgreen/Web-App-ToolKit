@@ -5,11 +5,6 @@ import java.util.Locale;
 
 import org.apache.cordova.CordovaActivity;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.support.v4.content.LocalBroadcastManager;
 import android.util.Base64;
 
 import com.manifoldjs.webapptoolkit.model.Manifest;
@@ -27,7 +22,6 @@ public class InjectionModule implements IModule{
 	private StylesConfig stylesConfig = null;
 	private CustomScriptConfig scriptConfig = null;
 	private WebAppToolkit webAppToolkit = null;
-	private BroadcastReceiver mInjectionBroadcast;
 	private CordovaActivity activity;
 
 	private static InjectionModule instance;
