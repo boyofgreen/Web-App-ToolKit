@@ -29,7 +29,6 @@ public class InjectionModule implements IModule{
 	private WebAppToolkit webAppToolkit = null;
 	private BroadcastReceiver mInjectionBroadcast;
 	private CordovaActivity activity;
-    private Boolean isSubscribed = false;
 
 	private static InjectionModule instance;
 
@@ -48,31 +47,18 @@ public class InjectionModule implements IModule{
 		return instance;
 	}
 
-	@Override
-	public void unsubscribe() {
-        if (isSubscribed) {
-            LocalBroadcastManager.getInstance(webAppToolkit.getContext()).unregisterReceiver(mInjectionBroadcast);
-            isSubscribed = false;
+    @Override
+    public Object onMessage(String id, Object data) {
+        if (id.equals(Constants.ON_PAGE_FINISHED)) {
+            inject();
         }
-	}
+        return null;
+    }
 
-	@Override
-	public void subscribe() {
-        if (!isSubscribed) {
-            this.mInjectionBroadcast = new BroadcastReceiver() {
-                @Override
-                public void onReceive(Context context, Intent intent) {
-                    inject();
-                }
-            };
-
-            LocalBroadcastManager.getInstance(webAppToolkit.getContext())
-                    .registerReceiver(mInjectionBroadcast,
-                            new IntentFilter(Constants.ON_PAGE_FINISHED));
-
-            isSubscribed = true;
-        }
-	}
+    @Override
+    public Boolean onNavigationAttempt(String url) {
+        return false;
+    }
 
 	public void inject() {
 		this.injectCustomScripts();

@@ -24,7 +24,6 @@ import com.manifoldjs.webapptoolkit.config.RedirectsConfig;
 
 public class RedirectsModule implements IModule {
 
-	private RedirectsConfig redirectsConfig = null;
 	private WebAppToolkit webAppToolkit = null;
 	private BroadcastReceiver mRedirectsMessage;
 	private CordovaActivity activity;
@@ -32,103 +31,99 @@ public class RedirectsModule implements IModule {
 
 	private RedirectsModule(WebAppToolkit webAppToolkit) {
 		this.webAppToolkit = webAppToolkit;
-		this.redirectsConfig = this.webAppToolkit.getManifest()
-				.getRedirectsConfig();
 		this.activity = (CordovaActivity) webAppToolkit.cordova.getActivity();
-		this.subscribe();
 	}
 
 	public static RedirectsModule getInstance(WebAppToolkit webAppToolkit) {
 		if (instance == null)
 			instance = new RedirectsModule(webAppToolkit);
+
 		return instance;
 	}
 
-	@Override
-	public void unsubscribe() {
-		LocalBroadcastManager.getInstance(webAppToolkit.getContext())
-				.unregisterReceiver(mRedirectsMessage);
-	}
+    @Override
+    public Object onMessage(String id, Object data) {
+        if (id.equals(Constants.ON_PAGE_STARTED)) {
+            //handle((String)data);
+        }
+        return null;
+    }
 
-	@Override
-	public void subscribe() {
-		this.mRedirectsMessage = new BroadcastReceiver() {
-			@Override
-			public void onReceive(Context context, Intent intent) {
-				handle(intent.getStringExtra("message"));
-			}
-		};
+    @Override
+    public Boolean onNavigationAttempt(String url) {
+        return handle(url);
+    }
 
-		LocalBroadcastManager.getInstance(webAppToolkit.getContext())
-				.registerReceiver(mRedirectsMessage,
-						new IntentFilter(Constants.ON_PAGE_STARTED));
-	}
+    public Boolean handle(String url) {
+        RedirectsConfig redirectsConfig = this.webAppToolkit.getManifest().getRedirectsConfig();
 
-	public void handle(String data) {
-		if (this.redirectsConfig.isEnabled() && redirectsConfig.hasRules()) {
-			int rulesSize = redirectsConfig.getRules().size();
-			for (int i = 0; i < rulesSize; i++) {
-				RedirectRulesConfig rule = redirectsConfig.getRules().get(i);
-				Matcher matcher = rule.getRegexPattern().matcher(data);
-				if (matcher.find()) {
-					boolean intercepted = false;
-					switch (rule.getActionType()) {
-					case showMessage:
-						Toast toast = Toast.makeText(
-								this.activity,
-								rule.getMessage(), Toast.LENGTH_LONG);
-						LinearLayout layout = (LinearLayout) toast.getView();
-						if (layout.getChildCount() > 0) {
-							TextView textView = (TextView) layout.getChildAt(0);
-							textView.setGravity(Gravity.CENTER_VERTICAL
-									| Gravity.CENTER_HORIZONTAL);
-						}
-						toast.show();
-						break;
-					case popout:
-						launchUrlInBrowser(data);
-						intercepted = true;
-						break;
-					case redirect:
-						String redirectUrl = rule.getUrl();
-						if (redirectsConfig.isEnableCaptureWindowOpen()) {
-							this.webAppToolkit.webView.loadUrl(redirectUrl);
-						} else {
-							launchUrlInBrowser(data);
-							intercepted = true;
-						}
-						break;
-					case modal:
-						Intent intent = new Intent(
-								this.activity,
-								ModalActivity.class);
-						intent.putExtra(Constants.MODAL_ORIGINAL_URL, data);
-						intent.putExtra(Constants.MODAL_CLOSE_ON_MATCH,
-								rule.getCloseOnMatch());
-						intent.putExtra(Constants.MODAL_CLOSE_ON_MATCH_PATTERN,
-								rule.getCloseOnMatchPattern());
-						intent.putExtra(Constants.MODAL_HIDE_BACK_BUTTON,
-								rule.isHideCloseButton());
-						this.activity
-								.startActivityForResult(intent,
-										Constants.MODAL_REQUEST_CODE);
-						intercepted = true;
-						break;
-					case unknown:
-						Log.w("WAT-redirects", "Unspecified rule action type: "
-								+ rule.getAction());
-						break;
-					}
+        if (redirectsConfig.isEnabled() && redirectsConfig.hasRules()) {
+            int rulesSize = redirectsConfig.getRules().size();
+            for (int i = 0; i < rulesSize; i++) {
+                RedirectRulesConfig rule = redirectsConfig.getRules().get(i);
+                Matcher matcher = rule.getRegexPattern().matcher(url);
+                if (matcher.find()) {
+                    boolean intercepted = false;
+                    switch (rule.getActionType()) {
+                        case showMessage:
+                            Toast toast = Toast.makeText(
+                                    this.activity,
+                                    rule.getMessage(), Toast.LENGTH_LONG);
+                            LinearLayout layout = (LinearLayout) toast.getView();
+                            if (layout.getChildCount() > 0) {
+                                TextView textView = (TextView) layout.getChildAt(0);
+                                textView.setGravity(Gravity.CENTER_VERTICAL
+                                        | Gravity.CENTER_HORIZONTAL);
+                            }
+                            toast.show();
+                            break;
+                        case popout:
+                            launchUrlInBrowser(url);
+                            intercepted = true;
+                            break;
+                        case redirect:
+                            String redirectUrl = rule.getUrl();
+                            if (redirectsConfig.isEnableCaptureWindowOpen()) {
+                                this.webAppToolkit.webView.loadUrl(redirectUrl);
+                            } else {
+                                launchUrlInBrowser(url);
+                                intercepted = true;
+                            }
+                            break;
+                        case modal:
+                            Intent intent = new Intent(
+                                    this.activity,
+                                    ModalActivity.class);
+                            intent.putExtra(Constants.MODAL_ORIGINAL_URL, url);
+                            intent.putExtra(Constants.MODAL_CLOSE_ON_MATCH,
+                                    rule.getCloseOnMatch());
+                            intent.putExtra(Constants.MODAL_CLOSE_ON_MATCH_PATTERN,
+                                    rule.getCloseOnMatchPattern());
+                            intent.putExtra(Constants.MODAL_HIDE_BACK_BUTTON,
+                                    rule.isHideCloseButton());
+                            this.activity
+                                    .startActivityForResult(intent,
+                                            Constants.MODAL_REQUEST_CODE);
+                            intercepted = true;
+                            break;
+                        case unknown:
+                            Log.w("WAT-redirects", "Unspecified rule action type: "
+                                    + rule.getAction());
+                            break;
+                    }
 
-					if (intercepted)
-						this.webAppToolkit.webView.stopLoading();
-				}
-			}
-		}
-	}
+                    if (intercepted) {
+                        this.webAppToolkit.webView.stopLoading();
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
 
 	private void launchUrlInBrowser(String url) {
 		this.activity.startActivity(new Intent(Intent.ACTION_VIEW).setData(Uri.parse(url)));
 	}
-
 }

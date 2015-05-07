@@ -1,6 +1,6 @@
 package com.manifoldjs.webapptoolkit.modules;
 
 public interface IModule {
-	void subscribe();
-	void unsubscribe();
+    Object onMessage(String id, Object data);
+    Boolean onNavigationAttempt(String url);
 }

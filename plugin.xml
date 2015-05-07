@@ -42,8 +42,6 @@
         <source-file src="src/android/modules/IModule.java" target-dir="src/com/manifoldjs/webapptoolkit/modules" />
         <source-file src="src/android/modules/InjectionModule.java" target-dir="src/com/manifoldjs/webapptoolkit/modules" />
         <source-file src="src/android/modules/RedirectsModule.java" target-dir="src/com/manifoldjs/webapptoolkit/modules" />
-        
-        <source-file src="libs/android/android-support-v4.jar" target-dir="libs/" />
     </platform>
 
     <!-- windows -->
