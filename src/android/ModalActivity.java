@@ -1,4 +1,4 @@
-package com.manifoldjs.webapptoolkit;
+package com.microsoft.webapptoolkit;
 
 import java.util.regex.Pattern;
 

@@ -1,4 +1,4 @@
-package com.manifoldjs.webapptoolkit;
+package com.microsoft.webapptoolkit;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,11 +14,11 @@ import android.app.ActionBar;
 import android.os.Build;
 import android.util.Log;
 import android.view.Window;
-import com.manifoldjs.hostedwebapp.HostedWebApp;
-import com.manifoldjs.webapptoolkit.model.Manifest;
-import com.manifoldjs.webapptoolkit.modules.IModule;
-import com.manifoldjs.webapptoolkit.modules.InjectionModule;
-import com.manifoldjs.webapptoolkit.modules.RedirectsModule;
+import com.microsoft.hostedwebapp.HostedWebApp;
+import com.microsoft.webapptoolkit.model.Manifest;
+import com.microsoft.webapptoolkit.modules.IModule;
+import com.microsoft.webapptoolkit.modules.InjectionModule;
+import com.microsoft.webapptoolkit.modules.RedirectsModule;
 
 /**
  * This class ...

@@ -1,4 +1,4 @@
-package com.manifoldjs.webapptoolkit.modules;
+package com.microsoft.webapptoolkit.modules;
 
 import java.util.List;
 import java.util.Locale;
@@ -7,12 +7,12 @@ import org.apache.cordova.CordovaActivity;
 
 import android.util.Base64;
 
-import com.manifoldjs.webapptoolkit.model.Manifest;
-import com.manifoldjs.webapptoolkit.Constants;
-import com.manifoldjs.webapptoolkit.WebAppToolkit;
-import com.manifoldjs.webapptoolkit.config.CustomScriptConfig;
-import com.manifoldjs.webapptoolkit.config.StylesConfig;
-import com.manifoldjs.webapptoolkit.utils.Assets;
+import com.microsoft.webapptoolkit.model.Manifest;
+import com.microsoft.webapptoolkit.Constants;
+import com.microsoft.webapptoolkit.WebAppToolkit;
+import com.microsoft.webapptoolkit.config.CustomScriptConfig;
+import com.microsoft.webapptoolkit.config.StylesConfig;
+import com.microsoft.webapptoolkit.utils.Assets;
 
 public class InjectionModule implements IModule{
 

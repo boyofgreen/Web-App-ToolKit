@@ -1,4 +1,4 @@
-package com.manifoldjs.webapptoolkit.utils;
+package com.microsoft.webapptoolkit.utils;
 
 import android.content.Context;
 import android.util.Base64;

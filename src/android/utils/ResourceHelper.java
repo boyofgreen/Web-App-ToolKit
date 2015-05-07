@@ -1,4 +1,4 @@
-package com.manifoldjs.webapptoolkit.utils;
+package com.microsoft.webapptoolkit.utils;
 
 import android.app.Activity;
 
