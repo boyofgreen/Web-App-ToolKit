@@ -1,0 +1,226 @@
+﻿body {
+}
+
+.viewport {
+    width: 100%;
+    height: 100%;
+    overflow-x: scroll;
+    -ms-overflow-style: none;
+    -ms-scroll-snap-type: mandatory; 
+    -ms-scroll-snap-points-x: snapList(0%, 300px); 
+    -ms-overflow-style: none;
+}
+
+.surface {
+    width: calc(300px + 100%);
+    height: 100%;
+    display: -ms-grid;
+    -ms-grid-columns: 300px 1fr;
+    -ms-grid-rows: 1fr;
+}
+
+.navDrawer {
+    -ms-grid-column: 1;
+    box-shadow: inset -5px 0 10px -2px rgba(0, 0, 0, 0.6);
+    font-family: 'Segoe UI Light', 'Segoe WP SemiLight';
+    display: -ms-flexbox;
+    -ms-flex-direction: column;
+    background-color: #375569;
+}
+
+.navDrawerIconTextItem-Image {
+    float: left;
+    background-color: transparent;
+    width: 30px;
+}
+
+.navDrawerIconTextItem {
+    padding-bottom: 20px;
+    background-color: #375569;
+}
+
+#navDrawerListView {
+    height: auto;
+}
+
+#search-box {
+	height: 35px;
+	width: 275px;
+	margin-left: 10px;
+}
+
+.content {
+    -ms-grid-column: 2;
+    -ms-grid-columns: 1fr;
+    -ms-grid-rows: 128px 1fr;
+    display: -ms-grid;
+    height: 100%;
+    width: 100%;
+}
+
+    .content .header{
+        /* Define a grid with columns for the back button and page title. */
+        -ms-grid-columns: 37px 83px 1fr 300px;
+        -ms-grid-rows: 1fr;
+        display: -ms-grid;
+    }
+
+        .content .header .hamburger {
+            width: 80px;
+            height: 100%;
+            opacity: 0.8;
+            background-image: url(/images/ham.svg);
+            background-position: center center;
+            background-size: 40%;
+            background-repeat: no-repeat;
+        }
+        
+        .content .header .hamburger:hover {
+            background-color: #375569;
+        }
+
+        .content .header #backbutton-wrapper {
+            -ms-grid-column: 2;
+            margin-top: 57px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .content .header .logoarea {
+            -ms-grid-column: 3;
+            -ms-grid-column-align: center;
+        }
+            
+        .content .header .logoarea #logo {
+            height: 50px !important;
+        }
+
+        .content .header .titlearea {
+            -ms-grid-column: 3;
+            -ms-grid-column-align: center;
+            -ms-text-overflow: ellipsis;
+            text-align: center;
+            width: 300px;
+        }
+
+        .content .header .search-box {
+            -ms-grid-column: 4;
+            margin-top:57px;
+            margin-right:100px;
+        }
+
+    .content .stage {
+        -ms-grid-row: 2;
+        height: 100%;
+        width: 100%;
+    }
+
+.flyout-host {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: 100;
+    top: 0;
+}
+
+.hidden {
+    display: none;
+}
+
+/* WVGA */
+@media only screen and (orientation: portrait) and (max-width: 401px),
+       only screen and (orientation: landscape) and (max-width: 714px)
+ {
+    #main-view {
+        -ms-zoom: 70%;
+        width: 145% !important;
+        height: 145% !important;
+    }
+
+    .webview-overlay {
+        -ms-zoom: 121%;
+    }
+}
+
+/* 720P */
+@media only screen and (orientation: portrait) and (min-width: 402px) and (max-width: 449px),
+       only screen and (orientation: landscape) and (min-width: 715px) and (max-width: 799px)
+ {
+    #main-view {
+        -ms-zoom: 50%;
+        width: 200% !important;
+        height: 200% !important;
+    }
+
+    .webview-overlay {
+        -ms-zoom: 113%;
+    }
+}
+
+/* 1080P */
+@media only screen and (orientation: portrait) and (min-width: 449px),
+       only screen and (orientation: landscape) and (min-width: 799px)
+ {
+    #main-view {
+        -ms-zoom: 40%;
+        width: 250% !important;
+        height: 250% !important;
+    }
+
+    .webview-overlay {
+        -ms-zoom: 104%;
+    }
+}
+
+@media (orientation: portrait) and (max-height: 853px) {
+
+            .content .header .logoarea {
+                margin-top: 10px !important;
+            }
+}
+
+@media (orientation: landscape) and (max-height: 853px) {
+
+    .content {
+        -ms-grid-rows: 64px 1fr !important;
+    }
+
+        .content .header{
+            -ms-grid-columns: 0px 37px 1fr 0px !important;
+        }
+
+            .content .header .logoarea {
+                margin-top: 10px !important;
+            }
+
+            .content .header .titlearea {
+                margin-top: 20px !important;
+                width: 500px;
+            }
+
+            .content .header h1 {
+                font-size: 20px !important;
+            }
+}
+
+.win-settingsflyout .win-header {
+    padding: 20px;
+}
+
+.win-settingsflyout .win-content {
+    padding: 20px;
+}
+
+.win-settingsflyout .win-label {
+    font-size: 20pt;
+    font-weight: normal;
+}
+
+.win-settingsflyout .win-header .win-label {
+    padding-left: 0;
+}
+
+.win-settingsflyout .win-backbutton {
+    visibility: collapse;
+    display: none;
+}
