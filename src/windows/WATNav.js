@@ -82,7 +82,7 @@ createBackButton = function () {
     wrapperDiv.style.width = "150px";
     wrapperDiv.style.height = "50px";
 
-    var btn = document.createElement("btn");
+    var btn = document.createElement("button");
     btn.classList.add("win-backbutton");
     btn.style.color = "black";
     btn.style.borderColor = "black";
