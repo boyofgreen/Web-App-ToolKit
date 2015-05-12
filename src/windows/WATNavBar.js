@@ -403,7 +403,6 @@ setupNestedNav = function (menuItem, btn) {
     flyout.style.zIndex = WAT.components.webView.style.zIndex + 100;
     var options = {placement: 'bottom'};
     new WinJS.UI.Flyout(flyout, options);
-    flyout.winControl.
     flyout.className += flyout.className ? ' navbar-submenu' : 'navbar-submenu';
 
     btn.setAttribute("data-nestednav", nestedNavID);
