@@ -1,7 +1,9 @@
 
 "use strict";
 
-var hostedWebApp = require('com.microsoft.hostedwebapp.HostedWebAppPluginProxy');
+var hostedWebApp = require('com-manifoldjs-hostedwebapp.HostedWebAppPluginProxy');
+
+var guids = [];
 
 var WAT = {
   manifest: undefined,
@@ -12,6 +14,17 @@ var WAT = {
   },
   isFunction: function (f) {
     return Object.prototype.toString.call(f) == '[object Function]';
+  },
+  getGUID: function () {
+      var newGUID = "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {
+          var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+          return v.toString(16);
+      });
+      if (guids.indexOf(newGUID) > -1) {
+          return self.getGUID();
+      } else {
+          return newGUID;
+      }
   }
 };
 

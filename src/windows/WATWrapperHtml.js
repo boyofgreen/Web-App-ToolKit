@@ -42,6 +42,13 @@
    };
 
    buildForWindows = function () {
+      // add base stylesheet
+       var base = document.createElement("link");
+       base.setAttribute("rel", "stylesheet");
+       base.setAttribute("type", "text/css");
+       base.href = "css/base.css";
+       document.head.appendChild(base);
+
        createHeaderElement();
        createStageElement();
        moveWebView();

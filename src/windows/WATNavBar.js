@@ -3,8 +3,9 @@
 var navDrawerList = new WinJS.Binding.List();
 var WAT;
 var navBarConfig, createNavBarElement, setupNavBar, createNavBarButton, setButtonAction, initUIDeclarations, setStickyBits,
-    navDrawerInit, returnToContent, toggleMenu, itemInvokedHandler, disableNavDrawer, barActions, handleBarEval, handleBarNavigate,
-    barActions = {};
+    navDrawerInit, returnToContent, toggleMenu, itemInvokedHandler, disableNavDrawer, barActions, handleBarEval, handleBarNavigate, setupNestedNav, toggleNestedNav,
+    barActions = {},
+    afterProcessAllActions = [];
 var logger = window.console;
 var _menuWidth = 300;
 
@@ -391,4 +392,72 @@ handleBarNavigate = function () {
     WAT.components.webView.navigate(target.toString());
 };
 
+setupNestedNav = function (menuItem, btn) {
+    var nestedNavID = WAT.getGUID(),
+        flyout = document.createElement("div"),
+        nestedNavContainer = document.createElement("div");
+
+    logger.log("Adding nested navigation on barItem: ", menuItem.label);
+
+    flyout.setAttribute("id", nestedNavID);
+    flyout.style.zIndex = WAT.components.webView.style.zIndex + 100;
+    var options = {placement: 'bottom'};
+    new WinJS.UI.Flyout(flyout, options);
+    flyout.winControl.
+    flyout.className += flyout.className ? ' navbar-submenu' : 'navbar-submenu';
+
+    btn.setAttribute("data-nestednav", nestedNavID);
+    new WinJS.UI.NavBarContainer(nestedNavContainer);
+    nestedNavContainer.winControl.layout = "horizontal";
+    nestedNavContainer.winControl.maxRows = 1;
+    nestedNavContainer.classList.add("win-navbarcontainer");
+
+    menuItem.children.forEach(function (subItem) {
+        var nestedBtn = document.createElement("div");
+
+        nestedBtn.setAttribute("role", "menuitem");
+
+        new WinJS.UI.NavBarCommand(nestedBtn, {
+            label: subItem.label,
+            icon: subItem.icon
+        });
+
+        setButtonAction(nestedBtn, subItem);
+        nestedNavContainer.appendChild(nestedBtn);
+    });
+
+    logger.log("Adding nested navigation UI to DOM");
+
+    flyout.appendChild(nestedNavContainer);
+    document.body.appendChild(flyout);
+
+    afterProcessAllActions.push(function () {
+        // make sure the splittoggle button (arrow) is correct
+        flyout.winControl.addEventListener('beforehide', function () {
+            btn.winControl.splitOpened = false;
+        });
+    });
+};
+
+toggleNestedNav = function (parentNavbarCommand, opened) {
+    var nestedel = document.getElementById(parentNavbarCommand.element.getAttribute("data-nestednav"));
+    var nestedControl = nestedel.winControl;
+    var nestedNavBarContainer = (nestedControl && nestedControl.element.querySelector('.win-navbarcontainer'));
+
+    if (!nestedControl || !nestedNavBarContainer) {
+        return;
+    }
+
+    if (opened) {
+        nestedControl.show(parentNavbarCommand.element);
+        // Switching the navbarcontainer from display none to display block requires
+        // forceLayout in case there was a pending measure.
+        nestedNavBarContainer.winControl.forceLayout();
+        // Reset back to the first item.
+        nestedNavBarContainer.currentIndex = 0;
+
+    } else {
+        nestedControl.hide();
+    }
+};
 module.exports = self; // exports

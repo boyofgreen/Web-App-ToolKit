@@ -8,7 +8,7 @@
     <keywords>cordova,manifest,hosted,web</keywords>
     <repo></repo>
 
-    <dependency id="com.microsoft.hostedwebapp" version=">=0.0.1" />
+    <dependency id="com-manifoldjs-hostedwebapp" url="https://github.com/manifoldjs/ManifoldCordova#v0.1.0" version=">=0.1.0" />
 
     <js-module src="www/webAppToolkit.js" name="webapptoolkit">
         <clobbers target="webapptoolkit" />

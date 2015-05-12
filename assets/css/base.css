@@ -1,0 +1,1194 @@
+﻿
+﻿/* 
+Modifications for top-level elements html, body and iframe.
+*/
+html, body {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    -ms-user-select: none;
+    cursor: default;
+    -ms-scroll-translation: vertical-to-horizontal;
+}
+html {
+    overflow: hidden;
+}
+body {
+    -ms-content-zooming: none;
+}
+
+iframe {
+    border: 0;
+}
+
+html:-ms-lang(ar, dv, fa, he, ku-Arab, pa-Arab, prs, ps, sd-Arab, syr, ug, ur, qps-plocm) {
+    direction: rtl;
+}
+
+/*.stage {
+    position: relative;
+}*/
+
+#main-view, #offline-view, .stage {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+#offline-view {
+    display: none;
+}
+
+.overlay-stage {
+    display: none;
+    position: absolute;
+    z-index: 5;
+    top: 0;
+    left: 0;
+    background: rgba(0,0,0,.5);
+}
+
+.modal-content {
+    width: 70%;
+    height: 80%;
+    margin: 5% 0 0 15%; /* Not sure why top needs to be 5%... seems like it should be 10%, but that isn't centered */
+}
+
+#backbutton-wrapper {
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding: 50px;
+    background: rgba(0,0,0,.5);
+    width: 150px;
+    height: 50px;
+}
+
+.win-closebutton {
+    position: absolute;
+    display: block;
+    top: 10%;
+    right: 16%;
+    padding: 0;
+    width: 40px;
+    height: 40px;
+    line-height: 30px;
+    color: #666;
+    font-weight: bold;
+    background: transparent;
+    border: solid 4px #666;
+    border-radius: 100%;
+    font-size: 1.4em;
+    opacity: 0.7;
+}
+
+.win-closebutton:hover {
+    opacity: 1;
+}
+
+.webview-overlay {
+    width: 100%;
+    height: 100%;
+    top:0;
+    left:0;
+    position:absolute;
+    transition: opacity 0.1s ease-in-out 0.1s;
+}
+
+.transparent-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+    opacity: 0.01;
+    display: none;
+}
+
+.overlay-wp {
+    background-color: black !important;
+    opacity: 0.3 !important;
+}
+
+.fadeOut {
+    opacity: 0;
+}
+
+.stage x-ms-webview {
+    /*transition: opacity ease-out .3s;
+    transition-delay: .3s;
+    opacity:1;*/
+}
+
+.loading.stage x-ms-webview {
+    /*opacity: .01 !important;*/
+}
+
+.loading-wrapper {
+    display: none;
+    z-index: 10;
+}
+
+.loading .loading-wrapper {
+    display: block;
+}
+.loading-progress {
+    position: absolute;
+    top: 50%;
+    left: 45%;
+    width: 10%;
+}
+
+.extendedSplashScreen .loading-progress {
+    position: absolute;
+    top: 50%;
+    left: 20%;
+    width: 60%;
+    margin: 0;
+}
+
+.win-navbarcontainer {
+    padding: 0 0 15px 15px;
+}
+
+.win-navbarcommand {
+    display: inline-block;
+}
+
+.navbar-submenu.win-flyout {
+    display: block;
+    position: absolute;
+    left: 0;
+    width: 100%;
+    max-width: 100%;
+    margin-top: 30px;
+    margin-left: 0px;
+    overflow-x: hidden;
+    border: none;
+    padding: 0;
+   
+}
+
+.extendedSplashScreen {
+    display: none;
+    background-color: #000000;
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    text-align: center;
+    z-index: 15;
+}
+
+.extendedSplashScreen .extendedSplashImage {
+    position: absolute;
+}
+
+/*
+Explicitly define a Segoe UI font-family so that we can assign Segoe UI 
+Semilight to an appropriate font-weight.
+*/
+@font-face {
+    font-family: "Segoe UI";
+    font-weight: 200;
+    src: local("Segoe UI Light");
+}
+@font-face {
+    font-family: "Segoe UI";
+    font-weight: 300;
+    src: local("Segoe UI Semilight");
+}
+@font-face {
+    font-family: "Segoe UI";
+    font-weight: 400;
+    src: local("Segoe UI");
+}
+@font-face {
+    font-family: "Segoe UI";
+    font-weight: 600;
+    src: local("Segoe UI Semibold");
+}
+@font-face {
+    font-family: "Segoe UI";
+    font-weight: 700;
+    src: local("Segoe UI Bold");
+}
+@font-face {
+    font-family: "Segoe UI";
+    font-style: italic;
+    font-weight: 400;
+    src: local("Segoe UI Italic");
+}
+@font-face {
+    font-family: "Segoe UI";
+    font-style: italic;
+    font-weight: 700;
+    src: local("Segoe UI Bold Italic");
+}
+
+/*
+Explicitly define font-families for Microsoft Yahei UI and Microsoft JhengHei UI so that we can fallback requests for, 
+    Microsoft Yahei UI Semilight and Microsoft JhengHei UI Semilight, to Regular instead of Light fonts.
+*/
+@font-face {
+    font-family: "Microsoft Yahei UI";
+    font-weight: 200;
+    src: local("Microsoft Yahei UI Light");
+}
+@font-face {
+    font-family: "Microsoft Yahei UI";
+    font-weight: 300;
+    src: local("Microsoft Yahei UI");
+}
+@font-face {
+    font-family: "Microsoft Yahei UI";
+    font-weight: 500;
+    src: local("Microsoft Yahei UI");
+}
+@font-face {
+    font-family: "Microsoft Yahei UI";
+    font-weight: 600;
+    src: local("Microsoft Yahei UI Bold");
+}
+
+@font-face {
+    font-family: "Microsoft JhengHei UI";
+    font-weight: 200;
+    src: local("Microsoft JhengHei UI Light");
+}
+@font-face {
+    font-family: "Microsoft JhengHei UI";
+    font-weight: 300;
+    src: local("Microsoft JhengHei UI");
+}
+@font-face {
+    font-family: "Microsoft JhengHei UI";
+    font-weight: 500;
+    src: local("Microsoft JhengHei UI");
+}
+@font-face {
+    font-family: "Microsoft JhengHei UI";
+    font-weight: 600;
+    src: local("Microsoft JhengHei UI Bold");
+}
+
+/* 
+Offsets for sprite versions.
+*/
+button:hover .win-commandimage, button:active .win-commandimage {
+    background-position: -40px 0;
+}
+button:hover:active .win-commandimage {
+    background-position: -80px 0;
+}
+
+button:-ms-keyboard-active .win-commandimage {
+    background-position: -80px 0;
+}
+button:disabled .win-commandimage,
+button:disabled:active .win-commandimage {
+    background-position: -120px 0;
+}
+
+/*
+Offsets for sprite versions in selected state.
+*/
+button[aria-checked=true] .win-commandimage {
+    background-position: 0 -40px;
+}
+button[aria-checked=true]:hover .win-commandimage, 
+button[aria-checked=true]:active .win-commandimage {
+    background-position: -40px -40px;
+}
+button[aria-checked=true]:hover:active .win-commandimage {
+    background-position: -80px -40px;
+}
+button[aria-checked=true]:-ms-keyboard-active .win-commandimage {
+    background-position: -80px -40px;
+}
+button[aria-checked=true]:disabled .win-commandimage, 
+button[aria-checked=true]:disabled:active .win-commandimage {
+    background-position: -120px -40px;
+}
+
+/* Default positioning for a Navigation BackButton in the App Body*/
+body > .win-navigation-backbutton {
+    position: absolute;
+    top: 50px;
+    left: 20px;
+}
+
+/*
+Command buttons.
+*/
+button.win-command {
+    background: none;
+    background-clip: border-box;
+    height: auto; /* height is 88px (label) or 68px (no label) */
+    padding: 12px 0; /* bottom dependent on label/img, 2px margin */
+    margin: 0;
+
+    min-width: 40px;
+    text-align: center;
+    font-size: 9pt;
+    line-height: 16px;
+    font-weight: normal;
+    color: inherit;
+    
+    /* Commands are lrtb */
+    writing-mode: lr-tb;
+}
+button.win-command:-ms-lang(ar, dv, fa, he, ku-Arab, pa-Arab, prs, ps, sd-Arab, syr, ug, ur, qps-plocm) {
+    writing-mode: rl-tb;
+}
+button.win-command:focus {
+    outline: none;
+    border: 2px solid; /* reserve focus rect */
+}
+
+/*
+Command button icons.
+*/
+.win-commandicon {
+    display: inline-block;
+    margin: 0 28px; /* padding for command buttons, 2px/side for focus */
+    min-width: 0;
+    min-height: 0;
+    padding: 0;
+
+    /* Normal sizing */
+    width: 40px;
+    height: 40px;
+    box-sizing: border-box;
+    cursor: default;
+}
+.win-commandimage {
+    /* Default font for glyphs. */
+    font-family: "Segoe UI Command";
+    letter-spacing: 0;
+    
+    /* Applications provide their own content, like &#xE0D5;. */
+    vertical-align: middle;
+    font-size: 14pt;
+    margin: -2px;
+    line-height: 40px; /* line-height must match the content box height */    
+    background-position: 0 0;
+    background-origin: border-box;
+    display: inline-block;
+    /* Still 40px */
+    width: 40px;
+    height: 40px;
+    background-size: 160px 80px;
+}
+
+/*
+Command button "ring".
+*/
+.win-commandring, 
+button:hover .win-commandring,
+button:active .win-commandring,
+button.win-command:disabled .win-commandring,
+button.win-command:disabled:active .win-commandring {
+    border-width: 2px;
+    border-style: solid;
+    border-radius: 50%;
+    background-clip: border-box;
+}
+button:hover:active .win-commandring,
+button[aria-checked=true] .win-commandring,
+button[aria-checked=true]:active .win-commandring,
+button[aria-checked=true]:disabled .win-commandring, 
+button[aria-checked=true]:disabled:active .win-commandring {
+    background-clip: border-box;
+}
+
+/*
+Command button labels.
+*/
+button.win-command .win-label {
+    position: relative;
+    line-height: 16px;
+    display: block;
+    max-width: 88px; /* 100px button, but allow for 2px margins and 4px padding on each side */
+    margin-top: 5px;
+    margin-bottom: -1px;
+    padding-left: 4px;  /* 12px between buttons, 6px per side, minus 2px margins */
+    padding-right: 4px;
+    overflow: hidden;
+    word-wrap: break-word;
+    word-break: keep-all;
+}
+
+/* 
+AppBarCommand content types. 
+*/
+div.win-command {
+
+    display: inline-block;   
+    min-width: 0;
+    min-height: 0;
+    padding: 12px 30px;
+    border: none;
+    text-align: center;
+    font-size: 9pt;
+    line-height: 16px;
+    font-weight: normal;    
+    vertical-align: top;
+
+    /* Content Commands are lrtb */
+    writing-mode: lr-tb;
+    
+}
+div.win-command:-ms-lang(ar, dv, fa, he, ku-Arab, pa-Arab, prs, ps, sd-Arab, syr, ug, ur, qps-plocm) {
+   writing-mode:rl-tb;
+}
+div.win-command:focus {
+    outline: none;
+}
+
+/* 
+AppBarCommand separator types.
+*/
+hr.win-command {
+    display: inline-block;
+    padding: 0;
+    margin: 14px 29px 34px 30px;
+    width: 1px;
+    height: 40px;
+    border: 0;
+    vertical-align: top;
+}
+hr.win-command:-ms-lang(ar, dv, fa, he, ku-Arab, pa-Arab, prs, ps, sd-Arab, syr, ug, ur, qps-plocm) {
+    margin-left: 29px;
+    margin-right: 30px;
+}
+
+/*
+AppBar Edgy Container
+*/
+.win-appbar {
+    z-index: 1002;
+    border-width: 0;
+    width: 100%;
+    height: auto;
+    left: 0;
+    position: -ms-device-fixed;
+}
+
+/* 
+AppBar control.
+*/
+.win-commandlayout {
+    text-align: right;   
+        
+    /* Hide whitespace between buttons. */
+    font-size: 0;
+        
+    min-height: 88px;
+}
+.win-commandlayout .win-selection {
+    float: left;
+}
+.win-commandlayout:-ms-lang(ar, dv, fa, he, ku-Arab, pa-Arab, prs, ps, sd-Arab, syr, ug, ur, qps-plocm) {
+    text-align: left;
+}
+.win-commandlayout .win-selection:-ms-lang(ar, dv, fa, he, ku-Arab, pa-Arab, prs, ps, sd-Arab, syr, ug, ur, qps-plocm) {
+    float: right;
+}
+
+/* Narrow buttons and no labels */  
+.win-reduced button.win-command .win-label {
+    display: none;
+}
+.win-reduced button.win-command .win-commandicon {
+    margin: 0 8px; /* 2px margin for focus */
+}
+
+/* Narrow Separators */
+.win-reduced hr.win-command {
+    margin-bottom: 14px;
+    margin-top: 14px;
+}
+.win-reduced hr.win-command {
+    margin-left: 10px;        
+    margin-right: 9px;        
+}
+    .win-reduced hr.win-command:-ms-lang(ar, dv, fa, he, ku-Arab, pa-Arab, prs, ps, sd-Arab, syr, ug, ur, qps-plocm) {
+    margin-left: 9px;
+    margin-right: 10px;
+}  
+
+/* Narrow Content Commands */
+.win-reduced div.win-command {
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+/* AppBar reduced height and width. */
+.win-commandlayout.win-reduced {
+    padding-left: 10px;
+    padding-right: 10px;
+    width: calc(100% - 20px);
+    min-height: 68px;
+}  
+
+
+/*
+Colors for command buttons and AppBarCommand "content" types.
+*/
+.win-command {
+    background-color: transparent;
+    border-color:  transparent;
+    color: inherit;
+}
+
+/*
+    win-hide-focus needs the qualifier for win-ui-light or dark,
+    otherwise .win-ui-dark button.win-command:focus is more
+    qualified and stomps on the transparent that doesn't have .win-ui-dark
+*/
+.win-ui-dark .win-command.win-hidefocus:focus,
+.win-command.win-hidefocus:focus {
+    border-color: transparent;
+}
+
+.win-commandimage {
+    color: inherit;
+}
+   
+
+/*
+High contrast AppBar needs a border
+*/
+@media (-ms-high-contrast) {
+    /*
+    AppBar Borders
+    */
+    .win-appbar {
+        border: solid 2px;
+    }
+    .win-appbar.win-top {
+        border-top: none;
+        border-left: none;
+        border-right: none;  
+    }
+    .win-appbar.win-bottom {
+        border-bottom: none;
+        border-left: none;
+        border-right: none;          
+    }
+    .win-appbar.win-top button.win-command, 
+    .win-appbar.win-top div.win-command {
+        padding-bottom: 10px;
+    }
+    .win-appbar.win-bottom button.win-command, 
+    .win-appbar.win-bottom div.win-command {
+        padding-top: 10px;
+    }
+    .win-appbar.win-top hr.win-command {
+        margin-bottom: 32px;
+    }
+    .win-appbar.win-bottom hr.win-command {
+        margin-top: 12px;
+    }    
+    .win-commandlayout {
+        min-height: 86px;
+    }
+
+    /* High Contrast Reduced sizes slightly different */
+    .win-commandlayout.win-reduced {
+        min-height: 66px;
+    }    
+    .win-appbar.win-reduced.win-top hr.win-command {
+        margin-bottom: 12px;
+    }
+    .win-appbar.win-reduced.win-bottom hr.win-command {
+        margin-top: 12px;
+    } 
+}
+
+
+
+/*
+    NavBar
+*/
+.win-navbar {
+    min-height: 60px;
+}
+
+/*
+    NavBarContainer
+*/
+.win-navbarcontainer {
+    width: 100%;
+    position: relative;
+}
+.win-navbarcontainer-pageindicator-box {
+    position: absolute;
+    width: 100%;
+    text-align: center;
+    pointer-events: none;
+}
+.win-navbarcontainer-vertical .win-navbarcontainer-pageindicator-box {
+    display: none;
+}
+.win-navbarcontainer-pageindicator {
+    display: inline-block;
+    width: 40px;
+    height: 4px;
+    margin: 5px 2.5px 11px 2.5px;
+}
+.win-navbarcontainer-horizontal .win-navbarcontainer-viewport {
+    padding: 15px 0;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -ms-scroll-snap-type: mandatory;
+    -ms-scroll-snap-points-x: snapInterval(0%, 100%);
+    -ms-overflow-style: none;
+    touch-action: pan-x;
+}
+.win-navbarcontainer-vertical .win-navbarcontainer-viewport {
+    padding: 10px 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+    max-height: 250px;
+    -ms-overflow-style: -ms-autohiding-scrollbar;
+    touch-action: pan-y;
+}
+.win-navbarcontainer-horizontal .win-navbarcontainer-surface {
+    display: -ms-grid;
+    -ms-grid-columns: auto;
+    -ms-grid-rows: auto;
+}
+.win-navbarcontainer-navarrow {
+    position: absolute;
+    top: 0;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    height: calc(100% - 40px);
+    width: 17px;
+    margin: 20px 0;
+    font-size: 16pt;
+    overflow: hidden;
+    font-family: 'Segoe UI Symbol';
+}
+.win-navbarcontainer-vertical .win-navbarcontainer-navarrow {
+    display: none;
+}
+.win-navbarcontainer-navleft {
+    left: 0;
+    margin-right: 8px;
+}
+.win-navbarcontainer-navleft::before {
+    content: '\E0E2';
+}
+.win-navbarcontainer-navright {
+    right: 15px;
+    margin-left: 8px;
+}
+.win-navbarcontainer-navright::before {
+    content: '\E0E3';
+}
+
+
+
+/*
+    NavBarCommand
+*/
+.win-navbarcommand {
+    display: -ms-grid;
+    -ms-grid-columns: 1fr auto;
+    -ms-grid-rows: 1fr;
+}
+.win-navbarcontainer-horizontal .win-navbarcommand {
+    margin: 5px;
+    width: 210px;
+}
+.win-navbarcontainer-vertical .win-navbarcommand {
+    margin: 10px 30px;
+}
+.win-navbarcommand-button {
+    -ms-grid-column: 1;
+    -ms-grid-row: 1;
+    width: 100%;
+    position: relative;
+}
+.win-navbarcommand-button-content {
+    position: relative;
+    padding: 5px 10px;
+    display: -ms-grid;
+    -ms-grid-columns: auto 1fr;
+    -ms-grid-rows: auto;
+}
+.win-navbarcommand-button:focus {
+    z-index: 1;
+    outline: none;
+}
+.win-navbarcommand-icon {
+    -ms-grid-column: 1;
+    -ms-grid-row: 1;
+    font-family: "Segoe UI Symbol";
+    height: 40px;
+    width: 40px;
+    font-size: 20pt;
+    margin-left: 0;
+    margin-right: 10px;
+    display: flex; 
+    align-items: center; 
+    justify-content: center;
+}
+.win-navbarcommand-icon:-ms-lang(ar, dv, fa, he, ku-Arab, pa-Arab, prs, ps, sd-Arab, syr, ug, ur, qps-plocm) {
+    margin-right: 0;
+    margin-left: 10px;
+}
+.win-navbarcommand-label {
+    -ms-grid-column: 2;
+    -ms-grid-row: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 11pt;
+    margin: 10px 0;
+}
+.win-navbarcommand-splitbutton {
+    -ms-grid-column: 2;
+    -ms-grid-row: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 40px;
+    font-family: 'Segoe UI Symbol';
+    font-size: 11pt;
+    margin-right: 0;
+    margin-left: 2px;
+    position: relative;
+}
+.win-navbarcommand-splitbutton:-ms-lang(ar, dv, fa, he, ku-Arab, pa-Arab, prs, ps, sd-Arab, syr, ug, ur, qps-plocm) {
+    margin-left: 0;
+    margin-right: 2px;
+}
+.win-navbarcommand-splitbutton::before {
+    content: '\E019';
+}
+
+.win-navbarcommand-splitbutton {
+    transition: transform ease 0.2s;
+}
+
+.win-navbarcommand-splitbutton-opened {
+    transform: translateY(0.6em);
+}
+
+.win-navbarcommand-splitbutton.win-navbarcommand-splitbutton-opened::before {
+    content: '\E018';
+}
+.win-navbarcommand-splitbutton:focus {
+    outline: none;
+}
+
+.win-navbarcommand-button:after,
+.win-navbarcommand-splitbutton:after {
+    position: absolute;
+    top: 0;
+    left:0;
+    content: "";
+    width: calc(100% - 3px);
+    height: calc(100% - 3px);
+    pointer-events: none;
+}
+
+
+/*
+AppBar/Flyout z-index values:
+    1000 - AppBar/settings click-eating div
+    1002 - AppBar
+    1004 - Settings Flyout
+    1006 - Flyout click-eating div 
+    1008 - Flyout
+*/
+
+
+.win-appbarclickeater, .win-flyoutmenuclickeater {
+    z-index: 1000;
+    background-color: transparent;
+    display: none;
+    width: 110%;
+    height: 110%;
+    left: -5%;
+    top: -5%;
+    position: fixed;
+    touch-action: none;
+    outline: 1px solid #000; /*Necessary to block passthrough over webviews*/
+    -ms-high-contrast-adjust:none; 
+}
+.win-flyoutmenuclickeater {
+    z-index: 1006;
+}
+
+
+/*
+Back buttons.
+*/
+
+.disabled {
+    opacity: 0.3;
+}
+
+.win-backbutton, .win-back {
+    display: inline-block;
+    min-width: 0;
+    min-height: 0;
+    background-clip: border-box;
+    box-sizing: border-box;
+    border-radius: 50%;
+    border-width: 2px;
+    border-style: solid;
+    padding: 0;
+    text-align: center;
+
+    /* Normal sizing. */
+    width: 41px;
+    height: 41px;
+    font-size: 14pt;
+    line-height: 37px; /* line-height must match the content box height. */
+    vertical-align: baseline;
+}
+
+.win-backbutton:hover, .win-backbutton:hover:active {
+    border-width: 2px;
+    border-style: solid;
+    border-radius: 50%;
+}
+.win-backbutton::before, .win-back::before {
+    font-family: "Segoe UI Symbol";
+    font-weight: normal;
+    content: "\E0D5";
+    vertical-align: 50%;
+}
+.win-backbutton:-ms-lang(ar, dv, fa, he, ku-Arab, pa-Arab, prs, ps, sd-Arab, syr, ug, ur, qps-plocm)::before, .win-back:-ms-lang(ar, dv, fa, he, ku-Arab, pa-Arab, prs, ps, sd-Arab, syr, ug, ur, qps-plocm)::before {
+    content: "\E0AE";
+}
+.win-backbutton:disabled, .win-backbutton:disabled:active,
+.win-navigation-backbutton:disabled, .win-navigation-backbutton:disabled:active {
+    visibility: hidden;
+}
+
+button.win-navigation-backbutton, button.win-navigation-backbutton:active, 
+button.win-navigation-backbutton:hover, button.win-navigation-backbutton:active:hover
+{
+    display: inline-block;
+    padding: 2px;
+    min-height: 0px;
+    min-width: 0px;
+    
+    /* Overwrite default background and border styles from HTML button element */
+    background-color: transparent;
+    border: none;
+
+    /* Normal Sizing */
+    height: 45px;
+    width: 45px;
+}
+
+
+
+/*
+Grippers in touch selection do not dissapear when focus moves to an element outside of the selection range and they are always drawn on a layer above all HTML elemements.
+When an _Overlay derived control such as AppBar/Flyout/Menu/SettingsFlyout is invoked and steals focus, if that _Overlay is laid out on top of the elements in the touch selection,
+the grippers can still be seen over the _Overlay and its contents. However, all grippers any where in the document will be hidden whenever the current active element has or inherits 
+the style "-ms-touch-select: none;" 
+*/
+.win-overlay {
+    -ms-touch-select: none;
+}
+
+/* For input elements we filter type using the :not selector to capture any unrecognized user specified types which would just default to the form and function of a textbox*/
+.win-overlay input:not([type="file"]),
+.win-overlay input:not([type="radio"]),
+.win-overlay input:not([type="checkbox"]),
+.win-overlay input:not([type="button"]),
+.win-overlay input:not([type="range"]),
+.win-overlay input:not([type="image"]),
+.win-overlay input:not([type="reset"]),
+.win-overlay input:not([type="hidden"]),
+.win-overlay input:not([type="submit"]),
+.win-overlay textarea,
+.win-overlay [contenteditable=true]{
+    -ms-touch-select: grippers;
+}
+
+/* Singleton element maintained by _Overlay, used for getting accurate floating point measurements of the total size of the visual viewport. 
+    Floating point is necesary in high DPI resolutions. */
+.win-visualviewport-space {
+    position:-ms-device-fixed;
+    height: 100vh;
+    width: 100vw;
+    visibility:hidden;
+}
+
+
+/*
+Flyout control.
+*/
+.win-flyout {
+    z-index: 1008;
+    position: -ms-device-fixed;
+    padding: 25px 20px 20px 20px;
+    border-style: solid;
+    border-width: 2px;
+    margin: 5px;
+    min-width: 26px; /* 70px - padding - border = 26px */
+    max-width: 466px; /* 510px - padding - border = 466px */
+    min-height: 5px; /* 54px - padding - border = 5px */
+    max-height: calc(100% - 59px); /* 768px - margin - padding - border = 709px */
+    width: auto;
+    height: auto;
+    word-wrap: break-word;
+    overflow: auto;
+    font-size: 11pt;
+    font-weight: 400;
+    line-height: 1.3636; /* 20px when font-size is 11pt */
+}
+.win-flyout.win-leftalign {
+    margin-left: 0;
+}
+.win-flyout.win-rightalign {
+    margin-right: 0;
+}
+.win-flyout.win-scrolls {
+    overflow: auto;
+}
+
+/*
+Progress control.
+*/
+progress {
+    width: 180px;
+    height: 6px;
+    border-style: none;
+}
+progress.win-medium {
+    width: 280px;
+}
+progress.win-large {
+    width: 100%;
+}
+progress::-ms-fill {
+    border-style: none;
+}
+progress:indeterminate {
+    height: 4px;
+    padding: 1px 0; /* Indeterminate dots should be 4px tall, but overall control stays 6px. */
+}
+@keyframes win-progress-fade-out {
+    from {
+        opacity: 1.0;
+    }
+    to {
+        opacity: 0.5;
+    }
+}
+progress.win-paused:not(:indeterminate) {
+    animation-name: win-progress-fade-out;
+    animation-duration: 3s;
+    animation-timing-function: cubic-bezier(0.03, 0.76, 0.31, 1.0);
+    opacity: 0.5;
+}
+progress.win-error::-ms-fill {
+    opacity: 0;
+}
+progress.win-ring:indeterminate::-ms-fill {
+    animation-name: -ms-ring;
+}
+progress.win-ring {
+    width: 20px;
+    height: 20px;
+}
+progress.win-medium.win-ring {
+    width: 40px;
+    height: 40px;
+}
+progress.win-large.win-ring {
+    width: 60px;
+    height: 60px;
+}
+
+form {
+    margin: 0;
+    padding: 0;
+}
+
+@font-face {
+    font-family: "Segoe UI Command";
+    src: local("Segoe UI Symbol");
+    font-weight: normal;
+    font-style: normal;
+}
+
+@keyframes WinJS-opacity-in               { from { opacity: 0; } to { opacity: 1; } }
+@keyframes WinJS-opacity-out              { from { opacity: 1; } to { opacity: 0; } }
+
+@keyframes WinJS-scale-up                 { from { transform: scale(0.85); } to { transform: scale(1); } }
+@keyframes WinJS-scale-down               { from { transform: scale(1); } to { transform: scale(0.85); } }
+
+@keyframes WinJS-default-remove           { from { transform: translateX( 11px); } to { transform: none; } }
+@keyframes WinJS-default-remove-rtl       { from { transform: translateX(-11px); } to { transform: none; } }
+
+@keyframes WinJS-default-apply            { from { transform: none; } to { transform: translateX( 11px); } }
+@keyframes WinJS-default-apply-rtl        { from { transform: none; } to { transform: translateX(-11px); } }
+
+@keyframes WinJS-showEdgeUI               { from { transform: translateY(-70px); } to { transform: none; } }
+@keyframes WinJS-showPanel                { from { transform: translateX( 364px); } to { transform: none; } }
+@keyframes WinJS-showPanel-rtl            { from { transform: translateX(-364px); } to { transform: none; } }
+@keyframes WinJS-hideEdgeUI               { from { transform: none; } to { transform: translateY(-70px); } }
+@keyframes WinJS-hidePanel                { from { transform: none; } to { transform: translateX( 364px); } }
+@keyframes WinJS-hidePanel-rtl            { from { transform: none; } to { transform: translateX(-364px); } }
+
+@keyframes WinJS-showPopup                { from { transform: translateY(50px); } to { transform: none; } }
+
+@keyframes WinJS-dragSourceEnd            { from { transform: translateX( 11px) scale(1.05); } to { transform: none; } }
+@keyframes WinJS-dragSourceEnd-rtl        { from { transform: translateX(-11px) scale(1.05); } to { transform: none; } }
+
+@keyframes WinJS-enterContent             { from { transform: translateX( 40px); } to { transform: none; } }
+@keyframes WinJS-enterContent-rtl         { from { transform: translateX(-40px); } to { transform: none; } }
+
+@keyframes WinJS-exit                     { from { transform: none; } to { transform: none; } }
+
+@keyframes WinJS-enterPage                { from { transform: translateX( 100px); } to { transform: none; } }
+@keyframes WinJS-enterPage-rtl            { from { transform: translateX(-100px); } to { transform: none; } }
+
+@keyframes WinJS-updateBadge              { from { transform: translateY(24px); } to { transform: none; } }
+
+/*Flyout control animations*/
+@keyframes WinJS-showFlyoutTop               { from { transform: translateY(50px); } to { transform: none; } }
+@keyframes WinJS-showFlyoutBottom            { from { transform: translateY(-50px); } to { transform: none; } }
+@keyframes WinJS-showFlyoutLeft              { from { transform: translateX(50px); } to { transform: none; } }
+@keyframes WinJS-showFlyoutRight             { from { transform: translateX(-50px); } to { transform: none; } }
+
+
+
+body{
+    font-family: "Segoe UI";
+}
+
+body:-ms-lang(am, ti) {
+    font-family: "Ebrima";
+}
+
+body:-ms-lang(as, bn, gu, hi, kn, kok, ml, mr, ne, or, pa, sat-Olck, si, srb-Sora, ta, te) {
+    font-family: 
+        "Nirmala UI";
+}
+
+body:-ms-lang(chr-CHER-US) {
+    font-family: 
+        "Gadugi";
+}
+
+body:-ms-lang(ja) {
+    font-family: 
+        "Meiryo UI";
+}
+
+body:-ms-lang(km, lo, th, bug-Bugi)) {
+    font-family: 
+        "Leelawadee UI";
+}
+
+body:-ms-lang(ko) {
+    font-family: 
+        "Malgun Gothic";
+}
+
+body:-ms-lang(jv-Java) {
+    font-family: 
+        "Javanese Text";
+}
+
+body:-ms-lang(cop-Copt) {
+    font-family: 
+        "Segoe UI Symbol";
+}
+
+body:-ms-lang(zh-CN, zh-Hans, zh-SG) {
+    font-family: 
+        "Microsoft YaHei UI";
+}
+
+body:-ms-lang(zh-HK, zh-TW, zh-Hant, zh-MO) {
+    font-family: 
+        "Microsoft JhengHei UI";
+}
+
+.settings-command {
+    width: 10em;
+}
+
+.win-settingsflyout .win-header {
+    height: auto;
+    padding: 20px;
+}
+
+.win-settingsflyout .win-ui-dark .win-backbutton {
+    background-color: transparent;
+    border-color: rgb(255, 255, 255);
+    color: rgb(255, 255, 255);
+}
+
+.win-settingsflyout .win-ui-light .win-backbutton {    
+    background-color: transparent;
+    border-color: rgb(0, 0, 0);
+    color: rgb(0, 0, 0);
+}
+
+.offlineMessageContainer{
+    position: absolute;
+    top: 35px;
+    left: 2%;
+    height: 0px;
+    width: 96%;
+    text-align: center;
+    z-index: 45;
+    overflow: visible;
+    text-shadow: none;
+    color: #222;
+    line-height: 1em;
+}
+
+.offlineMessageContainer .offlineMessage {
+    display: inline-block;
+    padding: 6px 10px;
+    background: #fef2ad;
+    border: 1px solid #fed973;
+    -webkit-border-radius: 4px;
+    border-radius: 4px;
+    font-size: 14px;
+    -webkit-box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+    box-shadow: 0px 2px 6px rgba(0,0,0,0.15);
+    position: relative;
+}
+
+.offlineMessageContainer .offlineMessageHide {
+    font-size: 12px;
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    padding: 8px;
+    margin: -6px -8px -8px 4px;
+    color: rgba(0, 0, 0, 0.3);
+    cursor: pointer;
+    float: right;
+}
