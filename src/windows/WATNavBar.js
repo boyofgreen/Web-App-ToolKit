@@ -1,10 +1,10 @@
-
 "use strict";
 var navDrawerList = new WinJS.Binding.List();
 var WAT;
 var navBarConfig, createNavBarElement, setupNavBar, createNavBarButton, setButtonAction, initUIDeclarations, setStickyBits,
-    navDrawerInit, returnToContent, toggleMenu, itemInvokedHandler, disableNavDrawer, barActions, handleBarEval, handleBarNavigate, setupNestedNav, toggleNestedNav,
+    navDrawerInit, returnToContent, navigateBack, toggleMenu, itemInvokedHandler, disableNavDrawer, barActions, handleBarEval, handleBarNavigate, setupNestedNav, toggleNestedNav,
     barActions = {},
+    backButtons = [],
     afterProcessAllActions = [];
 var logger = window.console;
 var _menuWidth = 300;
@@ -16,6 +16,7 @@ var self = {
         WAT = WATRef;
 
         barActions = {
+            back: navigateBack,
             eval: handleBarEval,
             navigate: handleBarNavigate,
             nested: true
@@ -403,6 +404,7 @@ setupNestedNav = function (menuItem, btn) {
     flyout.style.zIndex = WAT.components.webView.style.zIndex + 100;
     var options = {placement: 'bottom'};
     new WinJS.UI.Flyout(flyout, options);
+
     flyout.className += flyout.className ? ' navbar-submenu' : 'navbar-submenu';
 
     btn.setAttribute("data-nestednav", nestedNavID);
@@ -459,4 +461,45 @@ toggleNestedNav = function (parentNavbarCommand, opened) {
         nestedControl.hide();
     }
 };
+
+navigateBack = function (e) {
+    var view = WAT.components.webView;
+
+    if (e && e.currentTarget.getAttribute("disabled") === "disabled") {
+        e.preventDefault();
+        return false;
+    }
+
+    // TODO: reenable when wat_offline is implemented
+    //var offlineModule = WAT.getModule("offline");
+    //if (offlineModule && offlineModule.active && WAT.options.offlineView && !offlineModule.useSuperCache) {
+    //    view = WAT.options.offlineView;
+    //}
+
+    //if (offlineModule && offlineModule.active && WAT.options.offlineView && offlineModule.useSuperCache && view.canGoBack) {
+    //    view.style.display = "block";
+    //    WAT.options.offlineView.style.display = "none";
+    //    offlineModule.active = false;
+    //}
+
+    if (!view.canGoBack) {
+        return false;
+    }
+
+    try {
+        view.goBack();
+    } catch (err) {
+        return false;
+    }
+
+    if (WAT.manifest.wat_appBar && WAT.manifest.wat_appBar.enabled) {
+        WAT.components.appBar.winControl.hide();
+    }
+
+    if (WAT.manifest.wat_navBar && WAT.manifest.wat_navBar.enabled && WAT.environment.isWindows) {
+        WAT.components.navBar.parentNode.winControl.hide();
+    }
+
+    return true;
+}
 module.exports = self; // exports
