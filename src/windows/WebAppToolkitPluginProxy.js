@@ -1,7 +1,9 @@
 
 "use strict";
 
-var hostedWebApp = require('com.microsoft.hostedwebapp.HostedWebAppPluginProxy');
+var hostedWebApp = require('com-manifoldjs-hostedwebapp.HostedWebAppPluginProxy');
+
+var guids = [];
 
 var WAT = {
   manifest: undefined,
@@ -9,6 +11,20 @@ var WAT = {
   environment: {
     isWindowsPhone: !!(cordova.platformId === 'windows' && navigator.appVersion.indexOf("Windows Phone 8.1;") !== -1),
     isWindows: !!(cordova.platformId === 'windows' && navigator.appVersion.indexOf("Windows Phone 8.1;") === -1)
+  },
+  isFunction: function (f) {
+    return Object.prototype.toString.call(f) == '[object Function]';
+  },
+  getGUID: function () {
+      var newGUID = "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {
+          var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+          return v.toString(16);
+      });
+      if (guids.indexOf(newGUID) > -1) {
+          return self.getGUID();
+      } else {
+          return newGUID;
+      }
   }
 };
 
@@ -55,6 +71,12 @@ cordova.commandProxy.add("WebAppToolkit", module.exports);
   }
   scriptElem.addEventListener("load", loadWinJScss);
   document.head.appendChild(scriptElem);
+
+  // Create stage element
+  var stage = document.createElement("div");
+  stage.id = "stage";
+  WAT.components.stage = stage;
+  document.body.appendChild(stage);
 })(function () {
   document.addEventListener('manifestLoaded', function (evt) {
     WAT.manifest = evt.manifest;
@@ -77,12 +99,14 @@ function initialize() {
   if (WAT.manifest) {
     WAT.components.webView = hostedWebApp.getWebView();
     if (WAT.components.webView) {
+      require('com.microsoft.webapptoolkit.WATWrapperHtml').init(WAT);
       require('com.microsoft.webapptoolkit.WATAppBar').init(WAT);
       require('com.microsoft.webapptoolkit.WATShare').init(WAT);
       require('com.microsoft.webapptoolkit.WATNavigation').init(WAT);
       require('com.microsoft.webapptoolkit.WATStyles').init(WAT);
       require('com.microsoft.webapptoolkit.WATCustomScript').init(WAT);
-
+      require('com.microsoft.webapptoolkit.WATNavBar').init(WAT);
+      require('com.microsoft.webapptoolkit.WATHeader').init(WAT);
     }
   }
 }

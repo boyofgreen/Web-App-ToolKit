@@ -8,7 +8,7 @@
     <keywords>cordova,manifest,hosted,web</keywords>
     <repo></repo>
 
-    <dependency id="com.microsoft.hostedwebapp" version=">=0.0.1" />
+    <dependency id="com-manifoldjs-hostedwebapp" url="https://github.com/manifoldjs/ManifoldCordova#v0.1.0" version=">=0.1.0" />
 
     <js-module src="www/webAppToolkit.js" name="webapptoolkit">
         <clobbers target="webapptoolkit" />
@@ -60,7 +60,11 @@
 
     <!-- windows -->
     <platform name="windows">
+      <hook type="before_prepare" src="scripts/moveWindowsAssets.js" />
       <js-module src="src/windows/WebAppToolkitPluginProxy.js" name="WebAppToolkitPluginProxy">
+        <merges target="" />
+      </js-module>
+      <js-module src="src/windows/WATWrapperHtml.js" name="WATWrapperHtml">
         <merges target="" />
       </js-module>
       <js-module src="src/windows/WATShare.js" name="WATShare">
@@ -76,6 +80,12 @@
         <merges target="" />
       </js-module>
       <js-module src="src/windows/WATCustomScript.js" name="WATCustomScript">
+        <merges target="" />
+      </js-module>
+      <js-module src="src/windows/WATNavBar.js" name="WATNavBar">
+        <merges target="" />
+      </js-module>
+      <js-module src="src/windows/WATHeader.js" name="WATHeader">
         <merges target="" />
       </js-module>
     </platform>
