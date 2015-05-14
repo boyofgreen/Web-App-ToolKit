@@ -25,7 +25,27 @@ var WAT = {
       } else {
           return newGUID;
       }
-  }
+  },
+  escapeRegex: function (str) {
+      return ("" + str).replace(/([.?*+^$[\]\\(){}|-])/g, "\\$1");
+  },
+
+  convertPatternToRegex: function (pattern, excludeLineStart, excludeLineEnd) {
+      var isNot = (pattern[0] == '!');
+      if (isNot) { pattern = pattern.substr(1) };
+
+      var regexBody = WAT.escapeRegex(pattern);
+
+      excludeLineStart = !!excludeLineStart;
+      excludeLineEnd = !!excludeLineEnd;
+
+      regexBody = regexBody.replace(/\\\?/g, ".?").replace(/\\\*/g, ".*?");
+      if (isNot) { regexBody = "((?!" + regexBody + ").)*"; }
+      if (!excludeLineStart) { regexBody = "^" + regexBody; }
+      if (!excludeLineEnd) { regexBody += "$"; }
+
+      return new RegExp(regexBody);
+  },
 };
 
 module.exports = {
