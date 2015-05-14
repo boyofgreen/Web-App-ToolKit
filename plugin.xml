@@ -25,8 +25,37 @@
         </config-file>
 
         <source-file src="src/android/WebAppToolkit.java" target-dir="src/com/microsoft/webapptoolkit" />
+
         <source-file src="src/android/model/Manifest.java" target-dir="src/com/microsoft/webapptoolkit/model" />
         <source-file src="src/android/model/ShareConfig.java" target-dir="src/com/microsoft/webapptoolkit/model" />
+        <source-file src="src/android/model/CustomScriptConfig.java" target-dir="src/com/microsoft/webapptoolkit/model" />
+        <source-file src="src/android/model/StylesConfig.java" target-dir="src/com/microsoft/webapptoolkit/model" />
+        <source-file src="src/android/model/MenuItem.java" target-dir="src/com/microsoft/webapptoolkit/model" />
+        <source-file src="src/android/model/NavBarConfig.java" target-dir="src/com/microsoft/webapptoolkit/model" />
+        <source-file src="src/android/model/AppBarConfig.java" target-dir="src/com/microsoft/webapptoolkit/model" />
+
+        <source-file src="src/android/utils/Assets.java" target-dir="src/com/microsoft/webapptoolkit/utils" />
+        <source-file src="src/android/utils/NavDrawerListAdapter.java" target-dir="src/com/microsoft/webapptoolkit/utils" />
+        <source-file src="src/android/utils/ResourceHelper.java" target-dir="src/com/microsoft/webapptoolkit/utils" />
+
+        <source-file src="libs/android/android-support-v4.jar" target-dir="libs/" />
+
+
+        <!-- icons for drawer -->
+        <source-file src="assets/android/drawable/mdpi/ic_drawer.png" target-dir="res/drawable-mdpi/" />
+        <source-file src="assets/android/drawable/mdpi/drawer_shadow.9.png" target-dir="res/drawable-mdpi/" />
+        <source-file src="assets/android/drawable/hdpi/ic_drawer.png" target-dir="res/drawable-hdpi/" />
+        <source-file src="assets/android/drawable/hdpi/drawer_shadow.9.png" target-dir="res/drawable-hdpi/" />
+        <source-file src="assets/android/drawable/xhdpi/ic_drawer.png" target-dir="res/drawable-xhdpi/" />
+        <source-file src="assets/android/drawable/xhdpi/drawer_shadow.9.png" target-dir="res/drawable-xhdpi/" />
+        <source-file src="assets/android/drawable/xxhdpi/ic_drawer.png" target-dir="res/drawable-xxhdpi/" />
+        <source-file src="assets/android/drawable/xxhdpi/drawer_shadow.9.png" target-dir="res/drawable-xxhdpi/" />
+
+
+        <source-file src="assets/android/drawable/layout/drawer_list_item.xml" target-dir="res/layout/" />
+
+        <source-file src="assets/android/drawable/list_item_selector.xml" target-dir="res/drawable/" />
+        <!-- end of icons for drawer -->
     </platform>
 
     <!-- windows -->
@@ -76,8 +105,15 @@
 
     <header-file src="src/ios/Model/WATManifest.h" />
     <source-file src="src/ios/Model/WATManifest.m" />
+    
     <header-file src="src/ios/Model/WATShareConfig.h" />
     <source-file src="src/ios/Model/WATShareConfig.m" />
+
+    <header-file src="src/ios/Model/WATScriptInjection.h" />
+    <source-file src="src/ios/Model/WATScriptInjection.m" />
+
+    <header-file src="src/ios/Model/WATStyleInjection.h" />
+    <source-file src="src/ios/Model/WATStyleInjection.m" />
 
   </platform>
 
