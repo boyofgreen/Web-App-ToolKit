@@ -24,10 +24,11 @@ var self = {
       // Build back button only for Windows
       if (WAT.environment.isWindows) {
           createBackButton();
-          configureBackButton(WATref);
-          WAT.components.webView.addEventListener("MSWebViewNavigationStarting", webViewNavStart);
-          WAT.components.webView.addEventListener("MSWebViewNavigationCompleted", webViewNavComplete);
+          configureBackButton(WATref);  
       }
+
+      WAT.components.webView.addEventListener("MSWebViewNavigationStarting", webViewNavStart);
+      WAT.components.webView.addEventListener("MSWebViewNavigationCompleted", webViewNavComplete);
 
       configureRedirects(WATref);
       WinJS.Application.onbackclick = navigateBack;
