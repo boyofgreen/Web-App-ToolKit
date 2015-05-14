@@ -1,5 +1,5 @@
 ﻿
-﻿/* 
+﻿/*
 Modifications for top-level elements html, body and iframe.
 */
 html, body {
@@ -61,7 +61,7 @@ html:-ms-lang(ar, dv, fa, he, ku-Arab, pa-Arab, prs, ps, sd-Arab, syr, ug, ur, q
     top: 0;
     left: 0;
     padding: 50px;
-    background: rgba(0,0,0,.5);
+
     width: 150px;
     height: 50px;
 }
@@ -169,7 +169,7 @@ html:-ms-lang(ar, dv, fa, he, ku-Arab, pa-Arab, prs, ps, sd-Arab, syr, ug, ur, q
     overflow-x: hidden;
     border: none;
     padding: 0;
-   
+
 }
 
 .extendedSplashScreen {
@@ -189,7 +189,7 @@ html:-ms-lang(ar, dv, fa, he, ku-Arab, pa-Arab, prs, ps, sd-Arab, syr, ug, ur, q
 }
 
 /*
-Explicitly define a Segoe UI font-family so that we can assign Segoe UI 
+Explicitly define a Segoe UI font-family so that we can assign Segoe UI
 Semilight to an appropriate font-weight.
 */
 @font-face {
@@ -231,7 +231,7 @@ Semilight to an appropriate font-weight.
 }
 
 /*
-Explicitly define font-families for Microsoft Yahei UI and Microsoft JhengHei UI so that we can fallback requests for, 
+Explicitly define font-families for Microsoft Yahei UI and Microsoft JhengHei UI so that we can fallback requests for,
     Microsoft Yahei UI Semilight and Microsoft JhengHei UI Semilight, to Regular instead of Light fonts.
 */
 @font-face {
@@ -276,7 +276,7 @@ Explicitly define font-families for Microsoft Yahei UI and Microsoft JhengHei UI
     src: local("Microsoft JhengHei UI Bold");
 }
 
-/* 
+/*
 Offsets for sprite versions.
 */
 button:hover .win-commandimage, button:active .win-commandimage {
@@ -300,7 +300,7 @@ Offsets for sprite versions in selected state.
 button[aria-checked=true] .win-commandimage {
     background-position: 0 -40px;
 }
-button[aria-checked=true]:hover .win-commandimage, 
+button[aria-checked=true]:hover .win-commandimage,
 button[aria-checked=true]:active .win-commandimage {
     background-position: -40px -40px;
 }
@@ -310,7 +310,7 @@ button[aria-checked=true]:hover:active .win-commandimage {
 button[aria-checked=true]:-ms-keyboard-active .win-commandimage {
     background-position: -80px -40px;
 }
-button[aria-checked=true]:disabled .win-commandimage, 
+button[aria-checked=true]:disabled .win-commandimage,
 button[aria-checked=true]:disabled:active .win-commandimage {
     background-position: -120px -40px;
 }
@@ -338,7 +338,7 @@ button.win-command {
     line-height: 16px;
     font-weight: normal;
     color: inherit;
-    
+
     /* Commands are lrtb */
     writing-mode: lr-tb;
 }
@@ -370,12 +370,12 @@ Command button icons.
     /* Default font for glyphs. */
     font-family: "Segoe UI Command";
     letter-spacing: 0;
-    
+
     /* Applications provide their own content, like &#xE0D5;. */
     vertical-align: middle;
     font-size: 14pt;
     margin: -2px;
-    line-height: 40px; /* line-height must match the content box height */    
+    line-height: 40px; /* line-height must match the content box height */
     background-position: 0 0;
     background-origin: border-box;
     display: inline-block;
@@ -388,7 +388,7 @@ Command button icons.
 /*
 Command button "ring".
 */
-.win-commandring, 
+.win-commandring,
 button:hover .win-commandring,
 button:active .win-commandring,
 button.win-command:disabled .win-commandring,
@@ -401,7 +401,7 @@ button.win-command:disabled:active .win-commandring {
 button:hover:active .win-commandring,
 button[aria-checked=true] .win-commandring,
 button[aria-checked=true]:active .win-commandring,
-button[aria-checked=true]:disabled .win-commandring, 
+button[aria-checked=true]:disabled .win-commandring,
 button[aria-checked=true]:disabled:active .win-commandring {
     background-clip: border-box;
 }
@@ -423,12 +423,12 @@ button.win-command .win-label {
     word-break: keep-all;
 }
 
-/* 
-AppBarCommand content types. 
+/*
+AppBarCommand content types.
 */
 div.win-command {
 
-    display: inline-block;   
+    display: inline-block;
     min-width: 0;
     min-height: 0;
     padding: 12px 30px;
@@ -436,12 +436,12 @@ div.win-command {
     text-align: center;
     font-size: 9pt;
     line-height: 16px;
-    font-weight: normal;    
+    font-weight: normal;
     vertical-align: top;
 
     /* Content Commands are lrtb */
     writing-mode: lr-tb;
-    
+
 }
 div.win-command:-ms-lang(ar, dv, fa, he, ku-Arab, pa-Arab, prs, ps, sd-Arab, syr, ug, ur, qps-plocm) {
    writing-mode:rl-tb;
@@ -450,7 +450,7 @@ div.win-command:focus {
     outline: none;
 }
 
-/* 
+/*
 AppBarCommand separator types.
 */
 hr.win-command {
@@ -479,15 +479,15 @@ AppBar Edgy Container
     position: -ms-device-fixed;
 }
 
-/* 
+/*
 AppBar control.
 */
 .win-commandlayout {
-    text-align: right;   
-        
+    text-align: right;
+
     /* Hide whitespace between buttons. */
     font-size: 0;
-        
+
     min-height: 88px;
 }
 .win-commandlayout .win-selection {
@@ -500,7 +500,7 @@ AppBar control.
     float: right;
 }
 
-/* Narrow buttons and no labels */  
+/* Narrow buttons and no labels */
 .win-reduced button.win-command .win-label {
     display: none;
 }
@@ -514,13 +514,13 @@ AppBar control.
     margin-top: 14px;
 }
 .win-reduced hr.win-command {
-    margin-left: 10px;        
-    margin-right: 9px;        
+    margin-left: 10px;
+    margin-right: 9px;
 }
     .win-reduced hr.win-command:-ms-lang(ar, dv, fa, he, ku-Arab, pa-Arab, prs, ps, sd-Arab, syr, ug, ur, qps-plocm) {
     margin-left: 9px;
     margin-right: 10px;
-}  
+}
 
 /* Narrow Content Commands */
 .win-reduced div.win-command {
@@ -534,7 +534,7 @@ AppBar control.
     padding-right: 10px;
     width: calc(100% - 20px);
     min-height: 68px;
-}  
+}
 
 
 /*
@@ -559,7 +559,7 @@ Colors for command buttons and AppBarCommand "content" types.
 .win-commandimage {
     color: inherit;
 }
-   
+
 
 /*
 High contrast AppBar needs a border
@@ -574,18 +574,18 @@ High contrast AppBar needs a border
     .win-appbar.win-top {
         border-top: none;
         border-left: none;
-        border-right: none;  
+        border-right: none;
     }
     .win-appbar.win-bottom {
         border-bottom: none;
         border-left: none;
-        border-right: none;          
+        border-right: none;
     }
-    .win-appbar.win-top button.win-command, 
+    .win-appbar.win-top button.win-command,
     .win-appbar.win-top div.win-command {
         padding-bottom: 10px;
     }
-    .win-appbar.win-bottom button.win-command, 
+    .win-appbar.win-bottom button.win-command,
     .win-appbar.win-bottom div.win-command {
         padding-top: 10px;
     }
@@ -594,7 +594,7 @@ High contrast AppBar needs a border
     }
     .win-appbar.win-bottom hr.win-command {
         margin-top: 12px;
-    }    
+    }
     .win-commandlayout {
         min-height: 86px;
     }
@@ -602,13 +602,13 @@ High contrast AppBar needs a border
     /* High Contrast Reduced sizes slightly different */
     .win-commandlayout.win-reduced {
         min-height: 66px;
-    }    
+    }
     .win-appbar.win-reduced.win-top hr.win-command {
         margin-bottom: 12px;
     }
     .win-appbar.win-reduced.win-bottom hr.win-command {
         margin-top: 12px;
-    } 
+    }
 }
 
 
@@ -741,8 +741,8 @@ High contrast AppBar needs a border
     font-size: 20pt;
     margin-left: 0;
     margin-right: 10px;
-    display: flex; 
-    align-items: center; 
+    display: flex;
+    align-items: center;
     justify-content: center;
 }
 .win-navbarcommand-icon:-ms-lang(ar, dv, fa, he, ku-Arab, pa-Arab, prs, ps, sd-Arab, syr, ug, ur, qps-plocm) {
@@ -812,7 +812,7 @@ AppBar/Flyout z-index values:
     1000 - AppBar/settings click-eating div
     1002 - AppBar
     1004 - Settings Flyout
-    1006 - Flyout click-eating div 
+    1006 - Flyout click-eating div
     1008 - Flyout
 */
 
@@ -828,7 +828,7 @@ AppBar/Flyout z-index values:
     position: fixed;
     touch-action: none;
     outline: 1px solid #000; /*Necessary to block passthrough over webviews*/
-    -ms-high-contrast-adjust:none; 
+    -ms-high-contrast-adjust:none;
 }
 .win-flyoutmenuclickeater {
     z-index: 1006;
@@ -882,14 +882,14 @@ Back buttons.
     visibility: hidden;
 }
 
-button.win-navigation-backbutton, button.win-navigation-backbutton:active, 
+button.win-navigation-backbutton, button.win-navigation-backbutton:active,
 button.win-navigation-backbutton:hover, button.win-navigation-backbutton:active:hover
 {
     display: inline-block;
     padding: 2px;
     min-height: 0px;
     min-width: 0px;
-    
+
     /* Overwrite default background and border styles from HTML button element */
     background-color: transparent;
     border: none;
@@ -904,8 +904,8 @@ button.win-navigation-backbutton:hover, button.win-navigation-backbutton:active:
 /*
 Grippers in touch selection do not dissapear when focus moves to an element outside of the selection range and they are always drawn on a layer above all HTML elemements.
 When an _Overlay derived control such as AppBar/Flyout/Menu/SettingsFlyout is invoked and steals focus, if that _Overlay is laid out on top of the elements in the touch selection,
-the grippers can still be seen over the _Overlay and its contents. However, all grippers any where in the document will be hidden whenever the current active element has or inherits 
-the style "-ms-touch-select: none;" 
+the grippers can still be seen over the _Overlay and its contents. However, all grippers any where in the document will be hidden whenever the current active element has or inherits
+the style "-ms-touch-select: none;"
 */
 .win-overlay {
     -ms-touch-select: none;
@@ -926,7 +926,7 @@ the style "-ms-touch-select: none;"
     -ms-touch-select: grippers;
 }
 
-/* Singleton element maintained by _Overlay, used for getting accurate floating point measurements of the total size of the visual viewport. 
+/* Singleton element maintained by _Overlay, used for getting accurate floating point measurements of the total size of the visual viewport.
     Floating point is necesary in high DPI resolutions. */
 .win-visualviewport-space {
     position:-ms-device-fixed;
@@ -1085,47 +1085,47 @@ body:-ms-lang(am, ti) {
 }
 
 body:-ms-lang(as, bn, gu, hi, kn, kok, ml, mr, ne, or, pa, sat-Olck, si, srb-Sora, ta, te) {
-    font-family: 
+    font-family:
         "Nirmala UI";
 }
 
 body:-ms-lang(chr-CHER-US) {
-    font-family: 
+    font-family:
         "Gadugi";
 }
 
 body:-ms-lang(ja) {
-    font-family: 
+    font-family:
         "Meiryo UI";
 }
 
 body:-ms-lang(km, lo, th, bug-Bugi)) {
-    font-family: 
+    font-family:
         "Leelawadee UI";
 }
 
 body:-ms-lang(ko) {
-    font-family: 
+    font-family:
         "Malgun Gothic";
 }
 
 body:-ms-lang(jv-Java) {
-    font-family: 
+    font-family:
         "Javanese Text";
 }
 
 body:-ms-lang(cop-Copt) {
-    font-family: 
+    font-family:
         "Segoe UI Symbol";
 }
 
 body:-ms-lang(zh-CN, zh-Hans, zh-SG) {
-    font-family: 
+    font-family:
         "Microsoft YaHei UI";
 }
 
 body:-ms-lang(zh-HK, zh-TW, zh-Hant, zh-MO) {
-    font-family: 
+    font-family:
         "Microsoft JhengHei UI";
 }
 
@@ -1144,7 +1144,7 @@ body:-ms-lang(zh-HK, zh-TW, zh-Hant, zh-MO) {
     color: rgb(255, 255, 255);
 }
 
-.win-settingsflyout .win-ui-light .win-backbutton {    
+.win-settingsflyout .win-ui-light .win-backbutton {
     background-color: transparent;
     border-color: rgb(0, 0, 0);
     color: rgb(0, 0, 0);

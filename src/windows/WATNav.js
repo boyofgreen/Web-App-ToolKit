@@ -1,8 +1,8 @@
 
 "use strict";
 
-var configureBackButton, navigateBack, configureRedirects,
-    webViewNavStart, addRedirectRule, processOldRedirectFormat,
+var configureBackButton, createBackButton, navigateBack, configureRedirects,
+    webViewNavStart, webViewNavComplete, addRedirectRule, processOldRedirectFormat,
     redirectShowMessage, redirectPopout, redirectUrl,
     loadWindowOpenSpy, loadWindowCloseSpy, handleWindowOpen, handleWindowClose, closeModalContent, getUriParameter,
     redirectRules = [],
@@ -23,6 +23,7 @@ var self = {
 
       // Build back button only for Windows
       if (WAT.environment.isWindows) {
+          createBackButton();
           configureBackButton(WATref);
           WAT.components.webView.addEventListener("MSWebViewNavigationStarting", webViewNavStart);
           WAT.components.webView.addEventListener("MSWebViewNavigationCompleted", webViewNavComplete);
@@ -46,7 +47,7 @@ var self = {
           backButtons.forEach(function (btn) {
               if (btn.id === "backbutton-wrapper") {
                   // on-page button (hidden vs disabled)
-                  btn.style.display = (showBackButton && !WAT.manifest.wat_navigation.hideOnPageBackButton) ? "block" : "none";
+                  btn.style.display = (showBackButton && (navConfig && !navConfig.hideOnPageBackButton)) ? "block" : "none";
               } else if (showBackButton) {
                   btn.classList.remove("disabled");
               } else {
@@ -109,21 +110,35 @@ var self = {
 // Private methods
 
 configureBackButton = function () {
-    WinJS.UI.processAll().then(function () {
-        // create back button
-        createBackButton();
+    var hideBackRules = navConfig ? navConfig.hideBackButtonOnMatch : null;
 
+    backButtonRules.push(WAT.convertPatternToRegex(WAT.manifest.start_url));
 
+    if (hideBackRules && hideBackRules.length) {
+        hideBackRules.forEach(function (pattern) {
+            var fullPattern, regex;
 
-        if (WAT.components.backButton) {
-            // handle back button clicks
-            WAT.components.backButton.addEventListener("click", navigateBack);
-
-            if (!WAT.components.webView.canGoBack) {
-                self.toggleBackButton(false);
+            if (!pattern || !pattern.length) {
+                logger.warn("Skipping invalid back button hide rule:", pattern);
+                return;
             }
-        }
-    });
+
+            fullPattern = pattern.replace(/\{baseURL\}/g, WAT.config.baseURL);
+            regex = WAT.convertPatternToRegex(fullPattern);
+            if (regex) {
+                logger.log("Adding back button hide rule: ", pattern, regex);
+                backButtonRules.push(regex);
+            }
+        });
+    }
+
+    if (WAT.components.backButton && (navConfig && !navConfig.hideOnPageBackButton)) {
+        // we need to hold onto the parent since that is what gets toggled, not the actual <button>
+        backButtons.push(WAT.components.backButton.parentNode);
+
+        // handle back button clicks
+        WAT.components.backButton.addEventListener("click", navigateBack);
+    }
 };
 
 navigateBack = function (e) {
@@ -146,33 +161,57 @@ createBackButton = function () {
     var wrapperDiv = document.createElement("div");
 
     wrapperDiv.id = "backbutton-wrapper";
-    wrapperDiv.style.zIndex = WAT.components.webView.style.zIndex + 100;
-    wrapperDiv.style.position = "absolute";
-    wrapperDiv.style.top = "0";
-    wrapperDiv.style.left = "0";
-    wrapperDiv.style.padding = "50px";
-    wrapperDiv.style.width = "150px";
-    wrapperDiv.style.height = "50px";
+    wrapperDiv.style.zIndex = WAT.components.webView.style.zIndex + 101;
+    wrapperDiv.style.display = "none";
 
     var btn = document.createElement("button");
     btn.classList.add("win-backbutton");
     btn.style.color = "black";
     btn.style.borderColor = "black";
 
-    WAT.components.backButton = wrapperDiv;
+    WAT.components.backButton = btn;
 
     wrapperDiv.appendChild(btn);
     document.body.appendChild(wrapperDiv);
 }
 
 webViewNavStart = function (e) {
+    self.contentLoaded = false;
+    self.toggleLoadingScreen(true);
     self.toggleBackButton(false);
+
+    // Follow any redirect rules
+    if (WAT.manifest.wat_redirects && WAT.manifest.wat_redirects.enabled === true && e.uri.length > 0) {
+        redirectRules.forEach(function (rule) {
+            if (rule.regex.test(e.uri) && WAT.isFunction(redirectActions[rule.action])) {
+                e.stopImmediatePropagation();
+                e.preventDefault();
+                redirectActions[rule.action](rule, e.uri);
+                self.toggleLoadingScreen(false);
+                if (WAT.components.webView.canGoBack === true) {
+                    self.toggleBackButton(true);
+                }
+            }
+        });
+    }
 }
 
-webViewNavComplete = function (e) {
-    if (WAT.components.webView.canGoBack) {
-        self.toggleBackButton(true);
+webViewNavComplete = function () {
+    self.toggleLoadingScreen(false);
+
+    var showBackButton = true;
+
+    if (WAT.components.webView.canGoBack === true) {
+        backButtonRules.forEach(function (rule) {
+            if (rule.test(WAT.components.webView.src)) {
+                showBackButton = false;
+            }
+        });
+    } else {
+        showBackButton = false;
     }
+
+    self.toggleBackButton(showBackButton);
 }
 
 
@@ -396,27 +435,6 @@ processOldRedirectFormat = function (rule) {
     }
 
     addRedirectRule(newRule);
-};
-
-webViewNavStart = function (e) {
-    self.contentLoaded = false;
-    self.toggleLoadingScreen(true);
-    self.toggleBackButton(false);
-
-    // Follow any redirect rules
-    if (redirectConfig.enabled === true && e.uri.length > 0) {
-        redirectRules.forEach(function (rule) {
-            if (rule.regex.test(e.uri) && WAT.isFunction(redirectActions[rule.action])) {
-                e.stopImmediatePropagation();
-                e.preventDefault();
-                redirectActions[rule.action](rule, e.uri);
-                self.toggleLoadingScreen(false);
-                if (WAT.components.webView.canGoBack === true) {
-                    self.toggleBackButton(true);
-                }
-            }
-        });
-    }
 };
 
 getUriParameter = function (e, parameter) {
