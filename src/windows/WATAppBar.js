@@ -29,11 +29,11 @@ addAppBar = function () {
     var div = document.createElement("div");
     div.style.zIndex = WAT.components.webView.style.zIndex + 100;
     div.classList.add("customColor");
-    
+
     new WinJS.UI.AppBar(div);
 
     WAT.components.appBar = div;
-    document.body.appendChild(div);
+    WAT.components.stage.appendChild(div);
 
     setupAppBar();
   });

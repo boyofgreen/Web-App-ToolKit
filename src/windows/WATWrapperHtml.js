@@ -3,7 +3,7 @@
 
   var WAT;
   var buildForWindows, buildForWindowsPhone;
-  var createHeaderElement, createStageElement, moveWebView, createWebViewForModalDialog;
+  var createHeaderElement, createStageElement, moveWebView, createWebViewForModalDialog, createFlyoutHost;
 
   var self = {
       init: function (WATRef) {
@@ -117,6 +117,7 @@
       WAT.components.content = content;
 
       createStageElement();
+      createFlyoutHost();
 
       surface.appendChild(content);
 
@@ -214,5 +215,14 @@
 
        WAT.components.dialogView = webView;
    };
+
+  createFlyoutHost = function () {
+      var div = document.createElement("div");
+      div.classList.add("flyout-host");
+      div.classList.add("hidden");
+
+      WAT.components.stage.appendChild(div);
+      WAT.components.flyoutHost = div;
+  }
 
   module.exports = self; // export
