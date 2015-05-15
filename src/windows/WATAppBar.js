@@ -2,7 +2,7 @@
 "use strict";
 
 var addAppBar, setupAppBar, setButtonAction, handleBarEval, handleBarNavigate, handleBarShare;
-var WAT, appBarConfig, barActions;
+var WAT, appBarConfig, barActions, settingsConfig;
 
 // Public API
 var self = {
@@ -10,14 +10,17 @@ var self = {
     if (!WAT) {
       WAT = WATref;
       appBarConfig = (WAT.manifest.wat_appBar || {});
-
+      settingsConfig = (WAT.manifest.wat_settings || {});
+      
       barActions = {
         eval: handleBarEval,
         navigate: handleBarNavigate,
         share: handleBarShare
       };
 
-      addAppBar();
+      if (appBarConfig.enabled || settingsConfig.enabled){
+        addAppBar();
+      }
     }
   }
 };

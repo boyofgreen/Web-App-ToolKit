@@ -21,8 +21,11 @@ var self = {
         // On phone add settings right away
         WinJS.UI.processAll().then(function () {
             addSettings();
-            WAT.components.appBar.winControl.disabled = true;
-            WAT.components.appBar.winControl.disabled = false;
+
+            if (WAT.components.appBar){
+              WAT.components.appBar.winControl.disabled = true;
+              WAT.components.appBar.winControl.disabled = false;
+            }
 
         });
     } else {
