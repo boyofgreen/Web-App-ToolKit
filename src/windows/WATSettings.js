@@ -33,26 +33,10 @@ var self = {
 
   navigateBack: function () {
     if (self.active) {
-        self.hideFlyout();
         return true;
     }
 
     return false;
-  },
-
-  showFlyout: function (flyoutUrl) {
-    self.active = true;
-    WinJS.Utilities.empty(WAT.components.flyoutHost);
-    WinJS.UI.Pages.render(flyoutUrl, WAT.components.flyoutHost).done();
-    WinJS.Utilities.addClass(WAT.components.webView, "hidden");
-    WinJS.Utilities.removeClass(WAT.components.flyoutHost, "hidden");
-  },
-
-  hideFlyout: function () {
-    self.active = false;
-    WinJS.Utilities.addClass(WAT.components.flyoutHost, "hidden");
-    WinJS.Utilities.removeClass(WAT.components.webView, "hidden");
-    WinJS.Utilities.empty(WAT.components.flyoutHost);
   }
 };
 
@@ -120,30 +104,6 @@ setupSettingsCharm = function (e) {
   if (!e.detail.applicationcommands) {
     e.detail.applicationcommands = { };
   }
-
-  // // TODO: This doesn't seem right at all. e.detail doesn't even seem valid. - JB - 2014-05-15
-  // if (WAT.config.notifications &&
-  //   WAT.config.notifications.enabled &&
-  //   WAT.config.notifications.azureNotificationHub &&
-  //   WAT.config.notifications.azureNotificationHub.enabled) {
-  //
-  //   // Adds notification page command link to the settings flyout pane
-  //   e.detail.applicationcommands.notifications = {
-  //       title: rS.getString("notificationsTitle").value,
-  //           href: "/template/notify-settings.html"
-  //   };
-  //
-  //   // Add this line to add another settings fly out page
-  //   //    ,"about": { title: "About", href: "/template/about.html" }
-  // }
-
-  // if (WAT.config.isroller === true || localStorage.getItem("savedHostURL")) {
-  //   //for sample app, add a persistant link to application page
-  //   e.detail.applicationcommands.roller = {
-  //       title: rS.getString("rollerTitle").value,
-  //       href: "/template/roller-settings.html"
-  //   };
-  // }
 
   WinJS.UI.SettingsFlyout.populateSettings(e);
 };
