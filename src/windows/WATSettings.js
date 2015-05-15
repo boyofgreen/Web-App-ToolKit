@@ -87,8 +87,7 @@ addSettings = function (applicationCommands) {
         addSetting(applicationCommands, item.title,
                     function () {
                         if (item.loadInApp === true) {
-                            //WAT.goToLocation(item.page);
-                            WAT.components.webView.navigate(new Windows.Foundation.Uri(item.page));
+                            WAT.goToLocation(item.page);
                         } else {
                             Windows.System.Launcher.launchUriAsync(new Windows.Foundation.Uri(item.page));
                         }
