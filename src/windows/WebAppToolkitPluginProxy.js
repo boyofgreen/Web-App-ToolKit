@@ -105,12 +105,6 @@ cordova.commandProxy.add("WebAppToolkit", module.exports);
   }
   scriptElem.addEventListener("load", loadWinJScss);
   document.head.appendChild(scriptElem);
-
-  // Create stage element
-  var stage = document.createElement("div");
-  stage.id = "stage";
-  WAT.components.stage = stage;
-  document.body.appendChild(stage);
 })(function () {
   document.addEventListener('manifestLoaded', function (evt) {
     WAT.manifest = evt.manifest;
