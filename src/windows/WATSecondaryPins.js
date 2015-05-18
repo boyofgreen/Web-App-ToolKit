@@ -49,7 +49,7 @@ pinHandler = function () {
         squareLogoPath = "/images/storelogo.scale-100.png";
 
    if (displayName === "") {
-        displayName = WAT.manifest.displayName;
+        displayName = WAT.manifest.name;
     }
 
    tileId = (displayName + Math.random().toString()).replace(/[^a-z0-9\s]/gi, '').replace(/[_\s]/g, '-').substring(0, 63);
