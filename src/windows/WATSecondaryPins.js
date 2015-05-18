@@ -88,7 +88,7 @@ secondaryPin = function (tileId, displayName, squareLogoUri, wideLogoUri) {
             tileId,
             displayName,
             displayName,
-            WatExtensions.SuperCacheManager.resolveTargetUri(WAT.options.webView.src),
+            WAT.components.webView.src,
             (Windows.UI.StartScreen.TileOptions.showNameOnLogo | Windows.UI.StartScreen.TileOptions.showNameOnWideLogo),
             squareLogoUri,
             wideLogoUri
