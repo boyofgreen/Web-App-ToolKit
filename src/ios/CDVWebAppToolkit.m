@@ -136,6 +136,16 @@
 {
     if ([[notification name] isEqualToString:kCDVHostedWebAppWebViewDidFinishLoad]) {
         [self showBackButton:[self.webView canGoBack]];
+
+        if(self.manifest != nil) {
+            if(self.manifest.scriptInjection.enabled) {
+                [self injectJavascript];
+            }
+
+            if(self.manifest.styleInjection.enabled) {
+                [self injectStylesheet];
+            }
+        }
     }
 }
 
@@ -186,6 +196,54 @@
 - (void) navigateBack {
     if ([self.webView canGoBack]) {
         [self.webView goBack];
+    }
+}
+
+- (NSString *) getContentFromCustomScriptFile:(NSString *)fileName {
+    NSString *path = self.manifest.scriptInjection.filePath;
+    NSString *partialPath = [NSString stringWithFormat: @"%@%@", path, fileName];
+
+    NSString *fullPath = [self.commandDelegate pathForResource:partialPath];
+    fullPath = [fullPath stringByReplacingOccurrencesOfString:@" " withString:@"%20"];
+
+    return [NSString stringWithFormat: @"javascript:( function() { var parent = document.getElementsByTagName('head').item(0);var element = document.createElement('link'); element.type = 'text/css'; element.rel = 'stylesheet'; element.href = '%@';parent.appendChild(element);})()",fullPath];
+}
+
+- (NSString *) getContentFromStyleFile:(NSString *)fileName {
+    NSString *path = self.manifest.styleInjection.filePath;
+    NSString *partialPath = [NSString stringWithFormat: @"%@%@", path, fileName];
+
+    NSString *fullPath = [self.commandDelegate pathForResource:partialPath];
+    fullPath = [fullPath stringByReplacingOccurrencesOfString:@" " withString:@"%20"];
+
+    return [NSString stringWithFormat: @"javascript:( function() { var parent = document.getElementsByTagName('head').item(0);var element = document.createElement('script');element.type = 'text/javascript';element.src = '%@';parent.appendChild(element);})()",fullPath];
+}
+
+- (NSString *) getScriptFromInlineStyle:(NSString *)styles {
+    return [NSString stringWithFormat: @"javascript:( function() { var parent = document.getElementsByTagName('head').item(0);var style = document.createElement('style');style.type = 'text/css';style.appendChild(document.createTextNode('%@'));parent.appendChild(style)})()", styles];
+}
+
+- (void)injectJavascript {
+    NSString *inlineScript = self.manifest.scriptInjection.customString;
+    [[self commandDelegate] evalJs:inlineScript];
+
+    NSArray *files = self.manifest.scriptInjection.scriptFiles;
+    for (NSString *value in files) {
+        [[self commandDelegate] runInBackground:^{
+            [[self commandDelegate] evalJs: [self getContentFromCustomScriptFile:value]];
+        }];
+    }
+}
+
+- (void)injectStylesheet {
+    NSString *inlineStyles = self.manifest.styleInjection.customString;
+    [[self commandDelegate] evalJs:[self getScriptFromInlineStyle:inlineStyles]];
+
+    NSArray *files = self.manifest.styleInjection.styleFiles;
+    for (NSString *value in files) {
+        [[self commandDelegate] runInBackground:^{
+            [[self commandDelegate] evalJs: [self getContentFromStyleFile:value]];
+        }];
     }
 }
 

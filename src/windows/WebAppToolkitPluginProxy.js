@@ -1,7 +1,9 @@
 
 "use strict";
 
-var hostedWebApp = require('com.microsoft.hostedwebapp.HostedWebAppPluginProxy');
+var hostedWebApp = require('com-manifoldjs-hostedwebapp.HostedWebAppPluginProxy');
+
+var guids = [];
 
 var WAT = {
   manifest: undefined,
@@ -9,7 +11,41 @@ var WAT = {
   environment: {
     isWindowsPhone: !!(cordova.platformId === 'windows' && navigator.appVersion.indexOf("Windows Phone 8.1;") !== -1),
     isWindows: !!(cordova.platformId === 'windows' && navigator.appVersion.indexOf("Windows Phone 8.1;") === -1)
-  }
+  },
+  isFunction: function (f) {
+    return Object.prototype.toString.call(f) == '[object Function]';
+  },
+  getGUID: function () {
+      var newGUID = "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {
+          var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+          return v.toString(16);
+      });
+      if (guids.indexOf(newGUID) > -1) {
+          return self.getGUID();
+      } else {
+          return newGUID;
+      }
+  },
+  escapeRegex: function (str) {
+      return ("" + str).replace(/([.?*+^$[\]\\(){}|-])/g, "\\$1");
+  },
+
+  convertPatternToRegex: function (pattern, excludeLineStart, excludeLineEnd) {
+      var isNot = (pattern[0] == '!');
+      if (isNot) { pattern = pattern.substr(1) };
+
+      var regexBody = WAT.escapeRegex(pattern);
+
+      excludeLineStart = !!excludeLineStart;
+      excludeLineEnd = !!excludeLineEnd;
+
+      regexBody = regexBody.replace(/\\\?/g, ".?").replace(/\\\*/g, ".*?");
+      if (isNot) { regexBody = "((?!" + regexBody + ").)*"; }
+      if (!excludeLineStart) { regexBody = "^" + regexBody; }
+      if (!excludeLineEnd) { regexBody += "$"; }
+
+      return new RegExp(regexBody);
+  },
 };
 
 module.exports = {

@@ -1,10 +1,13 @@
 "use strict";
-
+var navDrawerList = new WinJS.Binding.List();
 var WAT;
 var navBarConfig, createNavBarElement, setupNavBar, createNavBarButton, setButtonAction, initUIDeclarations, setStickyBits,
-    navDrawerInit, returnToContent, toggleMenu, itemInvokedHandler, disableNavDrawer, barActions, handleBarEval, handleBarNavigate,
-    barActions = {};
+    navDrawerInit, returnToContent, navigateBack, toggleMenu, itemInvokedHandler, disableNavDrawer, barActions, handleBarEval, handleBarNavigate, setupNestedNav, toggleNestedNav,
+    barActions = {},
+    backButtons = [],
+    afterProcessAllActions = [];
 var logger = window.console;
+var _menuWidth = 300;
 
 // Public API
 var self = {
@@ -13,38 +16,101 @@ var self = {
         WAT = WATRef;
 
         barActions = {
+            back: navigateBack,
             eval: handleBarEval,
             navigate: handleBarNavigate,
             nested: true
         };
 
         navBarConfig = (WAT.manifest.wat_navBar || {});
+
+        if (!navBarConfig || !navBarConfig.enabled) {
+            if (WAT.environment.isWindowsPhone) {
+                disableNavDrawer();
+            }
+
+            return;
+        }
+
         createNavBarElement();
         setupNavBar();
 
-        // create the navbar controls from the previously created html
-        new WinJS.UI.NavBar(WAT.components.navBar.parentNode);
-        var container = new WinJS.UI.NavBarContainer(WAT.components.navBar);
-        container.maxRows = navBarConfig.maxRows;
+        if (WAT.environment.isWindows) {
+            // create the navbar controls from the previously created html
+            new WinJS.UI.NavBar(WAT.components.navBar.parentNode);
+            var container = new WinJS.UI.NavBarContainer(WAT.components.navBar);
+            container.maxRows = navBarConfig.maxRows;
 
-        WAT.components.webView.addEventListener("MSWebViewDOMContentLoaded", setStickyBits);
+            WAT.components.webView.addEventListener("MSWebViewDOMContentLoaded", setStickyBits);
+        }
     }
   }
 };
 
 // Private methods
 createNavBarElement = function () {
+    if (WAT.environment.isWindows) {
+        var div = document.createElement("div");
+        div.id = "navBar"
+        div.classList.add("customColor");
 
-    var div = document.createElement("div");
-    div.id = "navBar"
-    div.classList.add("customColor");
+        var parent = document.createElement("div");
+        parent.style.zIndex = WAT.components.webView.style.zIndex + 101;
+        parent.appendChild(div);
 
-    var parent = document.createElement("div");
-    parent.style.zIndex = WAT.components.webView.style.zIndex + 101;
-    parent.appendChild(div);
+        WAT.components.content.appendChild(parent);
+        WAT.components.navBar = div;
+    }
+    else {
+        var parentDiv = document.createElement("div");
+        parentDiv.style.zIndex = WAT.components.webView.style.zIndex + 101;
+        var navBar = document.createElement("div");
+        navBar.id = "navBar";
+        navBar.classList.add("customColor");
+        parentDiv.appendChild(navBar);
+        WAT.components.stage.appendChild(parentDiv);
+        WAT.components.navBar = navBar;
 
-    document.body.appendChild(parent);
-    WAT.components.navBar = div;
+        var listview = document.getElementById("navDrawerListView");
+        var navDrawerIconTextTemplate = document.getElementById("navDrawerIconTextTemplate");
+        var template = new WinJS.Binding.Template(navDrawerIconTextTemplate);
+
+        var list = new WinJS.UI.ListView(listview, { itemDataSource: navDrawerList.dataSource, itemTemplate: navDrawerIconTextTemplate, selectionMode: 'none', tapBehavior: 'invoke', layout: { type: WinJS.UI.ListLayout } });
+        list.itemTemplate = function (itemPromise) {
+            return itemPromise.then(function (item) {
+                var navDrawerIconTextTemplate = document.createElement("div");
+                navDrawerIconTextTemplate.id = "navDrawerIconTextTemplate";
+
+                var navDrawerIconTextItem = document.createElement("div");
+                navDrawerIconTextItem.id = "navDrawerIconTextItem";
+                navDrawerIconTextItem.classList.add("navDrawerIconTextItem");
+
+                if (WAT.manifest.wat_navBar.backgroundColor) {
+                    navDrawerIconTextItem.style.backgroundColor = WAT.manifest.wat_navBar.backgroundColor;
+                }
+
+                var navDrawerIconTextImage = document.createElement("img");
+                navDrawerIconTextImage.classList.add("navDrawerIconTextItem-Image");
+                navDrawerIconTextImage.setAttribute("src", item.data.icon);
+
+                var navDrawerIconTextDetail = document.createElement("div");
+                navDrawerIconTextDetail.classList.add("navDrawerIconTextItem-Detail");
+
+                var h4title = document.createElement("h4");
+                h4title.innerText = item.data.label;
+
+                navDrawerIconTextDetail.appendChild(h4title);
+
+                navDrawerIconTextItem.appendChild(navDrawerIconTextImage);
+                navDrawerIconTextItem.appendChild(navDrawerIconTextDetail);
+
+                navDrawerIconTextTemplate.appendChild(navDrawerIconTextItem);
+
+                return navDrawerIconTextTemplate;
+            });
+
+        }
+    }
 };
 
 setupNavBar = function () {
@@ -94,7 +160,7 @@ setupNavBar = function () {
             else if (WAT.environment.isWindowsPhone) { // initializing navdrawer for phone
                 navDrawerInit();
                 if (menuItem.icon && menuItem.icon != "" && menuItem.icon.substring(0, 2) != "ms") {
-                    menuItem.icon = "ms-appx:///images/enums/" + menuItem.icon + ".png";
+                    menuItem.icon = "ms-appx:///www/images/enums/" + menuItem.icon + ".png";
                 }
 
                 // adding buttons to the navdrawer list
@@ -195,9 +261,9 @@ setButtonAction = function (btn, menuItem) {
 };
 
 initUIDeclarations = function () {
-    //WAT.components.navBar.parentNode.setAttribute("data-win-control", "WinJS.UI.NavBar");
-    //WAT.components.navBar.setAttribute("data-win-control", "WinJS.UI.NavBarContainer");
-    //WAT.components.navBar.setAttribute("data-win-options", "{ maxRows: " + navBarConfig.maxRows + " }");
+    WAT.components.navBar.parentNode.setAttribute("data-win-control", "WinJS.UI.NavBar");
+    WAT.components.navBar.setAttribute("data-win-control", "WinJS.UI.NavBarContainer");
+    WAT.components.navBar.setAttribute("data-win-options", "{ maxRows: " + navBarConfig.maxRows + " }");
 };
 
 
@@ -208,7 +274,7 @@ disableNavDrawer = function () {
     surface.style.width = "100%";
     document.getElementById("hamburger").style.display = "none";
     document.getElementById("search-box").style.display = "none";
-    WAT.options.navDrawer = null;
+    WAT.components.navDrawer = null;
 };
 
     // initializing navdrawer
@@ -243,7 +309,7 @@ itemInvokedHandler = function (eventObject) {
     eventObject.detail.itemPromise.done(function (invokedItem) {
         switch (invokedItem.data.action) {
             case "home":
-                WAT.goToLocation(WAT.manifest.start_url);
+                WAT.components.webView.navigate(WAT.manifest.start_url);
                 break;
             case "eval":
                 var scriptString = "(function() { " + invokedItem.data.data + " })();";
@@ -256,7 +322,7 @@ itemInvokedHandler = function (eventObject) {
             case "nested":
                 break;
             default:
-                WAT.goToLocation(invokedItem.data.action);
+                WAT.components.webView.navigate(invokedItem.data.action);
                 break;
         }
         toggleMenu();
@@ -327,4 +393,113 @@ handleBarNavigate = function () {
     WAT.components.webView.navigate(target.toString());
 };
 
+setupNestedNav = function (menuItem, btn) {
+    var nestedNavID = WAT.getGUID(),
+        flyout = document.createElement("div"),
+        nestedNavContainer = document.createElement("div");
+
+    logger.log("Adding nested navigation on barItem: ", menuItem.label);
+
+    flyout.setAttribute("id", nestedNavID);
+    flyout.style.zIndex = WAT.components.webView.style.zIndex + 100;
+    var options = {placement: 'bottom'};
+    new WinJS.UI.Flyout(flyout, options);
+
+    flyout.className += flyout.className ? ' navbar-submenu' : 'navbar-submenu';
+
+    btn.setAttribute("data-nestednav", nestedNavID);
+    new WinJS.UI.NavBarContainer(nestedNavContainer);
+    nestedNavContainer.winControl.layout = "horizontal";
+    nestedNavContainer.winControl.maxRows = 1;
+    nestedNavContainer.classList.add("win-navbarcontainer");
+
+    menuItem.children.forEach(function (subItem) {
+        var nestedBtn = document.createElement("div");
+
+        nestedBtn.setAttribute("role", "menuitem");
+
+        new WinJS.UI.NavBarCommand(nestedBtn, {
+            label: subItem.label,
+            icon: subItem.icon
+        });
+
+        setButtonAction(nestedBtn, subItem);
+        nestedNavContainer.appendChild(nestedBtn);
+    });
+
+    logger.log("Adding nested navigation UI to DOM");
+
+    flyout.appendChild(nestedNavContainer);
+    document.body.appendChild(flyout);
+
+    afterProcessAllActions.push(function () {
+        // make sure the splittoggle button (arrow) is correct
+        flyout.winControl.addEventListener('beforehide', function () {
+            btn.winControl.splitOpened = false;
+        });
+    });
+};
+
+toggleNestedNav = function (parentNavbarCommand, opened) {
+    var nestedel = document.getElementById(parentNavbarCommand.element.getAttribute("data-nestednav"));
+    var nestedControl = nestedel.winControl;
+    var nestedNavBarContainer = (nestedControl && nestedControl.element.querySelector('.win-navbarcontainer'));
+
+    if (!nestedControl || !nestedNavBarContainer) {
+        return;
+    }
+
+    if (opened) {
+        nestedControl.show(parentNavbarCommand.element);
+        // Switching the navbarcontainer from display none to display block requires
+        // forceLayout in case there was a pending measure.
+        nestedNavBarContainer.winControl.forceLayout();
+        // Reset back to the first item.
+        nestedNavBarContainer.currentIndex = 0;
+
+    } else {
+        nestedControl.hide();
+    }
+};
+
+navigateBack = function (e) {
+    var view = WAT.components.webView;
+
+    if (e && e.currentTarget.getAttribute("disabled") === "disabled") {
+        e.preventDefault();
+        return false;
+    }
+
+    // TODO: reenable when wat_offline is implemented
+    //var offlineModule = WAT.getModule("offline");
+    //if (offlineModule && offlineModule.active && WAT.options.offlineView && !offlineModule.useSuperCache) {
+    //    view = WAT.options.offlineView;
+    //}
+
+    //if (offlineModule && offlineModule.active && WAT.options.offlineView && offlineModule.useSuperCache && view.canGoBack) {
+    //    view.style.display = "block";
+    //    WAT.options.offlineView.style.display = "none";
+    //    offlineModule.active = false;
+    //}
+
+    if (!view.canGoBack) {
+        return false;
+    }
+
+    try {
+        view.goBack();
+    } catch (err) {
+        return false;
+    }
+
+    if (WAT.manifest.wat_appBar && WAT.manifest.wat_appBar.enabled) {
+        WAT.components.appBar.winControl.hide();
+    }
+
+    if (WAT.manifest.wat_navBar && WAT.manifest.wat_navBar.enabled && WAT.environment.isWindows) {
+        WAT.components.navBar.parentNode.winControl.hide();
+    }
+
+    return true;
+}
 module.exports = self; // exports
