@@ -16,16 +16,18 @@ import android.webkit.WebView;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 
-public class ModalActivity extends Activity implements ModalWebViewClient.WebViewCallbacks {
+import com.microsoft.webapptoolkit.ModalWebViewClient.WebViewCallbacks;
 
-    private PlaceholderFragment mPlaceholderFragment;
-    private boolean mHideBackButton;
+public class ModalActivity extends Activity implements WebViewCallbacks {
 
-    private static final int FRAME_LAYOUT_ID = 999;
+  private PlaceholderFragment mPlaceholderFragment;
+  private boolean mHideBackButton;
+
+  private static final int FRAME_LAYOUT_ID = 999;
 
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
+  @Override
+  protected void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
 
       RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
@@ -45,57 +47,57 @@ public class ModalActivity extends Activity implements ModalWebViewClient.WebVie
                   .add(FRAME_LAYOUT_ID, mPlaceholderFragment)
                   .commit();
       }
-    }
+  }
 
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+  @Override
+  public boolean onCreateOptionsMenu(Menu menu) {
       // Inflate the menu; this adds items to the action bar if it is present.
       //getMenuInflater().inflate(R.menu.watmodal, menu);
       return true;
-    }
+  }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
       // Handle action bar item clicks here. The action bar will
       // automatically handle clicks on the Home/Up button, so long
       // as you specify a parent activity in AndroidManifest.xml.
-      int id = item.getItemId();
+      //int id = item.getItemId();
       /*
       if (id == R.id.action_settings) {
           return true;
       }
       */
       return super.onOptionsItemSelected(item);
-    }
+  }
 
-    @Override
-    public void onModalFinished(int code, Intent data) {
+  @Override
+  public void onModalFinished(int code, Intent data) {
       setResult(code, data);
       finish();
-    }
+  }
 
-    @Override
-    public void onBackPressed() {
+  @Override
+  public void onBackPressed() {
       if (mPlaceholderFragment != null && mPlaceholderFragment.handleBackButton() && !mHideBackButton) {
               super.onBackPressed();
       } else if (!mHideBackButton) {
               super.onBackPressed();
       }
 
-    }
+  }
 
-    /**
-    * A placeholder fragment containing a simple view.
-    */
-    public static class PlaceholderFragment extends Fragment {
+  /**
+   * A placeholder fragment containing a simple view.
+   */
+  public static class PlaceholderFragment extends Fragment {
 
       private static WebView mWebView;
       private String mUrlToLoad;
       private String mPatternToMatchForClose;
       private Pattern mMatchForClosePattern;
 
-      private ModalWebViewClient.WebViewCallbacks mCallbacks;
+      private WebViewCallbacks mCallbacks;
       private Context mContext;
 
       public PlaceholderFragment() {
@@ -105,18 +107,18 @@ public class ModalActivity extends Activity implements ModalWebViewClient.WebVie
       public View onCreateView(LayoutInflater inflater, ViewGroup container,
               Bundle savedInstanceState) {
 
-        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
-                RelativeLayout rl = new RelativeLayout(getActivity());
-                rl.setLayoutParams(layoutParams);
+      	RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
+				RelativeLayout rl = new RelativeLayout(getActivity());
+				rl.setLayoutParams(layoutParams);
 
-                mWebView = new WebView(getActivity());
-                mWebView.setLayoutParams(layoutParams);
+				mWebView = new WebView(getActivity());
+				mWebView.setLayoutParams(layoutParams);
 
         configureWebView();
         this.mUrlToLoad = getArguments().getString(Constants.MODAL_ORIGINAL_URL);
         this.mPatternToMatchForClose = getArguments().getString(Constants.MODAL_CLOSE_ON_MATCH);
         this.mMatchForClosePattern = (Pattern) getArguments().get(Constants.MODAL_CLOSE_ON_MATCH_PATTERN);
-        Object obj = getArguments().get(Constants.MODAL_CLOSE_ON_MATCH_PATTERN);
+//        Object obj = getArguments().get(Constants.MODAL_CLOSE_ON_MATCH_PATTERN);
         configureWebView();
         loadURL(this.mUrlToLoad);
 
@@ -128,7 +130,7 @@ public class ModalActivity extends Activity implements ModalWebViewClient.WebVie
       @Override
       public void onAttach(Activity activity) {
           super.onAttach(activity);
-          this.mCallbacks = (ModalWebViewClient.WebViewCallbacks)activity;
+          this.mCallbacks = (WebViewCallbacks)activity;
           this.mContext = activity;
       }
 
@@ -159,7 +161,7 @@ public class ModalActivity extends Activity implements ModalWebViewClient.WebVie
           }
           else
           {
-    //              Log.e(Constants.TAG, "Error loading URL in modal webview");
+//              Log.e(Constants.TAG, "Error loading URL in modal webview");
           }
       }
 
@@ -175,11 +177,11 @@ public class ModalActivity extends Activity implements ModalWebViewClient.WebVie
               return true;
           }
       }
-    }
+  }
 
-    @Override
-    public void onResponseError(int errorCode, String description) {
+	@Override
+  public void onResponseError(int errorCode, String description) {
 
-    }
-	
+  }
+
 }

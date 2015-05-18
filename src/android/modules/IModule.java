@@ -1,6 +1,11 @@
 package com.microsoft.webapptoolkit.modules;
 
-public interface IModule {
-    Object onMessage(String id, Object data);
-    Boolean onNavigationAttempt(String url);
+public abstract class IModule {
+	public Object onMessage(String id, Object data) {
+		return null;
+	}
+
+	public boolean shouldAllowRequest(String url) {
+		return false;
+	}
 }

@@ -7,22 +7,22 @@ import org.apache.cordova.CordovaActivity;
 
 import android.util.Base64;
 
-import com.microsoft.webapptoolkit.model.Manifest;
 import com.microsoft.webapptoolkit.Constants;
 import com.microsoft.webapptoolkit.WebAppToolkit;
 import com.microsoft.webapptoolkit.config.CustomScriptConfig;
 import com.microsoft.webapptoolkit.config.StylesConfig;
+import com.microsoft.webapptoolkit.model.Manifest;
 import com.microsoft.webapptoolkit.utils.Assets;
 
-public class InjectionModule implements IModule{
-
-    private static final String CONFIG_PATH_JAVASCRIPT = "custom_js_path";
-    private static final String CONFIG_PATH_STYLESHEET = "custom_css_path";
+public class InjectionModule extends IModule{
 
 	private StylesConfig stylesConfig = null;
 	private CustomScriptConfig scriptConfig = null;
 	private WebAppToolkit webAppToolkit = null;
 	private CordovaActivity activity;
+
+	private static final String CONFIG_PATH_JAVASCRIPT = "custom_js_path";
+	private static final String CONFIG_PATH_STYLESHEET = "custom_css_path";
 
 	private static InjectionModule instance;
 
@@ -32,27 +32,20 @@ public class InjectionModule implements IModule{
 	}
 
 	public static InjectionModule getInstance(WebAppToolkit webAppToolkit){
-		if(instance == null) {
-            instance = new InjectionModule(webAppToolkit);
-        }
+		if(instance == null)
+			instance = new InjectionModule(webAppToolkit);
 
-        instance.updateConfiguration(webAppToolkit.getManifest());
-
+		instance.updateConfiguration(webAppToolkit.getManifest());
 		return instance;
 	}
 
-    @Override
-    public Object onMessage(String id, Object data) {
-        if (id.equals(Constants.ON_PAGE_FINISHED)) {
-            inject();
-        }
-        return null;
-    }
-
-    @Override
-    public Boolean onNavigationAttempt(String url) {
-        return false;
-    }
+	@Override
+	public Object onMessage(String id, Object data) {
+		if (id.equals(Constants.ON_PAGE_FINISHED)) {
+			inject();
+		}
+		return null;
+	}
 
 	public void inject() {
 		this.injectCustomScripts();
@@ -63,7 +56,7 @@ public class InjectionModule implements IModule{
 
 	private void evalJS(final String action) {
 		if (action != null && action != "") {
-			this.webAppToolkit.webView.loadUrl("javascript:" + action);
+			this.webAppToolkit.webView.getEngine().loadUrl("javascript:" + action, false);
 		}
 	}
 
@@ -81,7 +74,7 @@ public class InjectionModule implements IModule{
 
 	private void injectScriptFile(String fileName) {
 		String fileContent = Assets.readEncoded(fileName,
-                this.activity);
+				this.activity);
 		this.injectScript(fileContent);
 	}
 
@@ -133,29 +126,24 @@ public class InjectionModule implements IModule{
 		}
 	}
 
-    private void updateConfiguration(Manifest manifest) {
+	private void updateConfiguration(Manifest manifest) {
+		String keyvalue;
+		try {
+			keyvalue = activity.getIntent().getStringExtra(
+					CONFIG_PATH_JAVASCRIPT.toLowerCase(Locale.getDefault()));
+			if (keyvalue != null) {
+				manifest.getCustomScript().setCustomFilePath(keyvalue);
+			}
+			keyvalue = activity.getIntent().getStringExtra(
+					CONFIG_PATH_STYLESHEET.toLowerCase(Locale.getDefault()));
+			if (keyvalue != null) {
+				manifest.getStyles().setCustomFilePath(keyvalue);
+			}
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		this.scriptConfig = manifest.getCustomScript();
+		this.stylesConfig = manifest.getStyles();
 
-        // Update custom file path (if defined)
-        try {
-            String keyvalue;
-
-            keyvalue = activity.getIntent().getStringExtra(
-                    CONFIG_PATH_JAVASCRIPT.toLowerCase(Locale.getDefault()));
-            if (keyvalue != null) {
-                manifest.getCustomScript().setCustomFilePath(keyvalue);
-            }
-            keyvalue = activity.getIntent().getStringExtra(
-                    CONFIG_PATH_STYLESHEET.toLowerCase(Locale.getDefault()));
-            if (keyvalue != null) {
-                manifest.getStyles().setCustomFilePath(keyvalue);
-            }
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-
-        this.scriptConfig = manifest.getCustomScript();
-        this.stylesConfig = manifest.getStyles();
-    }
-
-	// End JS and Styles injection
+	}
 }
