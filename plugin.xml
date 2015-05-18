@@ -42,6 +42,10 @@
         <source-file src="src/android/modules/IModule.java" target-dir="src/com/microsoft/webapptoolkit/modules" />
         <source-file src="src/android/modules/InjectionModule.java" target-dir="src/com/microsoft/webapptoolkit/modules" />
         <source-file src="src/android/modules/RedirectsModule.java" target-dir="src/com/microsoft/webapptoolkit/modules" />
+        
+        <config-file target="AndroidManifest.xml" parent="/manifest/application">
+            <activity android:name="com.microsoft.webapptoolkit.ModalActivity" />
+        </config-file>
     </platform>
 
     <!-- windows -->

@@ -1,10 +1,5 @@
 package com.microsoft.webapptoolkit.modules;
 
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.util.Hashtable;
 import java.util.regex.Matcher;
 
 import org.apache.cordova.CordovaActivity;
