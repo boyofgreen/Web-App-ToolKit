@@ -127,6 +127,8 @@ function initialize() {
       require('com.microsoft.webapptoolkit.WATCustomScript').init(WAT);
       require('com.microsoft.webapptoolkit.WATNavBar').init(WAT);
       require('com.microsoft.webapptoolkit.WATHeader').init(WAT);
+      require('com.microsoft.webapptoolkit.WATSecondaryPins').init(WAT);
+
     }
   }
 }

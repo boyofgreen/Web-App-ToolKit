@@ -88,6 +88,9 @@
       <js-module src="src/windows/WATHeader.js" name="WATHeader">
         <merges target="" />
       </js-module>
+      <js-module src="src/windows/WATSecondaryPins.js" name="WATSecondaryPins">
+        <merges target="" />
+      </js-module>
     </platform>
 
   <!-- ios -->
