@@ -39,6 +39,8 @@ setupPinning = function () {
        btn.addEventListener("click", pinHandler);
 
        WAT.components.appBar.appendChild(btn);
+       WAT.components.appBar.winControl.disabled = true;
+       WAT.components.appBar.winControl.disabled = false;
    };
 
 pinHandler = function () {
