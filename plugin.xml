@@ -25,37 +25,27 @@
         </config-file>
 
         <source-file src="src/android/WebAppToolkit.java" target-dir="src/com/microsoft/webapptoolkit" />
+        <source-file src="src/android/Constants.java" target-dir="src/com/microsoft/webapptoolkit/" />
+        <source-file src="src/android/ModalActivity.java" target-dir="src/com/microsoft/webapptoolkit/" />
+        <source-file src="src/android/ModalWebViewClient.java" target-dir="src/com/microsoft/webapptoolkit/" />
 
-        <source-file src="src/android/model/Manifest.java" target-dir="src/com/microsoft/webapptoolkit/model" />
-        <source-file src="src/android/model/ShareConfig.java" target-dir="src/com/microsoft/webapptoolkit/model" />
-        <source-file src="src/android/model/CustomScriptConfig.java" target-dir="src/com/microsoft/webapptoolkit/model" />
-        <source-file src="src/android/model/StylesConfig.java" target-dir="src/com/microsoft/webapptoolkit/model" />
-        <source-file src="src/android/model/MenuItem.java" target-dir="src/com/microsoft/webapptoolkit/model" />
-        <source-file src="src/android/model/NavBarConfig.java" target-dir="src/com/microsoft/webapptoolkit/model" />
-        <source-file src="src/android/model/AppBarConfig.java" target-dir="src/com/microsoft/webapptoolkit/model" />
+        <source-file src="src/android/model/Manifest.java" target-dir="src/com/microsoft/webapptoolkit/model" />     
+        
+        <source-file src="src/android/config/CustomScriptConfig.java" target-dir="src/com/microsoft/webapptoolkit/config" />
+        <source-file src="src/android/config/StylesConfig.java" target-dir="src/com/microsoft/webapptoolkit/config" />
+        <source-file src="src/android/config/RedirectsConfig.java" target-dir="src/com/microsoft/webapptoolkit/config" />
+        <source-file src="src/android/config/RedirectRulesConfig.java" target-dir="src/com/microsoft/webapptoolkit/config" />
 
         <source-file src="src/android/utils/Assets.java" target-dir="src/com/microsoft/webapptoolkit/utils" />
-        <source-file src="src/android/utils/NavDrawerListAdapter.java" target-dir="src/com/microsoft/webapptoolkit/utils" />
         <source-file src="src/android/utils/ResourceHelper.java" target-dir="src/com/microsoft/webapptoolkit/utils" />
 
-        <source-file src="libs/android/android-support-v4.jar" target-dir="libs/" />
-
-
-        <!-- icons for drawer -->
-        <source-file src="assets/android/drawable/mdpi/ic_drawer.png" target-dir="res/drawable-mdpi/" />
-        <source-file src="assets/android/drawable/mdpi/drawer_shadow.9.png" target-dir="res/drawable-mdpi/" />
-        <source-file src="assets/android/drawable/hdpi/ic_drawer.png" target-dir="res/drawable-hdpi/" />
-        <source-file src="assets/android/drawable/hdpi/drawer_shadow.9.png" target-dir="res/drawable-hdpi/" />
-        <source-file src="assets/android/drawable/xhdpi/ic_drawer.png" target-dir="res/drawable-xhdpi/" />
-        <source-file src="assets/android/drawable/xhdpi/drawer_shadow.9.png" target-dir="res/drawable-xhdpi/" />
-        <source-file src="assets/android/drawable/xxhdpi/ic_drawer.png" target-dir="res/drawable-xxhdpi/" />
-        <source-file src="assets/android/drawable/xxhdpi/drawer_shadow.9.png" target-dir="res/drawable-xxhdpi/" />
-
-
-        <source-file src="assets/android/drawable/layout/drawer_list_item.xml" target-dir="res/layout/" />
-
-        <source-file src="assets/android/drawable/list_item_selector.xml" target-dir="res/drawable/" />
-        <!-- end of icons for drawer -->
+        <source-file src="src/android/modules/IModule.java" target-dir="src/com/microsoft/webapptoolkit/modules" />
+        <source-file src="src/android/modules/InjectionModule.java" target-dir="src/com/microsoft/webapptoolkit/modules" />
+        <source-file src="src/android/modules/RedirectsModule.java" target-dir="src/com/microsoft/webapptoolkit/modules" />
+        
+        <config-file target="AndroidManifest.xml" parent="/manifest/application">
+            <activity android:name="com.microsoft.webapptoolkit.ModalActivity" />
+        </config-file>
     </platform>
 
     <!-- windows -->
@@ -86,6 +76,9 @@
         <merges target="" />
       </js-module>
       <js-module src="src/windows/WATHeader.js" name="WATHeader">
+        <merges target="" />
+      </js-module>
+      <js-module src="src/windows/WATSettings.js" name="WATSettings">
         <merges target="" />
       </js-module>
       <js-module src="src/windows/WATSecondaryPins.js" name="WATSecondaryPins">

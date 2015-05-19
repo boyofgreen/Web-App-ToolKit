@@ -2,22 +2,23 @@ package com.microsoft.webapptoolkit.model;
 
 import org.json.JSONObject;
 
+import com.microsoft.webapptoolkit.config.CustomScriptConfig;
+import com.microsoft.webapptoolkit.config.RedirectsConfig;
+import com.microsoft.webapptoolkit.config.StylesConfig;
+
 public class Manifest {
+
   private String startUrl;
   private String name;
   private String shortName;
-  private ShareConfig share;
   private CustomScriptConfig customScript;
   private StylesConfig styles;
-  private NavBarConfig navBar;
-  private AppBarConfig appBar;
+  private RedirectsConfig redirects;
 
   public Manifest() {
-    this.share = new ShareConfig();
     this.customScript = new CustomScriptConfig();
     this.styles = new StylesConfig();
-    this.navBar = new NavBarConfig();
-    this.appBar = new AppBarConfig();
+    this.redirects = new RedirectsConfig();
   }
 
   public Manifest(JSONObject manifestObject) {
@@ -34,12 +35,6 @@ public class Manifest {
         this.shortName = manifestObject.optString("short_name");
       }
 
-      if (manifestObject.has("wat_share")) {
-        this.share = new ShareConfig(manifestObject.optJSONObject("wat_share"));
-      } else {
-        this.share = new ShareConfig();
-      }
-
       if (manifestObject.has("wat_customScript")){
         this.customScript = new CustomScriptConfig(manifestObject.optJSONObject("wat_customScript"));
       }else{
@@ -52,16 +47,11 @@ public class Manifest {
         this.styles = new StylesConfig();
       }
 
-      if (manifestObject.has("wat_navBar")) {
-        this.navBar = new NavBarConfig(manifestObject.optJSONObject("wat_navBar"));
+      if (manifestObject.has("wat_redirects")) {
+		this.redirects = new RedirectsConfig(
+		manifestObject.optJSONObject("wat_redirects"), this);
       } else {
-        this.navBar = new NavBarConfig();
-      }
-
-      if (manifestObject.has("wat_appBar")) {
-        this.appBar = new AppBarConfig(manifestObject.optJSONObject("wat_appBar"));
-      } else {
-        this.appBar = new AppBarConfig();
+		this.redirects = new RedirectsConfig();
       }
     }
   }
@@ -78,10 +68,6 @@ public class Manifest {
     return this.shortName;
   }
 
-  public ShareConfig getShare() {
-    return this.share;
-  }
-
   public CustomScriptConfig getCustomScript() {
     return this.customScript;
   }
@@ -90,11 +76,7 @@ public class Manifest {
     return this.styles;
   }
 
-  public NavBarConfig getNavBar() {
-    return this.navBar;
-  }
-
-  public AppBarConfig getAppBar() {
-    return this.appBar;
-  }
+  public RedirectsConfig getRedirectsConfig() {
+		return this.redirects;
+	}
 }

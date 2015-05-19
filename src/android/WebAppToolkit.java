@@ -1,415 +1,166 @@
 package com.microsoft.webapptoolkit;
 
-import android.app.ActionBar;
-import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
-import android.os.Build;
-import android.support.v4.app.ActionBarDrawerToggle;
-import android.support.v4.widget.DrawerLayout;
-import android.util.Base64;
-import android.util.Log;
-import android.view.Gravity;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.ViewParent;
-import android.view.Window;
-import android.widget.AdapterView;
-import android.widget.FrameLayout;
-import android.widget.LinearLayout;
-import android.widget.ListView;
-
-import com.microsoft.hostedwebapp.HostedWebApp;
-
-import com.microsoft.sample.R;
-import com.microsoft.webapptoolkit.model.CustomScriptConfig;
-import com.microsoft.webapptoolkit.model.Manifest;
-import com.microsoft.webapptoolkit.model.ShareConfig;
-import com.microsoft.webapptoolkit.model.StylesConfig;
-import com.microsoft.webapptoolkit.utils.Assets;
-import com.microsoft.webapptoolkit.utils.NavDrawerListAdapter;
-import com.microsoft.webapptoolkit.utils.ResourceHelper;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.CordovaActivity;
 import org.apache.cordova.CordovaPlugin;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.List;
+import android.app.ActionBar;
+import android.content.Context;
+import android.os.Build;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.Window;
+
+import com.manifoldjs.hostedwebapp.HostedWebApp;
+import com.microsoft.webapptoolkit.model.Manifest;
+import com.microsoft.webapptoolkit.modules.*;
 
 /**
-* This class ...
-*/
+ * This class ...
+ */
 public class WebAppToolkit extends CordovaPlugin {
 
-  private CordovaActivity activity;
+	private CordovaActivity activity;
+	private Manifest manifest;
+	private List<IModule> modules;
+	private Menu menu;
 
-  private Manifest manifest;
+	@Override
+	public void pluginInitialize() {
+		this.activity = (CordovaActivity) this.cordova.getActivity();
 
-  private DrawerLayout mDrawerLayout;
-  private ListView mDrawerList;
-  private ActionBarDrawerToggle mDrawerToggle;
+		Window window = this.activity.getWindow();
+		if (Build.VERSION.SDK_INT > 10) {
+			if (!window.hasFeature(Window.FEATURE_ACTION_BAR)) {
+				Log.e("WAT-Initialization",
+						"ActionBar feature not available, Window.FEATURE_ACTION_BAR must be enabled!. Try changing the theme.");
+			}
+		}
 
-  @Override
-  public void pluginInitialize() {
-    this.activity = (CordovaActivity) this.cordova.getActivity();
+		HostedWebApp hostedAppPlugin = (HostedWebApp) this.webView.getPluginManager()
+				.getPlugin("HostedWebApp");
+		if (hostedAppPlugin != null) {
+			JSONObject manifestObject = hostedAppPlugin.getManifest();
 
-    Window window = this.activity.getWindow();
-    if (Build.VERSION.SDK_INT > 10) {
-      if (!window.hasFeature(Window.FEATURE_ACTION_BAR)) {
-        Log.e("WAT-Initialization", "ActionBar feature not available, Window.FEATURE_ACTION_BAR must be enabled!. Try changing the theme.");
-      }
-    }
+			if (manifestObject != null) {
+				this.manifest = new Manifest(manifestObject);
+				this.initialize();
+			}
+		}
+	}
 
-    HostedWebApp hostedAppPlugin = (HostedWebApp) this.webView.pluginManager.getPlugin("HostedWebApp");
-    if (hostedAppPlugin != null) {
-      JSONObject manifestObject = hostedAppPlugin.getManifest();
-
-      if (manifestObject != null) {
-        this.manifest = new Manifest(manifestObject);
-        this.initialize();
-      }
-    }
-  }
-
-  @Override
-  public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
-    if (action.equals("share")) {
-      if (args.length() > 0) {
-        doShare(args.getString(0));
-      } else {
-        doShare();
-      }
-    } else if (action.equals("initialize")) {
-      this.initialize();
-    } else {
-      return false;
-    }
-
-    return true;
-  }
-
-  public void initialize() {
-    if (this.manifest != null) {
-      if (this.manifest.getNavBar().isEnabled()) {
-        this.configureNavBar();
-      }
-
-      String name = this.manifest.getShortName();
-      if (name == null || name == "") {
-        name = this.manifest.getName();
-      }
-
-      if (Build.VERSION.SDK_INT > 10) {
-        ActionBar actionBar = this.activity.getActionBar();
-
-        if (actionBar != null) {
-          actionBar.setTitle(name);
+    /**
+     * Hook for blocking navigation by the Cordova WebView. This applies both to top-level and
+     * iframe navigations.
+     *
+     * This will be called when the WebView's needs to know whether to navigate
+     * to a new page. Return false to block the navigation: if any plugin
+     * returns false, Cordova will block the navigation. If all plugins return
+     * null, the default policy will be enforced. It at least one plugin returns
+     * true, and no plugins return false, then the navigation will proceed.
+     */
+    public Boolean shouldAllowNavigation(String url) {
+        boolean shouldAllowRequest;
+        for (IModule m : this.modules) {
+            shouldAllowRequest = m.shouldAllowRequest(url);
+            if (!shouldAllowRequest) return false;
         }
-      }
-
-      this.activity.setTitle(name);
+        return super.shouldAllowNavigation(url);
     }
 
-    this.activity.invalidateOptionsMenu();
-  }
+	/**
+	 * Called when the URL of the webview changes.
+	 *
+	 * @param url               The URL that is being changed to.
+	 * @return                  Return false to allow the URL to load, return true to prevent the URL from loading.
+	 */
+	@Override
+	public boolean onOverrideUrlLoading(String url) {
+		boolean shouldAllowRequest;
+		for (IModule m : this.modules) {
+			shouldAllowRequest = m.shouldAllowRequest(url);
+			if (shouldAllowRequest) return false;
+		}
+		return super.onOverrideUrlLoading(url);
+	}
 
-  @Override
-  public Object onMessage(String id, Object data) {
-    if (id.equals("onCreateOptionsMenu") && data != null) {
-      this.onCreateOptionsMenu((Menu) data);
-    }
+	@Override
+	public boolean execute(String action, JSONArray args,
+			CallbackContext callbackContext) throws JSONException {
 
-    if (id.equals("onOptionsItemSelected") && data != null) {
-      return this.onOptionsItemSelected((MenuItem) data);
-    }
+		return false;
+	}
 
-    if (id.equals("hostedWebApp_manifestLoaded") && data != null) {
-      this.manifest = new Manifest((JSONObject) data);
-      this.initialize();
-    }
+	public void initialize() {
+		if (this.manifest != null) {
 
-    if (id.equals("onPageFinished") && this.manifest != null) {
-      this.injectCustomScripts();
-      this.injectStyles();
-    }
 
-    return null;
-  }
+			/* New Module Implementation */
+			this.modules = new ArrayList<IModule>();
+			this.modules.add(InjectionModule.getInstance(this));
+			this.modules.add(RedirectsModule.getInstance(this));
 
-  private void onCreateOptionsMenu(Menu menu) {
-    if (this.manifest != null) {
-      //Clear menu to remove any old entities
-      menu.clear();
+			String name = this.manifest.getShortName();
+			if (name == null || name == "") {
+				name = this.manifest.getName();
+			}
 
-      addAppBarButtonsToActionBarMenu(menu);
-      appendShareActionsToActionBarMenu(menu);
-    }
-  }
+			if (Build.VERSION.SDK_INT > 10) {
+				ActionBar actionBar = this.activity.getActionBar();
 
-  private boolean onOptionsItemSelected(MenuItem item) {
-    int id = item.getItemId();
+				if (actionBar != null) {
+					actionBar.setTitle(name);
+				}
+			}
+			this.activity.setTitle(name);
+		}
+		this.activity.invalidateOptionsMenu();
+	}
 
-    if (mDrawerToggle != null && mDrawerToggle.onOptionsItemSelected(item)) {
-      return true;
-    }
+	@Override
+	public Object onMessage(String id, Object data) {
+		if (id.equals("hostedWebApp_manifestLoaded") && data != null) {
+			this.manifest = new Manifest((JSONObject) data);
+			this.initialize();
+		}
 
-    return false;
-  }
+		if (id.equals("onPageFinished") && this.manifest != null) {
+			broadcastMessage(Constants.ON_PAGE_FINISHED, data);
+		}
 
-  // Begin Share
-  private Intent doShare() {
-    return this.doShare(null);
-  }
+		if (id.equals("onPageStarted") && this.manifest != null) {
+			broadcastMessage(Constants.ON_PAGE_STARTED, data);
+		}
 
-  // Share intent TODO: would need to implement special cases for sharing across various social media, at the moment it's the lowest common denominator - URL only.
-  private Intent doShare(String url) {
-    // share text
-    String shareURL = ShareConfig.CURRENT_URL;
+		return null;
+	}
 
-    if (url != null && !url.isEmpty()) {
-      shareURL = url;
-    } else {
-      if (this.manifest != null && this.manifest.getShare().isEnabled()) {
-        ShareConfig shareOptions = this.manifest.getShare();
-        shareURL = shareOptions.getUrl();
-      }
-    }
+	private void broadcastMessage(String messageId, Object data) {
+		for (IModule m : this.modules) {
+			m.onMessage(messageId, data);
+		}
+	}
 
-    // share link
-    if (shareURL.equalsIgnoreCase(ShareConfig.CURRENT_URL)) {
-      shareURL = this.webView.getUrl();
-    }
+	private void broadcastMessage(String messageId) {
+		broadcastMessage(messageId, null);
+	}
 
-    // share image
-    //Uri path = Uri.parse(String.format("android.resource://%s/%s", this.getPackageName(), getResources().getDrawable(R.drawable.ic_launcher) ));
+	public Manifest getManifest() {
+		return this.manifest;
+	}
 
-    // sharing intent
-    Intent intent = new Intent(Intent.ACTION_SEND);
-    intent.setType("text/plain"); // "text/plain" "text/html" "image/*" "*/*"
-    intent.putExtra(Intent.EXTRA_TEXT, shareURL); // shareMessage // only a link is supported by FaceBook! (See bug report: https://developers.facebook.com/x/bugs/332619626816423/ and http://stackoverflow.com/questions/13286358/sharing-to-facebook-twitter-via-share-intent-android)
-    this.activity.startActivity(Intent.createChooser(intent, "Share via")); // Share via
-    return intent;
-  }
+	public Context getContext() {
+		return this.activity;
+	}
 
-  private void appendShareActionsToActionBarMenu(Menu menu) {
-    if (this.manifest != null && this.manifest.getShare().isEnabled()) {
-      ShareConfig shareConfig = this.manifest.getShare();
-      // Easy Share Action requires API Level 14
-      if (Build.VERSION.SDK_INT > 13) {
-        MenuItem menuItem = menu.add(shareConfig.getButtonText());
-        menuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
-        menuItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-          @Override
-          public boolean onMenuItemClick(MenuItem arg0) {
-            doShare();
-            return false;
-          }
-        });
-      }
-    }
-  }
-
-  // End Share
-
-  // Begin JS and Styles injection
-
-  private void evalJS(final String action) {
-    if (action != null && action != "") {
-      if (cordova.getActivity().getApplicationInfo().targetSdkVersion < Build.VERSION_CODES.KITKAT) {
-        webView.loadUrl("javascript:" + action);
-      } else {
-        webView.evaluateJavascript(action, null);
-      }
-    }
-  }
-
-  private void injectScript(String scriptContent) {
-    if (scriptContent != null && scriptContent != "") {
-      String script = "(function() {"
-      + "var element = document.createElement('script');"
-      + "element.type = 'text/javascript';"
-      + "element.innerHTML = window.atob('" + scriptContent + "');"
-      + "document.head.appendChild(element)" + "})()";
-
-      this.evalJS(script);
-    }
-  }
-
-  private void injectScriptFile(String fileName) {
-    String fileContent = Assets.readEncoded(fileName, this.cordova.getActivity());
-    this.injectScript(fileContent);
-  }
-
-  private void injectCustomScripts() {
-    CustomScriptConfig config = this.manifest.getCustomScript();
-
-    if (config.isEnabled()) {
-      List<String> scriptFiles = config.getScriptFiles();
-      for (String file : scriptFiles) {
-        this.injectScriptFile(file);
-      }
-
-      String customString = config.getCustomString();
-      String encodedScript = Base64.encodeToString(customString.getBytes(), Base64.NO_WRAP);
-      this.injectScript(encodedScript);
-    }
-  }
-
-  private void injectStyle(String styleContent) {
-    if (styleContent != null && styleContent != "") {
-      String script = "(function() {"
-      + "var element = document.createElement('style');"
-      + "element.type = 'text/css';"
-      + "element.innerHTML = window.atob('" + styleContent + "');"
-      + "document.head.appendChild(element)" + "})()";
-
-      this.evalJS(script);
-    }
-  }
-
-  private void injectStyleFile(String fileName) {
-    String fileContent = Assets.readEncoded(fileName, this.cordova.getActivity());
-    this.injectStyle(fileContent);
-  }
-
-  private void injectStyles() {
-    StylesConfig config = this.manifest.getStyles();
-
-    if (config.isEnabled()) {
-      List<String> scriptFiles = config.getCssFiles();
-      for (String file : scriptFiles) {
-        this.injectStyleFile(file);
-      }
-
-      String customString = config.getInlineStyles();
-      String encodedStyles = Base64.encodeToString(customString.getBytes(), Base64.NO_WRAP);
-      this.injectStyle(encodedStyles);
-    }
-  }
-
-  // End JS and Styles injection
-
-  // Begin AppBar
-  private void addAppBarButtonsToActionBarMenu(Menu menu) {
-    if (manifest != null && manifest.getAppBar() != null && manifest.getAppBar().isEnabled()) {
-      for (final com.microsoft.webapptoolkit.model.MenuItem btn : manifest.getAppBar().getMenuItems()) {
-        MenuItem menuItem = menu.add(btn.getLabel());
-        if (Build.VERSION.SDK_INT > 10) {
-          menuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_WITH_TEXT); // setShowAsAction requires API level 11
-          int resId = ResourceHelper.getResourceIconId(this.activity, btn.getIcon());
-
-          if (resId > 0) {
-            menuItem.setIcon(resId); // R.drawable.ic_action_about
-          }
-
-          menuItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem arg) {
-              doMenuAction(btn);
-              return false;
-            }
-          });
-        }
-      }
-    }
-  }
-
-  private void doMenuAction(com.microsoft.webapptoolkit.model.MenuItem btn) {
-    String action = btn.getAction();
-    if (action != null && action != ""){
-      if( action.equalsIgnoreCase("eval") ) {
-        // eval javascript
-        this.evalJS(btn.getData());
-      } else {
-        // handle URL
-        this.webView.loadUrlIntoView(action, false);
-      }
-    }
-  }
-
-  // End AppBar
-
-  // Begin NavBar
-
-  public void configureNavBar() {
-    if (this.manifest != null && this.manifest.getNavBar().isEnabled()) {
-      ActionBar actionBar = this.activity.getActionBar();
-      if (actionBar != null) {
-        NavDrawerListAdapter adapter = new NavDrawerListAdapter(this.activity, this.manifest.getNavBar().getMenuItems());
-
-        ViewParent parent = this.webView.getParent();
-        if ((parent != null)) {
-          ViewGroup parentGroup = (ViewGroup) parent;
-          parentGroup.removeView(this.webView);
-        }
-
-        final FrameLayout frameLayout = new FrameLayout(this.activity);
-        frameLayout.addView(this.webView);
-
-        DrawerLayout.LayoutParams lp = new DrawerLayout.LayoutParams(700, LinearLayout.LayoutParams.MATCH_PARENT);
-        lp.gravity = Gravity.START;
-
-        mDrawerList = new ListView(this.activity);
-        mDrawerList.setLayoutParams(lp);
-        mDrawerList.setDivider(new ColorDrawable(Color.BLACK));
-        mDrawerList.setDividerHeight(1);
-        mDrawerList.setBackgroundColor(Color.WHITE);
-        mDrawerList.setClickable(true);
-        mDrawerList.setOnItemClickListener(new SlideMenuClickListener());
-        mDrawerList.setAdapter(adapter);
-
-        if (Build.VERSION.SDK_INT > 10) {
-          actionBar.setDisplayHomeAsUpEnabled(true);
-
-          if (Build.VERSION.SDK_INT > 13) {
-            actionBar.setHomeButtonEnabled(true);
-          }
-        }
-
-        mDrawerLayout = new DrawerLayout(this.activity);
-        mDrawerLayout.addView(mDrawerList);
-        mDrawerLayout.addView(frameLayout);
-
-        mDrawerToggle = new ActionBarDrawerToggle(this.activity, mDrawerLayout, R.drawable.ic_drawer, R.string.app_name, R.string.app_name);
-
-        mDrawerToggle.setDrawerIndicatorEnabled(true);
-        mDrawerToggle.syncState();
-
-        mDrawerLayout.setDrawerListener(mDrawerToggle);
-
-        activity.setContentView(mDrawerLayout);
-
-        displayView(0);
-
-        mDrawerList.bringToFront();
-        mDrawerLayout.requestLayout();
-      }
-    }
-  }
-
-  private void displayView(int position) {
-    final com.microsoft.webapptoolkit.model.MenuItem menuItem = this.manifest.getNavBar().getMenuItems().get(position);
-
-    this.doMenuAction(menuItem);
-
-    mDrawerList.setItemChecked(position, true);
-    mDrawerList.setSelection(position);
-    mDrawerLayout.closeDrawer(mDrawerList);
-  }
-
-  private class SlideMenuClickListener implements ListView.OnItemClickListener {
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-      ((NavDrawerListAdapter) parent.getAdapter()).setItemSelected(position);
-      displayView(position);
-    }
-  }
-
-  // End nav bar
+	public Menu getMenu() {
+		return this.menu;
+	}
 }
