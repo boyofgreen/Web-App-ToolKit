@@ -29,8 +29,8 @@
         <source-file src="src/android/ModalActivity.java" target-dir="src/com/microsoft/webapptoolkit/" />
         <source-file src="src/android/ModalWebViewClient.java" target-dir="src/com/microsoft/webapptoolkit/" />
 
-        <source-file src="src/android/model/Manifest.java" target-dir="src/com/microsoft/webapptoolkit/model" />     
-        
+        <source-file src="src/android/model/Manifest.java" target-dir="src/com/microsoft/webapptoolkit/model" />
+
         <source-file src="src/android/config/CustomScriptConfig.java" target-dir="src/com/microsoft/webapptoolkit/config" />
         <source-file src="src/android/config/StylesConfig.java" target-dir="src/com/microsoft/webapptoolkit/config" />
         <source-file src="src/android/config/RedirectsConfig.java" target-dir="src/com/microsoft/webapptoolkit/config" />
@@ -42,7 +42,7 @@
         <source-file src="src/android/modules/IModule.java" target-dir="src/com/microsoft/webapptoolkit/modules" />
         <source-file src="src/android/modules/InjectionModule.java" target-dir="src/com/microsoft/webapptoolkit/modules" />
         <source-file src="src/android/modules/RedirectsModule.java" target-dir="src/com/microsoft/webapptoolkit/modules" />
-        
+
         <config-file target="AndroidManifest.xml" parent="/manifest/application">
             <activity android:name="com.microsoft.webapptoolkit.ModalActivity" />
         </config-file>
@@ -76,6 +76,9 @@
         <merges target="" />
       </js-module>
       <js-module src="src/windows/WATHeader.js" name="WATHeader">
+        <merges target="" />
+      </js-module>
+      <js-module src="src/windows/WATLiveTiles.js" name="WATLiveTiles">
         <merges target="" />
       </js-module>
     </platform>
