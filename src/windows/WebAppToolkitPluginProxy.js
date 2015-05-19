@@ -46,6 +46,20 @@ var WAT = {
 
       return new RegExp(regexBody);
   },
+  goToLocation: function (location) {
+      var target = new Windows.Foundation.Uri(location || WAT.manifest.startUrl);
+
+      WAT.components.webView.navigate(target.toString());
+
+      //here we'll close the menus when we start to navigate
+
+      if (WAT.manifest.wat_appBar && WAT.components.appBar.winControl && WAT.manifest.wat_appBar.enabled) {
+          WAT.components.appBar.winControl.hide();
+      }
+      if (WAT.manifest.wat_navBar && WAT.manifest.wat_navBar.enabled && WAT.components.navBar.parentNode && WAT.components.navBar.parentNode.winControl) {
+          WAT.components.navBar.parentNode.winControl.hide();
+      }
+  }
 };
 
 module.exports = {
@@ -91,12 +105,6 @@ cordova.commandProxy.add("WebAppToolkit", module.exports);
   }
   scriptElem.addEventListener("load", loadWinJScss);
   document.head.appendChild(scriptElem);
-
-  // Create stage element
-  var stage = document.createElement("div");
-  stage.id = "stage";
-  WAT.components.stage = stage;
-  document.body.appendChild(stage);
 })(function () {
   document.addEventListener('manifestLoaded', function (evt) {
     WAT.manifest = evt.manifest;
@@ -127,6 +135,7 @@ function initialize() {
       require('com.microsoft.webapptoolkit.WATCustomScript').init(WAT);
       require('com.microsoft.webapptoolkit.WATNavBar').init(WAT);
       require('com.microsoft.webapptoolkit.WATHeader').init(WAT);
+      require('com.microsoft.webapptoolkit.WATSettings').init(WAT);
     }
   }
 }
