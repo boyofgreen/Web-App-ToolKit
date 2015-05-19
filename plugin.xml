@@ -81,6 +81,9 @@
       <js-module src="src/windows/WATLiveTiles.js" name="WATLiveTiles">
         <merges target="" />
       </js-module>
+      <js-module src="src/windows/WATSettings.js" name="WATSettings">
+        <merges target="" />
+      </js-module>
     </platform>
 
   <!-- ios -->
