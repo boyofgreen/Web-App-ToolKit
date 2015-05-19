@@ -3,6 +3,7 @@
 
 var WAT, tileConfig;
 var logger = window.console;
+var setupLiveTile, setupTileFeed, checkSiteforMetaData, processLiveTileMetaTags;
 
 var self = {
   // These match the values in Windows.UI.Notifications.PeriodicUpdateRecurrence
@@ -164,4 +165,4 @@ setupTileFeed = function (feedURL) {
     }
 };
 
-exports = self.module;
+module.exports = self;
