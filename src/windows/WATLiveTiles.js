@@ -15,7 +15,7 @@ var self = {
       WAT = WATRef;
     }
 
-    tileConfig = (WAT.manifest.wat_liveTiles || {});
+    tileConfig = (WAT.manifest.wat_livetile || {});
     setupLiveTile();
   }
 };
