@@ -25,25 +25,36 @@ module.exports = function (context) {
   var sourcePath = path.resolve(__dirname, "..", "assets\\css");
   var destPath = path.resolve(__dirname, "..", "..", "..", "platforms\\windows\\www\\css");
   logger.log('Moving css assets for the windows platform.');
-  
+
   copyAssets(sourcePath, destPath, function (err) {
     if (err) {
       return console.error(err);
     }
-    
+
     return console.log("Finished copying css assets for the windows platform.");
   });
-  
+
   sourcePath = path.resolve(__dirname, "..", "assets\\images");
   destPath = path.resolve(__dirname, "..", "..", "..", "platforms\\windows\\www\\images");
   logger.log('Moving image assets for the windows platform');
-  
+
   copyAssets(sourcePath, destPath, function (err) {
     if (err) {
       return console.error(err);
     }
-    
+
     return console.log("Finished copying image assets for the windows platform.");
+  });
+
+  sourcePath = path.resolve(__dirname, "..", "assets\\js");
+  destPath = path.resolve(__dirname, "..", "..", "..", "platforms\\windows\\www\\js");
+
+  copyAssets(sourcePath, destPath, function (err) {
+    if (err) {
+      return console.error(err);
+    }
+
+    return console.log("Finished copying js assets for the windows platform.");
   });
 };
 
@@ -51,7 +62,8 @@ function copyAssets (source, dest, callback) {
   var basePath = process.cwd(),
       currentPath = path.resolve(basePath, source),
       targetPath = path.resolve(basePath, dest),
-     
+      replace = true,
+
       errs = null,
       started = 0,
       finished = 0,
@@ -59,9 +71,9 @@ function copyAssets (source, dest, callback) {
       limit = 16;
 
   startCopy(currentPath);
-  
+
   function startCopy(source) {
-    started++;    
+    started++;
     return getStats(source);
   }
 
@@ -78,7 +90,7 @@ function copyAssets (source, dest, callback) {
       if (err) {
         return onError(err);
       }
-      
+
       item.name = source;
       item.mode = stats.mode;
 
@@ -93,10 +105,15 @@ function copyAssets (source, dest, callback) {
 
   function onFile(file) {
     var target = file.name.replace(currentPath, targetPath);
-    
+
     isWritable(target, function (writable) {
       if (writable) {
         return copyFile(file, target);
+      }
+      if(replace) {
+        rmFile(target, function () {
+          copyFile(file, target);
+        });
       }
       else {
         return cb();
@@ -107,14 +124,14 @@ function copyAssets (source, dest, callback) {
   function copyFile(file, target) {
     var readStream = fs.createReadStream(file.name),
         writeStream = fs.createWriteStream(target, { mode: file.mode });
-    
+
     readStream.on('error', onError);
     writeStream.on('error', onError);
-     
+
       writeStream.on('open', function() {
         readStream.pipe(writeStream);
       });
-    
+
     writeStream.once('finish', function() {
         cb();
     });
@@ -168,7 +185,7 @@ function copyAssets (source, dest, callback) {
     if (typeof errs.write === 'undefined') {
       errs.push(err);
     }
-    else { 
+    else {
       errs.write(err.stack + '\n\n');
     }
     return cb();
@@ -182,5 +199,14 @@ function copyAssets (source, dest, callback) {
         return errs ? callback(errs) : callback(null);
       }
     }
+  }
+
+  function rmFile(file, done) {
+    fs.unlink(file, function (err) {
+      if (err) {
+        return onError(err);
+      }
+      return done();
+    });
   }
 }
