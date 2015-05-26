@@ -14,7 +14,6 @@
 @property (nonatomic, strong, readonly) NSArray *styleFiles;
 
 - (id)initFromManifest:(NSDictionary*)manifest;
-- (void) setFilePath:(NSString *) newPath;
 
 #define STYLE_FILE_PATH @"css/"
 

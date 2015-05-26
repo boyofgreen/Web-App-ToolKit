@@ -14,7 +14,6 @@
 @property (nonatomic, strong, readonly) NSArray *scriptFiles;
 
 - (id)initFromManifest:(NSDictionary*)manifest;
-- (void) setFilePath:(NSString *) newPath;
 
 #define SCRIPT_FILE_PATH @"js/"
 

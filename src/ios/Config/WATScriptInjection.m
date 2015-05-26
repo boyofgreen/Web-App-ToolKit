@@ -34,27 +34,4 @@
     return [self initFromManifest:nil];
 }
 
-- (void) setFilePath:(NSString *) newPath{
-    if([self validatePath:newPath]){
-      filePath = newPath;
-    }else{
-      NSLog(@"The newPath inserted is incorrect or null. Please keep setting your custom files into the default path( www/files/ )");
-    }
-}
-
-- (BOOL) validatePath:(NSString*)path{
-
-    if (path == nil || [path isEqualToString:@""] == YES || [self matchRegex:path] == NO ) {
-        return NO;
-    }
-    return YES;
-}
-
-- (BOOL) matchRegex:(NSString*) path{
-    if ([path rangeOfString:@"\\A(?:[0-9a-zA-Z\\_\\-]+\\/)+\\z" options:NSRegularExpressionSearch].location != NSNotFound)
-        return YES;
-    else
-        return NO;
-}
-
 @end

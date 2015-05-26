@@ -1,9 +1,19 @@
 #import <Cordova/CDVPlugin.h>
+#import "CDVHostedWebApp.h"
+#import "WATInjectionModule.h"
 
-@interface CDVWebAppToolkit : CDVPlugin
+#define kCDVHostedWebAppWebViewDidStartLoad @"CDVHostedWebAppWebViewDidStartLoad"
+#define kCDVHostedWebAppWebViewDidFinishLoad @"CDVHostedWebAppWebViewDidFinishLoad"
+#define kCDVHostedWebAppWebViewDidFailLoadWithError @"CDVHostedWebAppWebViewDidFailLoadWithError"
+#define kCDVHostedWebAppWebViewShouldStartLoadWithRequest @"CDVHostedWebAppWebViewShouldStartLoadWithRequest"
 
-- (void)share:(CDVInvokedUrlCommand*)command;
+#define kModuleConstantsWebViewDidFinishLoad @"WebViewDidFinishLoad"
+#define kModuleConstantsWebViewShouldStartLoadWithRequest @"WebViewShouldStartLoadWithRequest"
 
-- (void)shareUrl:(NSString *)url withMessage:(NSString *)message withImage:(BOOL) addImage;
+@interface CDVWebAppToolkit : CDVPlugin {
+    WATManifest *manifest;
+}
+
+@property (nonatomic, retain) WATManifest* manifest;
 
 @end
