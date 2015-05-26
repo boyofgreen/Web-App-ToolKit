@@ -9,13 +9,6 @@ import org.json.JSONObject;
 import android.util.Log;
 
 public class StylesConfig {
-
-  // This should be the default path for all the "external" files required
-  // by the user.
-  // TODO: As an additional feature we could allow set a custom
-  // preferences tag into
-  // the config.xml file to the user and check if this preference exists.
-
   private List<String> styleFiles = new ArrayList<String>();
   private List<String> hiddenElements = new ArrayList<String>();
   private String customString = "";
@@ -63,20 +56,6 @@ public class StylesConfig {
     }
   }
 
-  public String getFilePath() {
-    return this.filePath;
-  }
-
-  public void setCustomFilePath(String newFilePath) {
-    if (validateFilePath(newFilePath)) {
-      this.filePath = "www/" + newFilePath;
-    } else {
-      this.filePath = StylesConfig.DefaultFilePath;
-      Log.w(StylesConfig.WTAG,
-            "An invalid or null path received for the custom style files. The default location will be used (/assets/www/css/).");
-    }
-  }
-
   public List<String> getCssFiles() {
     return this.styleFiles;
   }
@@ -103,13 +82,5 @@ public class StylesConfig {
 
   public boolean isEnabled() {
     return this.enabled;
-  }
-
-  private static boolean validateFilePath(String path) {
-    if (path == null || path.equals("")
-    || !path.matches("\\A(?:[0-9a-zA-Z\\_\\-]+\\/)+\\z")) {
-      return false;
-    }
-    return true;
   }
 }

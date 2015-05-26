@@ -14,8 +14,6 @@ import android.app.ActionBar;
 import android.content.Context;
 import android.os.Build;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.Window;
 
 import com.manifoldjs.hostedwebapp.HostedWebApp;
@@ -29,8 +27,7 @@ public class WebAppToolkit extends CordovaPlugin {
 
 	private CordovaActivity activity;
 	private Manifest manifest;
-	private List<IModule> modules;
-	private Menu menu;
+	private List<IModule> modules = new ArrayList<IModule>();
 
 	@Override
 	public void pluginInitialize() {
@@ -101,7 +98,6 @@ public class WebAppToolkit extends CordovaPlugin {
 	public void initialize() {
 		if (this.manifest != null) {
 
-
 			/* New Module Implementation */
 			this.modules = new ArrayList<IModule>();
 			this.modules.add(InjectionModule.getInstance(this));
@@ -158,9 +154,5 @@ public class WebAppToolkit extends CordovaPlugin {
 
 	public Context getContext() {
 		return this.activity;
-	}
-
-	public Menu getMenu() {
-		return this.menu;
 	}
 }

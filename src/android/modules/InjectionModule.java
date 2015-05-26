@@ -15,14 +15,8 @@ import com.microsoft.webapptoolkit.model.Manifest;
 import com.microsoft.webapptoolkit.utils.Assets;
 
 public class InjectionModule extends IModule{
-
-	private StylesConfig stylesConfig = null;
-	private CustomScriptConfig scriptConfig = null;
 	private WebAppToolkit webAppToolkit = null;
 	private CordovaActivity activity;
-
-	private static final String CONFIG_PATH_JAVASCRIPT = "custom_js_path";
-	private static final String CONFIG_PATH_STYLESHEET = "custom_css_path";
 
 	private static InjectionModule instance;
 
@@ -35,7 +29,6 @@ public class InjectionModule extends IModule{
 		if(instance == null)
 			instance = new InjectionModule(webAppToolkit);
 
-		instance.updateConfiguration(webAppToolkit.getManifest());
 		return instance;
 	}
 
@@ -79,17 +72,20 @@ public class InjectionModule extends IModule{
 	}
 
 	private void injectCustomScripts() {
-
-		if (this.scriptConfig.isEnabled()) {
-			List<String> scriptFiles = this.scriptConfig.getScriptFiles();
+        CustomScriptConfig scriptConfig = this.webAppToolkit.getManifest().getCustomScript();
+  
+		if (scriptConfig.isEnabled()) {
+			List<String> scriptFiles = scriptConfig.getScriptFiles();
 			for (String file : scriptFiles) {
 				this.injectScriptFile(file);
 			}
 
-			String customString = this.scriptConfig.getCustomString();
-			String encodedScript = Base64.encodeToString(
-					customString.getBytes(), Base64.NO_WRAP);
-			this.injectScript(encodedScript);
+			String customString = scriptConfig.getCustomString();
+            if (customString != null) {
+                String encodedScript = Base64.encodeToString(
+                        customString.getBytes(), Base64.NO_WRAP);
+                this.injectScript(encodedScript);
+            }
 		}
 	}
 
@@ -112,38 +108,20 @@ public class InjectionModule extends IModule{
 	}
 
 	private void injectStyles() {
-
-		if (this.stylesConfig.isEnabled()) {
-			List<String> scriptFiles = this.stylesConfig.getCssFiles();
+        StylesConfig stylesConfig = this.webAppToolkit.getManifest().getStyles();
+  
+		if (stylesConfig.isEnabled()) {
+			List<String> scriptFiles = stylesConfig.getCssFiles();
 			for (String file : scriptFiles) {
 				this.injectStyleFile(file);
 			}
 
-			String customString = this.stylesConfig.getInlineStyles();
-			String encodedStyles = Base64.encodeToString(
-					customString.getBytes(), Base64.NO_WRAP);
-			this.injectStyle(encodedStyles);
+			String customString = stylesConfig.getInlineStyles();
+            if (customString != null) {
+                String encodedStyles = Base64.encodeToString(
+                        customString.getBytes(), Base64.NO_WRAP);
+                this.injectStyle(encodedStyles);
+            }
 		}
-	}
-
-	private void updateConfiguration(Manifest manifest) {
-		String keyvalue;
-		try {
-			keyvalue = activity.getIntent().getStringExtra(
-					CONFIG_PATH_JAVASCRIPT.toLowerCase(Locale.getDefault()));
-			if (keyvalue != null) {
-				manifest.getCustomScript().setCustomFilePath(keyvalue);
-			}
-			keyvalue = activity.getIntent().getStringExtra(
-					CONFIG_PATH_STYLESHEET.toLowerCase(Locale.getDefault()));
-			if (keyvalue != null) {
-				manifest.getStyles().setCustomFilePath(keyvalue);
-			}
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
-		this.scriptConfig = manifest.getCustomScript();
-		this.stylesConfig = manifest.getStyles();
-
 	}
 }
