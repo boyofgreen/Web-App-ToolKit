@@ -105,8 +105,8 @@
     <header-file src="src/ios/Model/WATManifest.h" />
     <source-file src="src/ios/Model/WATManifest.m" />
 
-    <header-file src="src/ios/Model/WATInjectionModule.h" />
-    <source-file src="src/ios/Model/WATInjectionModule.m" />  
+    <header-file src="src/ios/Modules/WATInjectionModule.h" />
+    <source-file src="src/ios/Modules/WATInjectionModule.m" />  
 
     <header-file src="src/ios/Config/WATScriptInjection.h" />
     <source-file src="src/ios/Config/WATScriptInjection.m" />
