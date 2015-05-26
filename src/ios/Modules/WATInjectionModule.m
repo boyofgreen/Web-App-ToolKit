@@ -77,28 +77,38 @@
 
 - (void)injectJavascript {
     NSString *inlineScript = self.webAppToolkit.manifest.scriptInjection.customString;
-    [webAppToolkit.webView performSelectorOnMainThread:@selector(stringByEvaluatingJavaScriptFromString:) withObject:inlineScript waitUntilDone:NO];
+    if (inlineScript != nil) {
+        [webAppToolkit.webView performSelectorOnMainThread:@selector(stringByEvaluatingJavaScriptFromString:) withObject:inlineScript waitUntilDone:NO];
+    }
 
 
     NSArray *files = self.webAppToolkit.manifest.scriptInjection.scriptFiles;
-    NSString *scripts = @"";
+    NSString *scripts;
     for (NSString *value in files) {
         scripts = [NSString stringWithFormat:@"%@ %@", (scripts!=nil?scripts:@""), [self getContentFromCustomScriptFile:value toolkit:webAppToolkit]];
     }
 
-    [self.webAppToolkit.webView performSelectorOnMainThread:@selector(stringByEvaluatingJavaScriptFromString:) withObject:scripts waitUntilDone:NO];
+    if (scripts != nil) {
+        [self.webAppToolkit.webView performSelectorOnMainThread:@selector(stringByEvaluatingJavaScriptFromString:) withObject:scripts waitUntilDone:NO];
+    }
 }
 
 - (void)injectStylesheet {
-    [self.webAppToolkit.webView performSelectorOnMainThread:@selector(stringByEvaluatingJavaScriptFromString:) withObject:[self getScriptFromInlineStyle:self.webAppToolkit.manifest.styleInjection.customString] waitUntilDone:NO];
-
-    NSArray *files = self.webAppToolkit.manifest.styleInjection.styleFiles;
-    NSString *fromFile;
-    for (NSString *value in files) {
-        fromFile = [NSString stringWithFormat:@"%@ %@", (fromFile!=nil?fromFile:@""), [self getContentFromStyleFile:value toolkit:webAppToolkit]];
+    NSString *inlineStyle = self.webAppToolkit.manifest.styleInjection.customString;
+    if (inlineStyle != nil) {
+        NSString *inlineScript = [self getScriptFromInlineStyle:inlineStyle];
+        [self.webAppToolkit.webView performSelectorOnMainThread:@selector(stringByEvaluatingJavaScriptFromString:) withObject:inlineScript waitUntilDone:NO];
     }
 
-    [self.webAppToolkit.webView performSelectorOnMainThread:@selector(stringByEvaluatingJavaScriptFromString:) withObject:fromFile waitUntilDone:NO];
+    NSArray *files = self.webAppToolkit.manifest.styleInjection.styleFiles;
+    NSString *scripts;
+    for (NSString *value in files) {
+        scripts = [NSString stringWithFormat:@"%@ %@", (scripts!=nil?scripts:@""), [self getContentFromStyleFile:value toolkit:webAppToolkit]];
+    }
+
+    if (scripts != nil) {
+        [self.webAppToolkit.webView performSelectorOnMainThread:@selector(stringByEvaluatingJavaScriptFromString:) withObject:scripts waitUntilDone:NO];
+    }
 }
 
 @end

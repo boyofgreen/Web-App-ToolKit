@@ -10,6 +10,8 @@
 
 @implementation CDVWebAppToolkit
 
+@synthesize manifest;
+
 - (void)pluginInitialize
 {
     [super pluginInitialize];
@@ -73,12 +75,14 @@
 - (void)webViewDidStartLoad:(NSNotification*)notification
 {
     if ([[notification name] isEqualToString:kCDVHostedWebAppWebViewDidStartLoad]) {
+        
     }
 }
 
 - (void)webViewDidFinishLoad:(NSNotification*)notification
 {
     if ([[notification name] isEqualToString:kCDVHostedWebAppWebViewDidFinishLoad]) {
+        [[NSNotificationCenter defaultCenter] postNotification:[NSNotification notificationWithName:kModuleConstantsWebViewDidFinishLoad object:nil]];
     }
 }
 
