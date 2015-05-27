@@ -382,7 +382,7 @@ handleBarEval = function () {
 
     scriptString = "(function() { " + this.dataset.barActionData + " })();";
 
-    exec = WAT.options.webView.invokeScriptAsync("eval", scriptString);
+    exec = WAT.components.webView.invokeScriptAsync("eval", scriptString);
     exec.start();
 };
 
