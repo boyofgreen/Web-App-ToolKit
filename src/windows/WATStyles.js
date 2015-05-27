@@ -3,7 +3,7 @@
 var WAT;
 var stylesConfig;
 var getCustomCssFile, customCssFileLoadHandler, loadCustomCssFileString, customStylesFromFile, loadCustomStyleString, scriptString, cssString,
-    addNavAppBarCustomColorStyles,
+    addNavAppBarCustomColorStyles, addCustomWrapperStyles,
     logger = window.console;
 
 
@@ -14,6 +14,10 @@ var self = {
             WAT = WATref;
             stylesConfig = WAT.manifest.wat_styles || {};
 
+            if (WAT.environment.isWindows){
+              addCustomWrapperStyles();
+            }
+            
             addNavAppBarCustomColorStyles();
 
             // Execute element hiding
@@ -27,6 +31,16 @@ var self = {
 };
 
 // Private Methods
+addCustomWrapperStyles = function () {
+    if (stylesConfig.backButton) {
+        if (stylesConfig.backButton.borderColor) {
+            WAT.components.backButton.style.borderColor = stylesConfig.backButton.borderColor;
+        }
+        if (stylesConfig.backButton.color) {
+            WAT.components.backButton.style.color = stylesConfig.backButton.color;
+        }
+    }
+};
 
 getCustomCssFile = function () {
     var cssFile = "ms-appx://" + ((/^\//.test(stylesConfig.customCssFile)) ? "" : "/") + stylesConfig.customCssFile;
