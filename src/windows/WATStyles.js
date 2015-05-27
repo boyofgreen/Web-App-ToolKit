@@ -3,7 +3,7 @@
 var WAT;
 var stylesConfig;
 var getCustomCssFile, customCssFileLoadHandler, loadCustomCssFileString, customStylesFromFile, loadCustomStyleString, scriptString, cssString,
-    addNavAppBarCustomColorStyles, addCustomWrapperStyles,
+    addNavAppBarCustomColorStyles, addCustomWrapperStyles, setupWrapperCssFile,
     logger = window.console;
 
 
@@ -17,12 +17,15 @@ var self = {
             if (WAT.environment.isWindows){
               addCustomWrapperStyles();
             }
-            
+
             addNavAppBarCustomColorStyles();
 
             // Execute element hiding
             WAT.components.webView.addEventListener("MSWebViewDOMContentLoaded", loadCustomStyleString);
 
+            if (stylesConfig.wrapperCssFile) {
+                setupWrapperCssFile();
+            }
             if (stylesConfig.customCssFile) {
                 getCustomCssFile();
             }
@@ -31,6 +34,16 @@ var self = {
 };
 
 // Private Methods
+setupWrapperCssFile = function () {
+    var newStyleSheet;
+
+    newStyleSheet = document.createElement("link");
+    newStyleSheet.rel = "stylesheet";
+    newStyleSheet.href = stylesConfig.wrapperCssFile;
+
+    document.head.appendChild(newStyleSheet);
+};
+
 addCustomWrapperStyles = function () {
     if (stylesConfig.backButton) {
         if (stylesConfig.backButton.borderColor) {
