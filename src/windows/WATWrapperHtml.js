@@ -15,6 +15,7 @@
                   var content = document.createElement("div");
                   content.id = "content";
                   content.classList.add("content");
+                  content.classList.add("customColor");
                   document.body.appendChild(content);
                   WAT.components.content = content;
 

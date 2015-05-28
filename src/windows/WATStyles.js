@@ -1,7 +1,7 @@
 "use strict"
 
 var WAT;
-var stylesConfig;
+var stylesConfig,navBarConfig;
 var getCustomCssFile, customCssFileLoadHandler, loadCustomCssFileString, customStylesFromFile, loadCustomStyleString, scriptString, cssString,
     addNavAppBarCustomColorStyles, addCustomWrapperStyles, setupWrapperCssFile,
     logger = window.console;
@@ -13,6 +13,7 @@ var self = {
         if (!WAT) {
             WAT = WATref;
             stylesConfig = WAT.manifest.wat_styles || {};
+            navBarConfig = WAT.manifest.wat_navBar || {};
 
             if (WAT.environment.isWindows){
               addCustomWrapperStyles();
@@ -137,9 +138,9 @@ addNavAppBarCustomColorStyles = function () {
 
     var navBar = WAT.components.navBar;
     if (navBar) {
-        var navBarBackColor = navBar.backgroundColor;
-        var navBarButtonTextColor = navBar.buttonTextColor;
-        var navBarButtonForeColor = navBar.buttonFaceColor;
+        var navBarBackColor = navBarConfig.backgroundColor;
+        var navBarButtonTextColor = navBarConfig.buttonTextColor;
+        var navBarButtonForeColor = navBarConfig.buttonFaceColor;
 
         if (navBarBackColor || navBarButtonForeColor || navBarButtonTextColor) {
 
