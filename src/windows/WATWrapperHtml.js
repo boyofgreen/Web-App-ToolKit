@@ -174,7 +174,7 @@
       WAT.components.content.appendChild(header);
 
       WAT.components.header = header;
-      WAT.components.logo = logoArea;
+      WAT.components.logo = logoImage;
       WAT.components.title = title;
   }
 
