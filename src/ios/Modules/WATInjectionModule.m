@@ -55,9 +55,10 @@
                                                      error:NULL];
 
 
-    content = [content stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-
-    return [NSString stringWithFormat: @"javascript:( function() { var p = document.getElementsByTagName('head').item(0);var s = document.createElement('style');s.type = 'text/css';s.appendChild(document.createTextNode('%@'));p.appendChild(s)})();",content];
+    NSCharacterSet *dontWantChar = [NSCharacterSet newlineCharacterSet];
+    content = [[content componentsSeparatedByCharactersInSet:dontWantChar] componentsJoinedByString:@""];
+    
+    return content;
 }
 
 
@@ -71,21 +72,23 @@
                                                   encoding:NSUTF8StringEncoding
                                                      error:NULL];
 
-    content = [content stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
-    return [NSString stringWithFormat: @"%@",content];
+    NSCharacterSet *dontWantChar = [NSCharacterSet newlineCharacterSet];
+    content = [[content componentsSeparatedByCharactersInSet:dontWantChar] componentsJoinedByString:@""];
+    
+    return content;
 }
 
 - (void)injectJavascript {
-    NSString *inlineScript = self.webAppToolkit.manifest.scriptInjection.customString;
-    if (inlineScript != nil) {
-        [webAppToolkit.webView performSelectorOnMainThread:@selector(stringByEvaluatingJavaScriptFromString:) withObject:inlineScript waitUntilDone:NO];
+    WATScriptInjection *scriptInjection = self.webAppToolkit.manifest.scriptInjection;
+    if (scriptInjection.customString != nil) {
+        [webAppToolkit.webView performSelectorOnMainThread:@selector(stringByEvaluatingJavaScriptFromString:) withObject:scriptInjection.customString waitUntilDone:NO];
     }
 
 
-    NSArray *files = self.webAppToolkit.manifest.scriptInjection.scriptFiles;
+    NSArray *files = scriptInjection.scriptFiles;
     NSString *scripts;
     for (NSString *value in files) {
-        scripts = [NSString stringWithFormat:@"%@ %@", (scripts!=nil?scripts:@""), [self getContentFromCustomScriptFile:value toolkit:webAppToolkit]];
+        scripts = [NSString stringWithFormat:@"%@%@", (scripts!=nil?scripts:@""), [self getContentFromCustomScriptFile:value toolkit:webAppToolkit]];
     }
 
     if (scripts != nil) {
@@ -94,20 +97,39 @@
 }
 
 - (void)injectStylesheet {
-    NSString *inlineStyle = self.webAppToolkit.manifest.styleInjection.customString;
-    if (inlineStyle != nil) {
-        NSString *inlineScript = [self getScriptFromInlineStyle:inlineStyle];
+    WATStyleInjection *styleInjection = self.webAppToolkit.manifest.styleInjection;
+    if (styleInjection.customString != nil) {
+        NSString *inlineScript = [self getScriptFromInlineStyle:styleInjection.customString];
         [self.webAppToolkit.webView performSelectorOnMainThread:@selector(stringByEvaluatingJavaScriptFromString:) withObject:inlineScript waitUntilDone:NO];
     }
 
     NSArray *files = self.webAppToolkit.manifest.styleInjection.styleFiles;
-    NSString *scripts;
+    NSString *styles;
     for (NSString *value in files) {
-        scripts = [NSString stringWithFormat:@"%@ %@", (scripts!=nil?scripts:@""), [self getContentFromStyleFile:value toolkit:webAppToolkit]];
+        styles = [NSString stringWithFormat:@"%@%@", (styles!=nil?styles:@""), [self getContentFromStyleFile:value toolkit:webAppToolkit]];
     }
 
-    if (scripts != nil) {
-        [self.webAppToolkit.webView performSelectorOnMainThread:@selector(stringByEvaluatingJavaScriptFromString:) withObject:scripts waitUntilDone:NO];
+    if (styles != nil) {
+        NSString *inlineScript = [self getScriptFromInlineStyle:styles];
+        [self.webAppToolkit.webView performSelectorOnMainThread:@selector(stringByEvaluatingJavaScriptFromString:) withObject:inlineScript waitUntilDone:NO];
+    }
+    
+    NSString *elementsToHide;
+    if (styleInjection.hiddenElements != nil && styleInjection.hiddenElements.count > 0) {
+        if (styleInjection.hiddenElements.count == 1) {
+            elementsToHide = [styleInjection.hiddenElements objectAtIndex:0];
+        } else {
+            for (NSString *el in styleInjection.hiddenElements) {
+                if (elementsToHide == nil) {
+                    elementsToHide = [NSString stringWithFormat:@"%@", el];
+                } else {
+                    elementsToHide = [NSString stringWithFormat:@"%@,%@", elementsToHide, el];
+                }
+            }
+        }
+        elementsToHide = [NSString stringWithFormat:@"%@ {display:none !important;}", elementsToHide];
+        
+        [self.webAppToolkit.webView performSelectorOnMainThread:@selector(stringByEvaluatingJavaScriptFromString:) withObject:[self getScriptFromInlineStyle:elementsToHide] waitUntilDone:NO];
     }
 }
 

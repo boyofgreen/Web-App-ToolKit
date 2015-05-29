@@ -2,7 +2,7 @@
 
 @implementation WATStyleInjection
 
-@synthesize enabled,filePath,customString,styleFiles;
+@synthesize enabled,filePath,customString,styleFiles,hiddenElements;
 
 - (id)initFromManifest:(NSDictionary*) manifestData
 {
@@ -23,7 +23,16 @@
                 enabled = YES;
                 customString = [manifestData objectForKey:@"customCssString"];
             }
-
+            
+            if ([manifestData objectForKey:@"hiddenElements"]) {
+                enabled = YES;
+                hiddenElements = [[NSMutableArray alloc] init];
+                
+                NSDictionary* elements = [manifestData objectForKey:@"hiddenElements"];
+                for (NSDictionary* el in elements) {
+                    [hiddenElements addObject:el];
+                }
+            }
         }
     }
 
