@@ -3,7 +3,7 @@
 
   var WAT;
   var buildForWindows, buildForWindowsPhone;
-  var createHeaderElement, createStageElement, moveWebView, createWebViewForModalDialog;
+  var createHeaderElement, createStageElement, moveWebView, createWebViewForModalDialog, createTransitionOverlay;
 
   var self = {
       init: function (WATRef) {
@@ -124,6 +124,7 @@
       document.body.appendChild(viewport);
 
       createHeaderElement();
+      createTransitionOverlay();
       moveWebView();
   };
 
@@ -214,5 +215,34 @@
 
        WAT.components.dialogView = webView;
    };
+
+   createTransitionOverlay = function () {
+      var overlay = document.createElement("div");
+      overlay.classList.add("webview-overlay");
+      overlay.style.zIndex = WAT.components.webView.style.zIndex + 200;
+
+      WAT.components.stage.appendChild(overlay);
+
+      var transparent = document.createElement("div");
+      transparent.classList.add("transparent-overlay");
+      transparent.style.zIndex = WAT.components.webView.style.zIndex + 200;
+
+      WAT.components.stage.appendChild(transparent);
+
+      var div = document.createElement("div");
+      div.classList.add("loading-wrapper");
+      div.id = "loading-wrapper";
+      div.style.zIndex = WAT.components.webView.style.zIndex + 200;
+
+      var progress = document.createElement("progress");
+      progress.id = "page-load-progress";
+      progress.classList.add("loading-progress");
+      progress.classList.add("win-ring");
+      progress.classList.add("win-large");
+      progress.style.zIndex = WAT.components.webView.style.zIndex + 200;
+
+      div.appendChild(progress);
+      WAT.components.stage.appendChild(div);
+  };
 
   module.exports = self; // export
