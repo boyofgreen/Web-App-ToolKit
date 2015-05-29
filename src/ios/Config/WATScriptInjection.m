@@ -2,7 +2,7 @@
 
 @implementation WATScriptInjection
 
-@synthesize enabled,filePath,customString,scriptFiles;
+@synthesize enabled,customString,scriptFiles;
 
 - (id)initFromManifest:(NSDictionary*) manifestData
 {
@@ -11,7 +11,6 @@
     if (self)
     {
         enabled = NO;
-        filePath = SCRIPT_FILE_PATH;
 
         if (manifestData) {
             if ([manifestData objectForKey:@"customJSString"]) {

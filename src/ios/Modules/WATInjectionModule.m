@@ -44,36 +44,25 @@
     return [NSString stringWithFormat: @"javascript:( function() { var parent = document.getElementsByTagName('head').item(0);var style = document.createElement('style');style.type = 'text/css';style.appendChild(document.createTextNode('%@'));parent.appendChild(style)})();",styles];
 }
 
-- (NSString *) getContentFromStyleFile:(NSString *)fileName toolkit:(CDVWebAppToolkit*) webAppToolkit{
-
-    NSString *path = self.webAppToolkit.manifest.styleInjection.filePath;
-    NSString *partialPath = [NSString stringWithFormat: @"%@%@", path, fileName];
-    NSString *fullPath = [self.webAppToolkit.commandDelegate pathForResource:partialPath];
-
-    NSString* content = [NSString stringWithContentsOfFile:fullPath
-                                                  encoding:NSUTF8StringEncoding
-                                                     error:NULL];
-
-
-    NSCharacterSet *dontWantChar = [NSCharacterSet newlineCharacterSet];
-    content = [[content componentsSeparatedByCharactersInSet:dontWantChar] componentsJoinedByString:@""];
+- (NSString *) getContentFromFile:(NSString *)filePath {
+    NSBundle* mainBundle = [NSBundle mainBundle];
+    NSMutableArray* directoryParts = [NSMutableArray arrayWithArray:[filePath componentsSeparatedByString:@"/"]];
+    NSString* filename = [directoryParts lastObject];
     
-    return content;
-}
-
-
-- (NSString *) getContentFromCustomScriptFile:(NSString *)fileName toolkit:(CDVWebAppToolkit*) webAppToolkit {
-    NSString *path = self.webAppToolkit.manifest.scriptInjection.filePath;
-    NSString *partialPath = [NSString stringWithFormat: @"%@%@", path, fileName];
-
-    NSString *fullPath = [self.webAppToolkit.commandDelegate pathForResource:partialPath];
-
+    [directoryParts removeLastObject];
+    
+    NSString* directoryPartsJoined = [directoryParts componentsJoinedByString:@"/"];
+    NSString *fullPath = [mainBundle pathForResource:filename ofType:@"" inDirectory:directoryPartsJoined];
     NSString* content = [NSString stringWithContentsOfFile:fullPath
                                                   encoding:NSUTF8StringEncoding
-                                                     error:NULL];
+                                                     error:nil];
 
-    NSCharacterSet *dontWantChar = [NSCharacterSet newlineCharacterSet];
-    content = [[content componentsSeparatedByCharactersInSet:dontWantChar] componentsJoinedByString:@""];
+    if (content != nil) {
+        NSCharacterSet *dontWantChar = [NSCharacterSet newlineCharacterSet];
+        content = [[content componentsSeparatedByCharactersInSet:dontWantChar] componentsJoinedByString:@""];
+    } else {
+        content = @"";
+    }
     
     return content;
 }
@@ -84,14 +73,13 @@
         [webAppToolkit.webView performSelectorOnMainThread:@selector(stringByEvaluatingJavaScriptFromString:) withObject:scriptInjection.customString waitUntilDone:NO];
     }
 
-
     NSArray *files = scriptInjection.scriptFiles;
     NSString *scripts;
     for (NSString *value in files) {
-        scripts = [NSString stringWithFormat:@"%@%@", (scripts!=nil?scripts:@""), [self getContentFromCustomScriptFile:value toolkit:webAppToolkit]];
+        scripts = [NSString stringWithFormat:@"%@%@", (scripts!=nil?scripts:@""), [self getContentFromFile:value]];
     }
 
-    if (scripts != nil) {
+    if (scripts != nil && [scripts length] != 0) {
         [self.webAppToolkit.webView performSelectorOnMainThread:@selector(stringByEvaluatingJavaScriptFromString:) withObject:scripts waitUntilDone:NO];
     }
 }
@@ -106,10 +94,10 @@
     NSArray *files = self.webAppToolkit.manifest.styleInjection.styleFiles;
     NSString *styles;
     for (NSString *value in files) {
-        styles = [NSString stringWithFormat:@"%@%@", (styles!=nil?styles:@""), [self getContentFromStyleFile:value toolkit:webAppToolkit]];
+        styles = [NSString stringWithFormat:@"%@%@", (styles!=nil?styles:@""), [self getContentFromFile:value]];
     }
 
-    if (styles != nil) {
+    if (styles != nil && [styles length] != 0) {
         NSString *inlineScript = [self getScriptFromInlineStyle:styles];
         [self.webAppToolkit.webView performSelectorOnMainThread:@selector(stringByEvaluatingJavaScriptFromString:) withObject:inlineScript waitUntilDone:NO];
     }

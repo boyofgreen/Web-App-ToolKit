@@ -2,7 +2,7 @@
 
 @implementation WATStyleInjection
 
-@synthesize enabled,filePath,customString,styleFiles,hiddenElements;
+@synthesize enabled,customString,styleFiles,hiddenElements;
 
 - (id)initFromManifest:(NSDictionary*) manifestData
 {
@@ -11,7 +11,6 @@
     if (self)
     {
         enabled = NO;
-        filePath = STYLE_FILE_PATH;
 
         if (manifestData) {
             if ([manifestData objectForKey:@"customCssFiles"]) {
