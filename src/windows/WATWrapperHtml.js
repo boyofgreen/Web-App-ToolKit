@@ -1,4 +1,3 @@
-
 "use strict";
 
   var WAT;
@@ -10,11 +9,19 @@
           if (!WAT) {
               WAT = WATRef;
 
+              // add base stylesheet
+              var base = document.createElement("link");
+              base.setAttribute("rel", "stylesheet");
+              base.setAttribute("type", "text/css");
+              base.href = "css/base.css";
+              document.head.appendChild(base);
+
               if (WAT.environment.isWindows) {
                   // build wrapper html for windows
                   var content = document.createElement("div");
                   content.id = "content";
                   content.classList.add("content");
+                  content.classList.add("customColor");
                   document.body.appendChild(content);
                   WAT.components.content = content;
 
@@ -38,21 +45,16 @@
               styles.setAttribute("type", "text/css");
               styles.href = "css/wrapper-styles.css";
               document.head.appendChild(styles);
+
+              createTransitionOverlay();
           }
       }
   };
 
   buildForWindows = function () {
-     // add base stylesheet
-      var base = document.createElement("link");
-      base.setAttribute("rel", "stylesheet");
-      base.setAttribute("type", "text/css");
-      base.href = "css/base.css";
-      document.head.appendChild(base);
-
       createHeaderElement();
       createStageElement();
-      createWebViewForModalDialog();
+      createWebViewForModalDialog(document.body);
       moveWebView();
   };
 
@@ -124,7 +126,8 @@
       document.body.appendChild(viewport);
 
       createHeaderElement();
-      createTransitionOverlay();
+      createWebViewForModalDialog(WAT.components.stage);
+
       moveWebView();
   };
 
@@ -175,7 +178,7 @@
       WAT.components.content.appendChild(header);
 
       WAT.components.header = header;
-      WAT.components.logo = logoArea;
+      WAT.components.logo = logoImage;
       WAT.components.title = title;
   }
 
@@ -193,7 +196,7 @@
       WAT.components.stage.appendChild(webView);
   };
 
-  createWebViewForModalDialog = function () {
+  createWebViewForModalDialog = function (appendToElement) {
        var modalStage = document.createElement("div");
        modalStage.id = "modal-stage";
        modalStage.classList.add("stage");
@@ -211,21 +214,49 @@
 
        modalStage.appendChild(webView);
        modalStage.appendChild(button);
-       document.body.appendChild(modalStage);
+       appendToElement.appendChild(modalStage);
 
        WAT.components.dialogView = webView;
-   };
+       WAT.components.closeButton = button;
+  };
 
-   createTransitionOverlay = function () {
+  createTransitionOverlay = function () {
       var overlay = document.createElement("div");
       overlay.classList.add("webview-overlay");
-      overlay.style.zIndex = WAT.components.webView.style.zIndex + 200;
+
+      if (WAT.environment.isWindows) {
+          var svg = document.createElement("svg");
+          svg.setAttribute("preserveAspectRatio", true);
+
+          var defs = document.createElement("defs");
+          var filter = document.createElement("filter");
+          filter.id = "filtersPicture";
+
+          var blur = document.createElement("feGaussianBlur");
+          blur.setAttribute("stdDeviation", "2");
+
+          filter.appendChild(blur);
+          defs.appendChild(filter);
+
+          var image = document.createElement("image");
+          image.setAttribute("x", "0");
+          image.setAttribute("y", "0");
+          image.height = "100%";
+          image.width = "100%";
+          image.setAttribute("xlink:href", "");
+          image.setAttribute("filter", "url(#filtersPicture)");
+
+          svg.appendChild(defs);
+          svg.appendChild(image);
+          overlay.appendChild(svg);
+      }
 
       WAT.components.stage.appendChild(overlay);
 
       var transparent = document.createElement("div");
       transparent.classList.add("transparent-overlay");
       transparent.style.zIndex = WAT.components.webView.style.zIndex + 200;
+
 
       WAT.components.stage.appendChild(transparent);
 
