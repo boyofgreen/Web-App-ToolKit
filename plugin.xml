@@ -105,14 +105,14 @@
     <header-file src="src/ios/Model/WATManifest.h" />
     <source-file src="src/ios/Model/WATManifest.m" />
 
-    <header-file src="src/ios/Model/WATShareConfig.h" />
-    <source-file src="src/ios/Model/WATShareConfig.m" />
+    <header-file src="src/ios/Modules/WATInjectionModule.h" />
+    <source-file src="src/ios/Modules/WATInjectionModule.m" />  
 
-    <header-file src="src/ios/Model/WATScriptInjection.h" />
-    <source-file src="src/ios/Model/WATScriptInjection.m" />
+    <header-file src="src/ios/Config/WATScriptInjection.h" />
+    <source-file src="src/ios/Config/WATScriptInjection.m" />
 
-    <header-file src="src/ios/Model/WATStyleInjection.h" />
-    <source-file src="src/ios/Model/WATStyleInjection.m" />
+    <header-file src="src/ios/Config/WATStyleInjection.h" />
+    <source-file src="src/ios/Config/WATStyleInjection.m" />
 
   </platform>
 
