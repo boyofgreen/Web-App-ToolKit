@@ -9,17 +9,11 @@ import org.json.JSONObject;
 import android.util.Log;
 
   public class CustomScriptConfig {
-    private List<String> scriptFiles = new ArrayList<String>();
-    private String customString = null;
-    private boolean enabled = false;
+  private List<String> scriptFiles = new ArrayList<String>();
+  private String customString = null;
+  private boolean enabled = false;
 
-    public static final String WTAG = "WTAG: ";
-
-    private static String DefaultFilePath = "www/js/";
-
-    private String filePath = CustomScriptConfig.DefaultFilePath;
-
-    public CustomScriptConfig() {
+  public CustomScriptConfig() {
   }
 
   public CustomScriptConfig(JSONObject manifestObject) {
@@ -31,7 +25,7 @@ import android.util.Log;
           enabled = true;
 
           for (int i = 0; i < files.length(); i++) {
-            this.scriptFiles.add(this.filePath + files.optString(i));
+            this.scriptFiles.add(files.optString(i));
           }
         }
       }

@@ -6,7 +6,7 @@ import org.json.JSONObject;
 
 public class RedirectRulesConfig {
 
-	private String pattern;
+  private String pattern;
   private Pattern regexPattern;
   
   private String action;
