@@ -17,9 +17,6 @@ public final class Constants {
 
   public static final String ON_PAGE_FINISHED = "page-finished-event";
   public static final String ON_PAGE_STARTED = "page-started-event";
-  public static final String ON_CREATE_OPTIONS_MENU = "on-create-options-event";
-  public static final String ON_SHARE_BUTTON_PRESSED = "on-share-button-pressed-event";
   public static final String ON_INITIALIZE = "on-initialize-event";
-  public static final String ON_OPTION_ITEM_SELECTED = "on-option-items-selected-event";
-
+  
 }
