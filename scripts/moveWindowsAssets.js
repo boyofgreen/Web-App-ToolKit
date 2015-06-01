@@ -22,7 +22,7 @@ var logger = {
 
 module.exports = function (context) {
   // move contents of the assets folder to the windows platform dir
-  var sourcePath = path.resolve(__dirname, "..", "assets\\css");
+  var sourcePath = path.resolve(__dirname, "..", "assets\\windows\\css");
   var destPath = path.resolve(__dirname, "..", "..", "..", "platforms\\windows\\www\\css");
   logger.log('Moving css assets for the windows platform.');
 
@@ -34,7 +34,7 @@ module.exports = function (context) {
     return console.log("Finished copying css assets for the windows platform.");
   });
 
-  sourcePath = path.resolve(__dirname, "..", "assets\\images");
+  sourcePath = path.resolve(__dirname, "..", "assets\\windows\\images");
   destPath = path.resolve(__dirname, "..", "..", "..", "platforms\\windows\\www\\images");
   logger.log('Moving image assets for the windows platform');
 
@@ -46,7 +46,7 @@ module.exports = function (context) {
     return console.log("Finished copying image assets for the windows platform.");
   });
 
-  sourcePath = path.resolve(__dirname, "..", "assets\\js");
+  sourcePath = path.resolve(__dirname, "..", "assets\\windows\\js");
   destPath = path.resolve(__dirname, "..", "..", "..", "platforms\\windows\\www\\js");
 
   copyAssets(sourcePath, destPath, function (err) {
