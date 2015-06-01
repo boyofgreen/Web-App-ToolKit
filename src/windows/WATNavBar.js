@@ -172,7 +172,7 @@ setupNavBar = function () {
                         }
 
                         if (childItem.icon && childItem.icon != "" && childItem.icon.substring(0, 2) != "ms") {
-                            childItem.icon = "ms-appx:///images/enums/" + childItem.icon + ".png";
+                            childItem.icon = "ms-appx:///www/images/enums/" + childItem.icon + ".png";
                         }
                         childItem.label = '  ' + childItem.label;
                         navDrawerList.push(childItem);
