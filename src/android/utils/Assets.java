@@ -10,6 +10,12 @@ import java.io.InputStreamReader;
 public class Assets {
   public static String readEncoded(String fileName, Context context) {
     InputStream ins = null;
+
+    // Remove starting "/" character if present (asset paths should be relative)
+    if (fileName.startsWith("/")) {
+      fileName = fileName.substring(1);
+    }
+
     try {
       ins = context.getAssets().open(fileName);
 
