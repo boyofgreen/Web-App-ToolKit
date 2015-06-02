@@ -46,7 +46,7 @@ addShareButton = function () {
     Windows.ApplicationModel.DataTransfer.DataTransferManager.showShareUI();
   });
 
-  new WinJS.UI.AppBarCommand(btn, { id: 'shareButton', label: buttonText, icon: 'url(/images/share.png)', section: section });
+  new WinJS.UI.AppBarCommand(btn, { id: 'shareButton', label: buttonText, icon: 'url(/www/images/share.png)', section: section });
 
   WAT.components.appBar.appendChild(btn);
 

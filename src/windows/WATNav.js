@@ -24,7 +24,7 @@ var self = {
       // Build back button only for Windows
       if (WAT.environment.isWindows) {
           createBackButton();
-          configureBackButton(WATref);  
+          configureBackButton(WATref);
       }
 
       WAT.components.webView.addEventListener("MSWebViewNavigationStarting", webViewNavStart);
@@ -312,14 +312,14 @@ handleWindowOpen = function (e) {
         }
     }
 
-    if (WAT.options.closeButton) {
-        WAT.options.closeButton.style.display = "block";
+    if (WAT.components.closeButton) {
+        WAT.components.closeButton.style.display = "block";
 
         // Hide close button if requested for this URL
-        if (WAT.config.redirects.enabled === true) {
+        if (WAT.manifest.wat_redirects.enabled === true) {
             redirectRules.forEach(function (rule) {
                 if (rule.regex.test(url) && rule.hideCloseButton === true) {
-                    WAT.options.closeButton.style.display = "none";
+                    WAT.components.closeButton.style.display = "none";
                 }
             });
         }

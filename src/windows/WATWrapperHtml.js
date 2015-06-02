@@ -1,4 +1,3 @@
-
 "use strict";
 
   var WAT;
@@ -10,11 +9,19 @@
           if (!WAT) {
               WAT = WATRef;
 
+              // add base stylesheet
+              var base = document.createElement("link");
+              base.setAttribute("rel", "stylesheet");
+              base.setAttribute("type", "text/css");
+              base.href = "css/base.css";
+              document.head.appendChild(base);
+
               if (WAT.environment.isWindows) {
                   // build wrapper html for windows
                   var content = document.createElement("div");
                   content.id = "content";
                   content.classList.add("content");
+                  content.classList.add("customColor");
                   document.body.appendChild(content);
                   WAT.components.content = content;
 
@@ -43,16 +50,9 @@
   };
 
   buildForWindows = function () {
-     // add base stylesheet
-      var base = document.createElement("link");
-      base.setAttribute("rel", "stylesheet");
-      base.setAttribute("type", "text/css");
-      base.href = "css/base.css";
-      document.head.appendChild(base);
-
       createHeaderElement();
       createStageElement();
-      createWebViewForModalDialog();
+      createWebViewForModalDialog(document.body);
       moveWebView();
   };
 
@@ -124,6 +124,7 @@
       document.body.appendChild(viewport);
 
       createHeaderElement();
+      createWebViewForModalDialog(WAT.components.stage);
       moveWebView();
   };
 
@@ -174,7 +175,7 @@
       WAT.components.content.appendChild(header);
 
       WAT.components.header = header;
-      WAT.components.logo = logoArea;
+      WAT.components.logo = logoImage;
       WAT.components.title = title;
   }
 
@@ -192,7 +193,7 @@
       WAT.components.stage.appendChild(webView);
   };
 
-  createWebViewForModalDialog = function () {
+  createWebViewForModalDialog = function (appendToElement) {
        var modalStage = document.createElement("div");
        modalStage.id = "modal-stage";
        modalStage.classList.add("stage");
@@ -210,9 +211,10 @@
 
        modalStage.appendChild(webView);
        modalStage.appendChild(button);
-       document.body.appendChild(modalStage);
+       appendToElement.appendChild(modalStage);
 
        WAT.components.dialogView = webView;
+       WAT.components.closeButton = button;
    };
 
   module.exports = self; // export
