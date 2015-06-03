@@ -4,7 +4,8 @@ var fs = require('fs'),
     path = require('path'),
     url = require('url'),
     currentPath,
-    targetPath;
+    targetPath,
+    Q;
 
 var logger = {
   log: function () {
@@ -21,6 +22,9 @@ var logger = {
 
 
 module.exports = function (context) {
+  Q = context.requireCordovaModule('q');
+  var task = Q.defer();
+
   // move contents of the assets folder to the windows platform dir
   var sourcePath = path.resolve(__dirname, "..", "assets\\windows\\css");
   var destPath = path.resolve(__dirname, "..", "..", "..", "platforms\\windows\\www\\css");
@@ -28,34 +32,40 @@ module.exports = function (context) {
 
   copyAssets(sourcePath, destPath, function (err) {
     if (err) {
-      return console.error(err);
+      console.error(err);
+      return task.reject();
     }
 
-    return console.log("Finished copying css assets for the windows platform.");
+    console.log("Finished copying css assets for the windows platform.");
+
+    sourcePath = path.resolve(__dirname, "..", "assets\\windows\\images");
+    destPath = path.resolve(__dirname, "..", "..", "..", "platforms\\windows\\www\\images");
+    logger.log('Moving image assets for the windows platform');
+
+    copyAssets(sourcePath, destPath, function (err) {
+      if (err) {
+        console.error(err);
+        return task.reject();
+      }
+
+      console.log("Finished copying image assets for the windows platform.");
+
+      sourcePath = path.resolve(__dirname, "..", "assets\\windows\\js");
+      destPath = path.resolve(__dirname, "..", "..", "..", "platforms\\windows\\www\\js");
+
+      copyAssets(sourcePath, destPath, function (err) {
+        if (err) {
+          console.error(err);
+          return task.reject();
+        }
+
+        console.log("Finished copying js assets for the windows platform.");
+        return task.resolve();
+      });
+    });
   });
 
-  sourcePath = path.resolve(__dirname, "..", "assets\\windows\\images");
-  destPath = path.resolve(__dirname, "..", "..", "..", "platforms\\windows\\www\\images");
-  logger.log('Moving image assets for the windows platform');
-
-  copyAssets(sourcePath, destPath, function (err) {
-    if (err) {
-      return console.error(err);
-    }
-
-    return console.log("Finished copying image assets for the windows platform.");
-  });
-
-  sourcePath = path.resolve(__dirname, "..", "assets\\windows\\js");
-  destPath = path.resolve(__dirname, "..", "..", "..", "platforms\\windows\\www\\js");
-
-  copyAssets(sourcePath, destPath, function (err) {
-    if (err) {
-      return console.error(err);
-    }
-
-    return console.log("Finished copying js assets for the windows platform.");
-  });
+  return task.promise;
 };
 
 function copyAssets (source, dest, callback) {

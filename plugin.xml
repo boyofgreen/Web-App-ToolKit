@@ -50,7 +50,7 @@
 
     <!-- windows -->
     <platform name="windows">
-      <hook type="before_prepare" src="scripts/moveWindowsAssets.js" />
+      <hook type="after_prepare" src="scripts/moveWindowsAssets.js" />
       <js-module src="src/windows/WebAppToolkitPluginProxy.js" name="WebAppToolkitPluginProxy">
         <merges target="" />
       </js-module>
@@ -106,7 +106,7 @@
     <source-file src="src/ios/Model/WATManifest.m" />
 
     <header-file src="src/ios/Modules/WATInjectionModule.h" />
-    <source-file src="src/ios/Modules/WATInjectionModule.m" />  
+    <source-file src="src/ios/Modules/WATInjectionModule.m" />
 
     <header-file src="src/ios/Config/WATScriptInjection.h" />
     <source-file src="src/ios/Config/WATScriptInjection.m" />
