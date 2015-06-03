@@ -1,7 +1,7 @@
 
 "use strict";
 
-var hostedWebApp = require('com-manifoldjs-hostedwebapp.HostedWebAppPluginProxy');
+var hostedWebApp = require('cordova-plugin-hostedwebapp.HostedWebAppPluginProxy');
 
 var guids = [];
 
