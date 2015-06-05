@@ -1,6 +1,6 @@
 # Web App Toolkit
 
-The Web App Toolkit is a plugin for creating Windows, Android and iOS apps based on existing web content. It depends on the ManifoldCordova plugin. Used in the right way, it can facilitate the creation of compelling extensions to your web content for users across platforms. However, there are several guidelines and best practices to get the best use from the plugin.
+The Web App Toolkit is a plugin for creating Windows, Android and iOS apps based on existing web content. It depends on the ManifoldCordova plugin. Used in the right way, it can facilitate the creation of compelling extensions to your web content for users across platforms.
 
 ## Getting Started
 
@@ -31,6 +31,17 @@ The plugin leverages the functionality from the ManifoldCordova plugin. The foll
 
 
 ### wat_share
+
+This controls the use of the share charm within the application.
+
+| **enabled* | Toggles the share charm functionality on or off (true/false)
+| **showButton**|  Toggles visibility of a Share button on the app bar (true/false)
+| **buttonText** | Text used for the Share app bar button if it is enabled
+| **buttonSection*| This sets the sharebutton into a particular section of the app bar (if you have sections set up) the default is global http://msdn.microsoft.com/en-us/library/windows/apps/Hh700497.aspx
+| **title** | Defines the title passed into the share charm
+| **url** | Defines a url that is shared via the share contract. You can use {currentURL} to share the current URL of the webview.
+| **screenshot** | Enables the sharing of a screenshot (true/false)
+| **message ** | Defines a message for the share contract contents. You can use {currentURL} to reference the current url or {url} to reference the base url.
 
 #### Example
 <pre>
