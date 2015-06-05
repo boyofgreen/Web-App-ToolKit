@@ -1,13 +1,13 @@
 # Web App Toolkit
 
-The Web App Toolkit is a plugin for creating Windows, Android and iOS apps based on existing web content. It depends on the ManifoldCordova plugin. Used in the right way, it can facilitate the creation of compelling extensions to your web content for users across platforms.
+The Web App Toolkit is a plugin for creating Windows, Android and iOS apps based on existing web content. It depends on the [Hosted Web App Plugin](http://plugins.cordova.io/#/package/com.manifoldjs.hostedwebapp). Used in the right way, it can facilitate the creation of compelling extensions to your web content for users across platforms.
 
 ## Getting Started
 
 The following tutorial requires you to install the [Cordova Command-Line Inteface](http://cordova.apache.org/docs/en/4.0.0/guide_cli_index.md.html#The%20Command-Line%20Interface).
 
 ### Hosting a Web Application
-The plugin leverages the functionality from the ManifoldCordova plugin. The following steps describe how you can create and configure a sample application and use it with the Web App Toolkit.
+The plugin leverages the functionality from the [Hosted WebApp Plugin](http://plugins.cordova.io/#/package/com.manifoldjs.hostedwebapp). The following steps describe how you can create and configure a sample application and use it with the Web App Toolkit.
 
 1. Create a new Cordova application.  
 	`cordova create sampleapp yourdomain.sampleapp SampleHostedApp`
@@ -19,7 +19,7 @@ The plugin leverages the functionality from the ManifoldCordova plugin. The foll
 	> **Note:** You can find a sample manifest file at the start of this document.
 
 1. Add the **Web App Toolkit** plugin to the project.  
-	`cordova plugin add com-microsoft-webapptoolkit`
+	`cordova plugin add https://github.com/boyofgreen/web-app-toolkit`
 
 1. Add one or more platforms, for example, to support Android.  
 	`cordova platform add android`
@@ -28,7 +28,7 @@ The plugin leverages the functionality from the ManifoldCordova plugin. The foll
 	`cordova build`
 
 ## Features
-
+The following section shows examples of how you can enable the plugin's features in the **manifest.json** file.
 
 ### wat_share
 
@@ -43,15 +43,15 @@ This controls the use of the share charm within the application.
 | **title** | Defines the title passed into the share charm
 | **url** | Defines a url that is shared via the share contract. You can use {currentURL} to share the current URL of the webview.
 | **screenshot** | Enables the sharing of a screenshot (true/false)
-| **message ** | Defines a message for the share contract contents. You can use {currentURL} to reference the current url or {url} to reference the base url.
+| **message** | Defines a message for the share contract contents. You can use {currentURL} to reference the current url or {url} to reference the base url.
 
 #### Example
 <pre>
   "wat_share": {
   	"enabled": true,
-      "showButton": true,
-      "buttonText": "Share",
-      "buttonSection": "global",
+    "showButton": true,
+    "buttonText": "Share",
+    "buttonSection": "global",
   	"title": "WAT Documentation",
   	"url": "{currentURL}",
   	"screenshot": true,
@@ -73,6 +73,16 @@ An array of custom script files stored within the app package that are injected 
 
 ### wat_appBar
 This controls the application bar at the bottom of the screen.
+
+|**Option**|**Description**|
+|:---------|:--------------|
+| **enabled** | Toggles the app bar visibility (true/false)
+| **makeSticky** |  Toggles whether the app bar is always visible or not (true/false)
+| **buttons** | An array of objects, each of which represent a button within the application bar. Each object has three parameters:
+| &nbsp;&nbsp;&nbsp;&nbsp; **label** | the text for the button. Leave this blank to omit the text
+| &nbsp;&nbsp;&nbsp;&nbsp; **icon** | the icon for the button. A list of available icons is at dev.windows.com. Leave this blank to omit the icon
+| &nbsp;&nbsp;&nbsp;&nbsp; **action** | The action for the button. This defines either the url location that the button links to or it can be set to a eval to executes the javascript defined in the 'data' field
+| &nbsp;&nbsp;&nbsp;&nbsp; **data** | Javascript that gets executed if the action is set to 'eval'
 
 #### Example
 <pre>
@@ -102,6 +112,16 @@ This controls the application bar at the bottom of the screen.
 
 ### wat_navBar
 This controls the navigation bar at the top of the screen.
+
+| **enabled** | Toggles the navigation bar visibility (true/false)
+| **maxRows** |  Sets the maximum number of rows that are used to display buttons before the nav bar starts paging
+| **makeSticky** | Toggles whether the app bar is always visible or not (true/false)
+| **buttons** | An array of objects, each of which represent a button within the navigation bar.Each object has three parameters:
+| &nbsp;&nbsp;&nbsp;&nbsp; **label** | The text for the button. Leave this blank to omit the text
+| &nbsp;&nbsp;&nbsp;&nbsp; **icon** | The icon for the button. A list of available icons is at dev.windows.com. Leave this blank to omit the icon
+| &nbsp;&nbsp;&nbsp;&nbsp; **action** | The action for the button. This defines either the url location that the button links to or a special keyword. back Takes the app back to the most recent page. home Takes the app to the base url. nested Allows the inclusion of children node. eval Executes the javascript defined in the 'data' field
+| &nbsp;&nbsp;&nbsp;&nbsp; **data** | Javascript that gets executed if the action is set to 'eval'
+children An array of nodes that are shown beneath the parent node. Children nodes take the same format as parent nodes. Only used if the parent node's action is set to 'nested'.
 
 #### Example
 <pre>
@@ -171,6 +191,13 @@ This controls the navigation bar at the top of the screen.
 ### wat_livetile
 This controls the applications live tile notifications on the users start screen.
 
+|**Option**|**Description**|
+|----------|---------------|
+| **enabled** | Toggles the live tile functionality (true/false)
+| **periodicUpdate** | Number which defines how often the tile updates based on the PeriodicUpdateRecurrence enumeration. Valid values are 0, 1, 2, 3 or 4. 0 is most frequent (half an hour), 4 is the least frequent (daily)
+| **enableQueue** | Toggles multiple live tile updates on or off. When set to true the live tile on the start screen will cycle through muliple tile updates either via the RSS feed or multple push notification updates. (true/false)
+| **tilePollFeed** | The url for the RSS feed that will drive the live tile updates. This can be any RSS feed.
+
 #### Example
 <pre>
   "wat_livetile": {
@@ -184,13 +211,24 @@ This controls the applications live tile notifications on the users start screen
 ### wat_redirects
 Enables you to specify which urls remain inside the app and which ones open in the browser. This feature is useful for those users who are already using the Web App Template and want to keep their configuration file unmodified.
 
+| **enabled** | Toggles the redirect functionality (true/false)
+| **enableCaptureWindowOpen ** | This captures popups (new windows) think about this as a way to catch facebook logins and things like that that need to happen in the app, once this value is enabled, you can control this on each of the redirects (true/false)
+| **refreshOnModalClose** | If you need to have the app refresh when this model closes, (like in a login scenario) set this to true (true/false)
+| **rules** | An array of objects, each of which represent a re-direction. Each object has three parameters:
+| &nbsp;&nbsp;&nbsp;&nbsp; **pattern** | The pattern that the rule should match to take effect
+| &nbsp;&nbsp;&nbsp;&nbsp; **action** | The action associated with this operation, this can be one of four options showMessage, popout, redirect or modal.
+| &nbsp;&nbsp;&nbsp;&nbsp; **url** | The url to redirect to if action is set to url
+| &nbsp;&nbsp;&nbsp;&nbsp; **message** | The message that is used if the action is set to showMessage
+| &nbsp;&nbsp;&nbsp;&nbsp; **hideCloseButton** | Hides close button on modal windows
+| &nbsp;&nbsp;&nbsp;&nbsp; **closeOnMatch** | A url that when it is loaded, it forces the modal to close (usefull for login scenario)
+
 #### Example
 <pre>
-  "redirects": {
-  "enabled": true,
-  "enableCaptureWindowOpen": true,
-  "refreshOnModalClose": true,
-  "rules": [
+  "wat_redirects": {
+    "enabled": true,
+    "enableCaptureWindowOpen": true,
+    "refreshOnModalClose": true,
+    "rules": [
   	    {
   		    "pattern": "http://getbootstrap.com?",
   		    "action": "showMessage",
@@ -217,6 +255,37 @@ Enables you to specify which urls remain inside the app and which ones open in t
   		    "closeOnMatch": "\*/drive_api/calculator/complete_login"
   	    }
       ]
+  },
+</pre>
+
+
+### wat_settings
+This controls the use of the settings charm within the application.
+
+|**Option**| **Description**|
+| **enabled** | Toggles the settings charm functionality (true/false)
+| **privacyUrl** | Defines a url link to the application's privacy policy. A privacy policy is typically required for app to pass store certification.
+| **items** | Defines an array of item that are used in the settings charm
+| **title** | Defines the text for the settings item
+| **page** | Defines the url for the settings item
+| **loadInApp** | Defines whether the url is opened in the app or the browser (true/false)
+
+#### Example
+<pre>
+  "wat_settings": {
+  "enabled": true,
+  "privacyUrl": "http://wat-docs.azurewebsites.net/Privacy",
+  "items": [
+      {
+  	    "title": "Support",
+  	    "page": "http://wat-docs.azurewebsites.net/Support",
+  	    "loadInApp": true
+      },
+      {
+  	    "title": "Codeplex Site",
+  	    "page": "http://www.codeplex.com"
+      }
+  ]
   },
 </pre>
 
@@ -266,13 +335,13 @@ This option sets the secondary pin functionality in the app bar.
 
 #### Example
 <pre>
-  "secondaryPin": {
+  "wat_secondaryPin": {
       "enabled": true,
-  	"buttonText": "Pin It!",
+  	  "buttonText": "Pin It!",
       "tileTextTheme": "light",
       "buttonSection": "global",
-  	"squareImage": "/images/logo.scale-100.png",
-  	"wideImage": "/images/widelogo.scale-100.png"
+  	  "squareImage": "/images/logo.scale-100.png",
+  	  "wideImage": "/images/widelogo.scale-100.png"
   },
 </pre>
 
@@ -294,7 +363,7 @@ Controls options on how users navigate around the app
 The following table describes the supported features for each of the platforms.
 
 |               | **Windows** |   **iOS**   | **Android** |
-|:--------------|:------------|:------------|:------------|
+|:--------------|:-----------:|:-----------:|:-----------:|
 |wat_navigation  |   yes   |         |         |
 |wat_share       |   yes   |         |         |
 |wat_customScript|   yes   |   yes   |   yes   |
