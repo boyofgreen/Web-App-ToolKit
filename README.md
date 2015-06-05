@@ -34,10 +34,12 @@ The plugin leverages the functionality from the ManifoldCordova plugin. The foll
 
 This controls the use of the share charm within the application.
 
-| **enabled* | Toggles the share charm functionality on or off (true/false)
-| **showButton**|  Toggles visibility of a Share button on the app bar (true/false)
+| **Option** | **Description**
+|:-----------|:---------------|
+| **enabled** | Toggles the share charm functionality on or off (true/false)
+| **showButton** |  Toggles visibility of a Share button on the app bar (true/false)
 | **buttonText** | Text used for the Share app bar button if it is enabled
-| **buttonSection*| This sets the sharebutton into a particular section of the app bar (if you have sections set up) the default is global http://msdn.microsoft.com/en-us/library/windows/apps/Hh700497.aspx
+| **buttonSection** | This sets the sharebutton into a particular section of the app bar (if you have sections set up) the default is global http://msdn.microsoft.com/en-us/library/windows/apps/Hh700497.aspx
 | **title** | Defines the title passed into the share charm
 | **url** | Defines a url that is shared via the share contract. You can use {currentURL} to share the current URL of the webview.
 | **screenshot** | Enables the sharing of a screenshot (true/false)
