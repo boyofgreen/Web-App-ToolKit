@@ -113,6 +113,8 @@ This controls the application bar at the bottom of the screen.
 ### wat_navBar
 This controls the navigation bar at the top of the screen.
 
+|**Option**|**Description** |
+|----------|----------------|
 | **enabled** | Toggles the navigation bar visibility (true/false)
 | **maxRows** |  Sets the maximum number of rows that are used to display buttons before the nav bar starts paging
 | **makeSticky** | Toggles whether the app bar is always visible or not (true/false)
@@ -211,6 +213,8 @@ This controls the applications live tile notifications on the users start screen
 ### wat_redirects
 Enables you to specify which urls remain inside the app and which ones open in the browser. This feature is useful for those users who are already using the Web App Template and want to keep their configuration file unmodified.
 
+|**Option** | **Description** |
+|-----------|-----------------|
 | **enabled** | Toggles the redirect functionality (true/false)
 | **enableCaptureWindowOpen ** | This captures popups (new windows) think about this as a way to catch facebook logins and things like that that need to happen in the app, once this value is enabled, you can control this on each of the redirects (true/false)
 | **refreshOnModalClose** | If you need to have the app refresh when this model closes, (like in a login scenario) set this to true (true/false)
@@ -263,6 +267,7 @@ Enables you to specify which urls remain inside the app and which ones open in t
 This controls the use of the settings charm within the application.
 
 |**Option**| **Description**|
+|----------|----------------|
 | **enabled** | Toggles the settings charm functionality (true/false)
 | **privacyUrl** | Defines a url link to the application's privacy policy. A privacy policy is typically required for app to pass store certification.
 | **items** | Defines an array of item that are used in the settings charm
