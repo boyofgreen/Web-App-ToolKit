@@ -2,7 +2,7 @@
 
 @implementation WATManifest
 
-@synthesize startURL, name, styleInjection, scriptInjection;
+@synthesize startURL, name, styleInjection, scriptInjection, redirectsConfig;
 
 - (id)initFromManifest:(NSDictionary*)manifest
 {
@@ -17,6 +17,7 @@
 
             NSDictionary* styleData = [manifest objectForKey:@"wat_styles"];
             NSDictionary* scriptData = [manifest objectForKey:@"wat_customScript"];
+            NSDictionary* redirectsData = [manifest objectForKey:@"wat_redirects"];
 
             if (styleData) {
               styleInjection = [[WATStyleInjection alloc] initFromManifest:styleData];
@@ -24,6 +25,10 @@
 
             if (scriptData) {
               scriptInjection = [[WATScriptInjection alloc] initFromManifest:scriptData];
+            }
+            
+            if (redirectsData) {
+                redirectsConfig = [[WATRedirectsConfig alloc] initFromManifest:redirectsData withBaseUrl:startURL];
             }
         }
     }

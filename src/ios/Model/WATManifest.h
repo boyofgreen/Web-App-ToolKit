@@ -1,6 +1,7 @@
 #import <Foundation/Foundation.h>
 #import "WATScriptInjection.h"
 #import "WATStyleInjection.h"
+#import "WATRedirectsConfig.h"
 
 @interface WATManifest : NSObject
 {
@@ -8,6 +9,7 @@
     NSString *name;
     WATStyleInjection *styleInjection;
     WATScriptInjection *scriptInjection;
+    WATRedirectsConfig *redirectsConfig;
 }
 
 @property (nonatomic, strong, readonly) NSString *startURL;
@@ -15,6 +17,7 @@
 
 @property (nonatomic, strong, readonly) WATStyleInjection *styleInjection;
 @property (nonatomic, strong, readonly) WATScriptInjection *scriptInjection;
+@property (nonatomic, strong, readonly) WATRedirectsConfig *redirectsConfig;
 
 - (id)initFromManifest:(NSDictionary*)manifest;
 

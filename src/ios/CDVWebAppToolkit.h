@@ -1,6 +1,7 @@
 #import <Cordova/CDVPlugin.h>
 #import "CDVHostedWebApp.h"
 #import "WATInjectionModule.h"
+#import "WATRedirectsModule.h"
 
 #define kCDVHostedWebAppWebViewDidStartLoad @"CDVHostedWebAppWebViewDidStartLoad"
 #define kCDVHostedWebAppWebViewDidFinishLoad @"CDVHostedWebAppWebViewDidFinishLoad"
