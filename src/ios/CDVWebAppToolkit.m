@@ -4,7 +4,7 @@
 
 @interface CDVWebAppToolkit ()
 
-@property WATInjectionModule *injectionModule;
+@property NSMutableArray *modules;
 
 @end
 
@@ -24,27 +24,20 @@
 
     // observe notifications from webview when page starts loading
     [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(webViewDidStartLoad:)
-                                                 name:kCDVHostedWebAppWebViewDidStartLoad
-                                               object:nil];
-
-    // observe notifications from webview when page starts loading
-    [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(webViewDidFinishLoad:)
                                                  name:kCDVHostedWebAppWebViewDidFinishLoad
                                                object:nil];
 
-    // observe notifications from webview when page fails loading
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(webViewShouldStartLoadWithRequest:)
-                                                 name:kCDVHostedWebAppWebViewShouldStartLoadWithRequest
-                                               object:nil];
 
     CDVHostedWebApp* plugin = [self.commandDelegate getCommandInstance:@"HostedWebApp"];
 
     [self initializeWithManifest:[plugin manifest]];
 
-    self.injectionModule = [[WATInjectionModule alloc] initWithPlugin:self];
+    if (self.modules == nil) {
+        self.modules = [[NSMutableArray alloc] init];
+        [self.modules addObject:[[WATInjectionModule alloc] initWithPlugin:self]];
+        [self.modules addObject:[[WATRedirectsModule alloc] initWithPlugin:self]];
+    }
 }
 
 
@@ -66,24 +59,21 @@
     self.manifest = [[WATManifest alloc] initFromManifest:manifestData];
 }
 
-- (void)webViewShouldStartLoadWithRequest:(NSNotification*)notification {
-    if ([[notification name] isEqualToString:kCDVHostedWebAppWebViewShouldStartLoadWithRequest]) {
-        [[NSNotificationCenter defaultCenter] postNotification:[NSNotification notificationWithName:kModuleConstantsWebViewShouldStartLoadWithRequest object:notification.object]];
-    }
-}
-
-- (void)webViewDidStartLoad:(NSNotification*)notification
-{
-    if ([[notification name] isEqualToString:kCDVHostedWebAppWebViewDidStartLoad]) {
-        
-    }
-}
-
 - (void)webViewDidFinishLoad:(NSNotification*)notification
 {
     if ([[notification name] isEqualToString:kCDVHostedWebAppWebViewDidFinishLoad]) {
         [[NSNotificationCenter defaultCenter] postNotification:[NSNotification notificationWithName:kModuleConstantsWebViewDidFinishLoad object:nil]];
     }
+}
+
+- (BOOL) shouldOverrideLoadWithRequest:(NSURLRequest*)request navigationType:(UIWebViewNavigationType)navigationType {
+    for (WATModule *module in self.modules) {
+        if ([module shouldOverrideLoadWithRequest:request navigationType:navigationType]) {
+            return YES;
+        }
+    }
+    
+    return NO;
 }
 
 @end
