@@ -66,7 +66,7 @@ An array of custom script files stored within the app package that are injected 
 <pre>
   "wat_customScript": {
   	"scriptFiles": [
-  		"injection-script-example.js"
+  		"www/js/injection-script-example.js"
   	]
   },
 </pre>
@@ -298,6 +298,19 @@ This controls the use of the settings charm within the application.
 ### wat_styles
 This allows the user to configure the application's view of their website.
 
+
+|**Option**|**Description**|
+|----------|---------------|
+|**setViewport**| Toggles whether the CSS is created to set the –ms-viewport setting (true/false)|
+|**targetWidth**| The target width value that is passed into viewport settings (pixels). This can be blank. NOTE: do not use this for websites that already have a responsive base.
+|**targetHeight**| The target height value that is passed into viewport settings (pixels). This can be blank. NOTE: do not use this for websites that already have a responsive base.
+|**suppressTouchAction**| Toggles whether the top level touch events are surpressed or not. This is quite helpful with SPA where you don’t want to be able to see scrolling or ruberbanding of the page (true/false)
+|**hiddenElements**| An array of strings that reference HTML elements. This enables you to hide any website HTML elements from your application. This is ideal for removing any unwanted top navigation, footers etc from the application view
+|**backButton**| An array of style rules that are applied to the back button
+|**wrapperCssFile**| A path to the /css/wrapper-styles.css file. This file applies styles to the native aspects of the app such as app bars, back button etc. Generally speaking you should not need to change this
+|**customCssFile**| A path to the /css/injected-styles.css file. This file injects styles into the web view control and can overide CSS within the website itself. Generally speaking you should not need to change this
+|**customCssString**| This enables you to embed CSS styles which get inserted over the existing styles on your website. This is great for adjusting the style of the site when it is presented as an application. This can be used as an alterntive to the injected-styles.css.
+
 #### Example
 <pre>
   "wat_styles": {
@@ -322,6 +335,16 @@ This allows the user to configure the application's view of their website.
 ### wat_header
 This enables use of a native page header within the application. This can make the app appear less like a website when use in conjunction with hiding the website's header elements.
 
+
+|**Option**|**Description**|
+|----------|---------------|
+|**enabled**| Toggles the header on or off (true/false)
+|**backgroundColor**| A hex coe that defines tha background colour for the header
+|**logo**| The path to an image that is used as a logo in the header. This is only used if the title is disabled
+|**title**| Settings that control the title text that is used in the header. The text is taken from the Title metadata of the page that is being displayed
+|**enabled**| Toggles the title text functionality (true/false)
+|**displayOnHomePage**| Toggles whether to display the title text on the home page. If false, the title text will still be applied to all other pages (true/false)
+
 #### Example
 <pre>
   "wat_header": {
@@ -337,6 +360,15 @@ This enables use of a native page header within the application. This can make t
 
 ### wat_secondaryPin
 This option sets the secondary pin functionality in the app bar.
+
+|**Option**|**Description**
+|----------|---------------|
+|**enabled**| Toggles the secondary pin functionality (true/false)
+|**buttonText**| Text that is used on the pin button
+|**tileTextTheme**| The visual theme for the tile (light/dark)
+|**buttonSection**| This sets the sharebutton into a particular section of the app bar (if you have secions set up) the default is global http://msdn.microsoft.com/en-us/library/windows/apps/Hh700497.aspx
+|**squareImage**| A path to a square image that is used for secondary tiles
+|**wideImage**| A path to a wide image that is used for secndary tiles
 
 #### Example
 <pre>
