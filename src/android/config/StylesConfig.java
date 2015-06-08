@@ -14,12 +14,6 @@ public class StylesConfig {
   private String customString = "";
   private boolean enabled = false;
 
-  public static final String WTAG = "WTAG: ";
-
-  private static String DefaultFilePath = "www/css/";
-
-  private String filePath = StylesConfig.DefaultFilePath;
-
   public StylesConfig() {
   }
 
@@ -32,7 +26,7 @@ public class StylesConfig {
           this.enabled = true;
 
           for (int i = 0; i < files.length(); i++) {
-            this.styleFiles.add(this.filePath + files.optString(i));
+            this.styleFiles.add(files.optString(i));
           }
         }
       }

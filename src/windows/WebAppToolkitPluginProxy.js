@@ -1,7 +1,7 @@
 
 "use strict";
 
-var hostedWebApp = require('com-manifoldjs-hostedwebapp.HostedWebAppPluginProxy');
+var hostedWebApp = require('cordova-plugin-hostedwebapp.HostedWebAppPluginProxy');
 
 var guids = [];
 
@@ -131,9 +131,9 @@ function initialize() {
       require('com.microsoft.webapptoolkit.WATAppBar').init(WAT);
       require('com.microsoft.webapptoolkit.WATShare').init(WAT);
       require('com.microsoft.webapptoolkit.WATNavigation').init(WAT);
+      require('com.microsoft.webapptoolkit.WATNavBar').init(WAT);
       require('com.microsoft.webapptoolkit.WATStyles').init(WAT);
       require('com.microsoft.webapptoolkit.WATCustomScript').init(WAT);
-      require('com.microsoft.webapptoolkit.WATNavBar').init(WAT);
       require('com.microsoft.webapptoolkit.WATHeader').init(WAT);
       require('com.microsoft.webapptoolkit.WATLiveTiles').init(WAT);
       require('com.microsoft.webapptoolkit.WATSettings').init(WAT);

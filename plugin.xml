@@ -8,7 +8,7 @@
     <keywords>cordova,manifest,hosted,web</keywords>
     <repo></repo>
 
-    <dependency id="com-manifoldjs-hostedwebapp" url="https://github.com/manifoldjs/ManifoldCordova#v0.1.0" version=">=0.1.0" />
+    <dependency id="cordova-plugin-hostedwebapp" version=">=0.1.0" />
 
     <js-module src="www/webAppToolkit.js" name="webapptoolkit">
         <clobbers target="webapptoolkit" />
@@ -50,7 +50,7 @@
 
     <!-- windows -->
     <platform name="windows">
-      <hook type="before_prepare" src="scripts/moveWindowsAssets.js" />
+      <hook type="after_prepare" src="scripts/moveWindowsAssets.js" />
       <js-module src="src/windows/WebAppToolkitPluginProxy.js" name="WebAppToolkitPluginProxy">
         <merges target="" />
       </js-module>
@@ -104,16 +104,33 @@
 
     <header-file src="src/ios/Model/WATManifest.h" />
     <source-file src="src/ios/Model/WATManifest.m" />
+    
+    <header-file src="src/ios/Model/Alert.h" />
+    <source-file src="src/ios/Model/Alert.m" />
+    
+    <header-file src="src/ios/Model/PopupViewController.h" />
+    <source-file src="src/ios/Model/PopupViewController.m" />
+    
+    <header-file src="src/ios/Modules/WATModule.h" />
+    <source-file src="src/ios/Modules/WATModule.m" />
 
-    <header-file src="src/ios/Model/WATShareConfig.h" />
-    <source-file src="src/ios/Model/WATShareConfig.m" />
+    <header-file src="src/ios/Modules/WATInjectionModule.h" />
+    <source-file src="src/ios/Modules/WATInjectionModule.m" />
+    
+    <header-file src="src/ios/Modules/WATRedirectsModule.h" />
+    <source-file src="src/ios/Modules/WATRedirectsModule.m" />
 
-    <header-file src="src/ios/Model/WATScriptInjection.h" />
-    <source-file src="src/ios/Model/WATScriptInjection.m" />
+    <header-file src="src/ios/Config/WATScriptInjection.h" />
+    <source-file src="src/ios/Config/WATScriptInjection.m" />
 
-    <header-file src="src/ios/Model/WATStyleInjection.h" />
-    <source-file src="src/ios/Model/WATStyleInjection.m" />
-
+    <header-file src="src/ios/Config/WATStyleInjection.h" />
+    <source-file src="src/ios/Config/WATStyleInjection.m" />
+    
+    <header-file src="src/ios/Config/WATRedirectRulesConfig.h" />
+    <source-file src="src/ios/Config/WATRedirectRulesConfig.m" />
+    
+    <header-file src="src/ios/Config/WATRedirectsConfig.h" />
+    <source-file src="src/ios/Config/WATRedirectsConfig.m" />
   </platform>
 
 </plugin>

@@ -1,22 +1,23 @@
 #import <Foundation/Foundation.h>
-#import "WATShareConfig.h"
 #import "WATScriptInjection.h"
 #import "WATStyleInjection.h"
+#import "WATRedirectsConfig.h"
 
 @interface WATManifest : NSObject
 {
     NSString *startURL;
     NSString *name;
-    WATShareConfig *shareConfig;
     WATStyleInjection *styleInjection;
     WATScriptInjection *scriptInjection;
+    WATRedirectsConfig *redirectsConfig;
 }
 
 @property (nonatomic, strong, readonly) NSString *startURL;
 @property (nonatomic, strong, readonly) NSString *name;
-@property (nonatomic, strong, readonly) WATShareConfig *shareConfig;
+
 @property (nonatomic, strong, readonly) WATStyleInjection *styleInjection;
 @property (nonatomic, strong, readonly) WATScriptInjection *scriptInjection;
+@property (nonatomic, strong, readonly) WATRedirectsConfig *redirectsConfig;
 
 - (id)initFromManifest:(NSDictionary*)manifest;
 

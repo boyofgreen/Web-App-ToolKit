@@ -172,7 +172,7 @@ setupNavBar = function () {
                         }
 
                         if (childItem.icon && childItem.icon != "" && childItem.icon.substring(0, 2) != "ms") {
-                            childItem.icon = "ms-appx:///images/enums/" + childItem.icon + ".png";
+                            childItem.icon = "ms-appx:///www/images/enums/" + childItem.icon + ".png";
                         }
                         childItem.label = '  ' + childItem.label;
                         navDrawerList.push(childItem);
@@ -352,8 +352,20 @@ setStickyBits = function () {
         WAT.components.stage.style.paddingTop = '30px';
         WAT.components.stage.style.top = navHeight + "px";
 
-        //TODO: fix for backbutton
-        //WAT.components.backButton.parentNode.style.top = navHeight + "px";
+        if (WAT.manifest.wat_header && WAT.manifest.wat_header.enabled) {
+            var logoArea = document.querySelector(".logoarea");
+            logoArea.style.marginTop = 30 + navHeight + "px";
+
+            var header = document.getElementById("header");
+            header.style.height = header.clientHeight + navHeight + "px";
+
+            var title = document.getElementById("title");
+            title.style.marginTop = 37 + navHeight + "px";
+
+            height -= navHeight;
+        }
+
+        WAT.components.backButton.parentNode.style.top = navHeight + "px";
     }
 
     if (WAT.manifest.wat_appBar && WAT.manifest.wat_appBar.enabled === true && WAT.manifest.wat_appBar.makeSticky) {
@@ -370,8 +382,8 @@ setStickyBits = function () {
         height -= appBarHeight;
     }
 
-    // WAT.components.stage.style.height = height + "px";
-    // WAT.components.webView.style.height = height + "px";
+    WAT.components.stage.style.height = height + "px";
+    WAT.components.webView.style.height = height + "px";
     // WAT.components.offlineView.style.height = height + "px";
 };
 
@@ -382,7 +394,7 @@ handleBarEval = function () {
 
     scriptString = "(function() { " + this.dataset.barActionData + " })();";
 
-    exec = WAT.options.webView.invokeScriptAsync("eval", scriptString);
+    exec = WAT.components.webView.invokeScriptAsync("eval", scriptString);
     exec.start();
 };
 

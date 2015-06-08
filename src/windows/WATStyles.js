@@ -1,9 +1,9 @@
 "use strict"
 
 var WAT;
-var stylesConfig;
+var stylesConfig,navBarConfig;
 var getCustomCssFile, customCssFileLoadHandler, loadCustomCssFileString, customStylesFromFile, loadCustomStyleString, scriptString, cssString,
-    addNavAppBarCustomColorStyles,
+    addNavAppBarCustomColorStyles, addCustomWrapperStyles, setupWrapperCssFile,
     logger = window.console;
 
 
@@ -13,12 +13,20 @@ var self = {
         if (!WAT) {
             WAT = WATref;
             stylesConfig = WAT.manifest.wat_styles || {};
+            navBarConfig = WAT.manifest.wat_navBar || {};
+
+            if (WAT.environment.isWindows){
+              addCustomWrapperStyles();
+            }
 
             addNavAppBarCustomColorStyles();
 
             // Execute element hiding
             WAT.components.webView.addEventListener("MSWebViewDOMContentLoaded", loadCustomStyleString);
 
+            if (stylesConfig.wrapperCssFile) {
+                setupWrapperCssFile();
+            }
             if (stylesConfig.customCssFile) {
                 getCustomCssFile();
             }
@@ -27,6 +35,26 @@ var self = {
 };
 
 // Private Methods
+setupWrapperCssFile = function () {
+    var newStyleSheet;
+
+    newStyleSheet = document.createElement("link");
+    newStyleSheet.rel = "stylesheet";
+    newStyleSheet.href = stylesConfig.wrapperCssFile;
+
+    document.head.appendChild(newStyleSheet);
+};
+
+addCustomWrapperStyles = function () {
+    if (stylesConfig.backButton) {
+        if (stylesConfig.backButton.borderColor) {
+            WAT.components.backButton.style.borderColor = stylesConfig.backButton.borderColor;
+        }
+        if (stylesConfig.backButton.color) {
+            WAT.components.backButton.style.color = stylesConfig.backButton.color;
+        }
+    }
+};
 
 getCustomCssFile = function () {
     var cssFile = "ms-appx://" + ((/^\//.test(stylesConfig.customCssFile)) ? "" : "/") + stylesConfig.customCssFile;
@@ -110,9 +138,9 @@ addNavAppBarCustomColorStyles = function () {
 
     var navBar = WAT.components.navBar;
     if (navBar) {
-        var navBarBackColor = navBar.backgroundColor;
-        var navBarButtonTextColor = navBar.buttonTextColor;
-        var navBarButtonForeColor = navBar.buttonFaceColor;
+        var navBarBackColor = navBarConfig.backgroundColor;
+        var navBarButtonTextColor = navBarConfig.buttonTextColor;
+        var navBarButtonForeColor = navBarConfig.buttonFaceColor;
 
         if (navBarBackColor || navBarButtonForeColor || navBarButtonTextColor) {
 
