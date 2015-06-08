@@ -52,10 +52,10 @@ This controls the use of the share charm within the application.
     "showButton": true,
     "buttonText": "Share",
     "buttonSection": "global",
-  	"title": "WAT Documentation",
+  	"title": "Web App Tooklit Documentation",
   	"url": "{currentURL}",
   	"screenshot": true,
-  	"message": "{url} shared with {appLink} for Windows Phone and Windows 8 Store apps."
+  	"message": "{url} shared with {appLink} for Windows."
   },
 </pre>
 
@@ -216,7 +216,7 @@ Enables you to specify which urls remain inside the app and which ones open in t
 |**Option** | **Description** |
 |-----------|-----------------|
 | **enabled** | Toggles the redirect functionality (true/false)
-| **enableCaptureWindowOpen ** | This captures popups (new windows) think about this as a way to catch facebook logins and things like that that need to happen in the app, once this value is enabled, you can control this on each of the redirects (true/false)
+| **enableCaptureWindowOpen** | This captures popups (new windows) think about this as a way to catch facebook logins and things like that that need to happen in the app, once this value is enabled, you can control this on each of the redirects (true/false)
 | **refreshOnModalClose** | If you need to have the app refresh when this model closes, (like in a login scenario) set this to true (true/false)
 | **rules** | An array of objects, each of which represent a re-direction. Each object has three parameters:
 | &nbsp;&nbsp;&nbsp;&nbsp; **pattern** | The pattern that the rule should match to take effect
