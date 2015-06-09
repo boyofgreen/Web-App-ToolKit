@@ -246,7 +246,6 @@
           image.setAttribute("y", "0");
           image.setAttribute("height", "100%");
           image.setAttribute("width", "100%");
-          image.setAttribute("xlink:href", "");
           image.setAttribute("filter", "url(#filtersPicture)");
 
           svg.appendChild(defs);
