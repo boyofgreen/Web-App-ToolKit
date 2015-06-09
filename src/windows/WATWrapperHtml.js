@@ -238,7 +238,7 @@
           filter.appendChild(blur);
           defs.appendChild(filter);
 
-          var image = document.createElement("image");
+          var image = document.createElement("img");
           image.setAttribute("x", "0");
           image.setAttribute("y", "0");
           image.height = "100%";
