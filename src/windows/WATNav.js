@@ -86,7 +86,7 @@ var self = {
                               if (!self.contentLoaded && WAT.components.stage.classList.contains("loading")) {
                                   clearOverlay.style.display = 'inline';
 
-                                  blurImage.setAttribute("xlink:href", reader.result);
+                                  blurImage.setAttribute("src", reader.result);
                                   blurOverlay.classList.remove("fadeOut");
                               }
                           };

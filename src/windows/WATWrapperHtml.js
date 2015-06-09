@@ -225,6 +225,9 @@
       overlay.classList.add("webview-overlay");
 
       if (WAT.environment.isWindows) {
+          overlay.style.zIndex = WAT.components.webView.style.zIndex + 1;
+          overlay.classList.add("fadeOut");
+
           var svg = document.createElement("svg");
           svg.setAttribute("preserveAspectRatio", true);
 
@@ -238,11 +241,11 @@
           filter.appendChild(blur);
           defs.appendChild(filter);
 
-          var image = document.createElement("img");
+          var image = new Image();
           image.setAttribute("x", "0");
           image.setAttribute("y", "0");
-          image.height = "100%";
-          image.width = "100%";
+          image.setAttribute("height", "100%");
+          image.setAttribute("width", "100%");
           image.setAttribute("xlink:href", "");
           image.setAttribute("filter", "url(#filtersPicture)");
 
