@@ -30,6 +30,23 @@ The plugin leverages the functionality from the [Hosted WebApp Plugin](http://pl
 ## Features
 The following section shows examples of how you can enable the plugin's features in the **manifest.json** file.
 
+The following table describes the supported features for each of the platforms.
+
+|               | **Windows** |   **iOS**   | **Android** |
+|:--------------|:-----------:|:-----------:|:-----------:|
+|[wat_navigation](#wat_navigation)  |   yes   |         |         |
+|[wat_share](#wat_share)       |   yes   |         |         |
+|[wat_customScript](#wat_customScript)|   yes   |   yes   |   yes   |
+|[wat_appBar](#wat_appBar)      |   yes   |         |         |
+|[wat_navBar](#wat_navBar)      |   yes   |         |         |
+|[wat_livetile](#wat_livetile)    |   yes   |         |         |
+|[wat_redirects](#wat_redirects)   |   yes   |   yes   |   yes   |
+|[wat_settings](#wat_settings)    |   yes   |         |         |
+|[wat_styles](#wat_styles)      |   yes   |   yes   |   yes   |
+|[wat_header](#wat_header)      |   yes   |         |         |
+|[wat_secondaryPin](#wat_secondaryPin)|   yes   |         |         |
+
+
 ### wat_share
 
 This controls the use of the share charm within the application.
@@ -393,22 +410,3 @@ Controls options on how users navigate around the app
       "pageLoadingPartial": "/template/partials/page-loading.html"
   }
 </pre>
-
-
-## Features table
-
-The following table describes the supported features for each of the platforms.
-
-|               | **Windows** |   **iOS**   | **Android** |
-|:--------------|:-----------:|:-----------:|:-----------:|
-|wat_navigation  |   yes   |         |         |
-|wat_share       |   yes   |         |         |
-|wat_customScript|   yes   |   yes   |   yes   |
-|wat_appBar      |   yes   |         |         |
-|wat_navBar      |   yes   |         |         |
-|wat_livetile    |   yes   |         |         |
-|wat_redirects   |   yes   |   yes   |   yes   |
-|wat_settings    |   yes   |         |         |
-|wat_styles      |   yes   |   yes   |   yes   |
-|wat_header      |   yes   |         |         |
-|wat_secondaryPin|   yes   |         |         |
