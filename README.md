@@ -34,7 +34,6 @@ The following table describes the supported features for each of the platforms.
 
 |               | **Windows** |   **iOS**   | **Android** |
 |:--------------|:-----------:|:-----------:|:-----------:|
-|[wat_navigation](#wat_navigation)  |   yes   |         |         |
 |[wat_share](#wat_share)       |   yes   |         |         |
 |[wat_customScript](#wat_customscript)|   yes   |   yes   |   yes   |
 |[wat_appBar](#wat_appbar)      |   yes   |         |         |
@@ -45,6 +44,7 @@ The following table describes the supported features for each of the platforms.
 |[wat_styles](#wat_styles)      |   yes   |   yes   |   yes   |
 |[wat_header](#wat_header)      |   yes   |         |         |
 |[wat_secondaryPin](#wat_secondarypin)|   yes   |         |         |
+|[wat_navigation](#wat_navigation)  |   yes   |         |         |
 
 
 ### wat_share
@@ -324,13 +324,13 @@ This allows the user to configure the application's view of their website.
 
 |**Option**|**Description**|
 |----------|---------------|
-|**setViewport**| Toggles whether the CSS is created to set the –ms-viewport setting (true/false)|
-|**targetWidth**| The target width value that is passed into viewport settings (pixels). This can be blank. NOTE: do not use this for websites that already have a responsive base.
-|**targetHeight**| The target height value that is passed into viewport settings (pixels). This can be blank. NOTE: do not use this for websites that already have a responsive base.
-|**suppressTouchAction**| Toggles whether the top level touch events are surpressed or not. This is quite helpful with SPA where you don’t want to be able to see scrolling or ruberbanding of the page (true/false)
+|**setViewport**| (_Windows only_) Toggles whether the CSS is created to set the –ms-viewport setting (true/false) |
+|**targetWidth**| (_Windows only_) The target width value that is passed into viewport settings (pixels). This can be blank. NOTE: do not use this for websites that already have a responsive base.
+|**targetHeight**| (_Windows only_) The target height value that is passed into viewport settings (pixels). This can be blank. NOTE: do not use this for websites that already have a responsive base.
+|**suppressTouchAction**| (_Windows only_) Toggles whether the top level touch events are surpressed or not. This is quite helpful with SPA where you don’t want to be able to see scrolling or ruberbanding of the page (true/false)
 |**hiddenElements**| An array of strings that reference HTML elements. This enables you to hide any website HTML elements from your application. This is ideal for removing any unwanted top navigation, footers etc from the application view
-|**backButton**| An array of style rules that are applied to the back button
-|**wrapperCssFile**| A path to the /css/wrapper-styles.css file. This file applies styles to the native aspects of the app such as app bars, back button etc. Generally speaking you should not need to change this
+|**backButton**| (_Windows only_) An array of style rules that are applied to the back button
+|**wrapperCssFile**|(_Windows only_) A path to the /css/wrapper-styles.css file. This file applies styles to the native aspects of the app such as app bars, back button etc. Generally speaking you should not need to change this
 |**customCssFile**| A path to the /css/injected-styles.css file. This file injects styles into the web view control and can overide CSS within the website itself. Generally speaking you should not need to change this
 |**customCssString**| This enables you to embed CSS styles which get inserted over the existing styles on your website. This is great for adjusting the style of the site when it is presented as an application. This can be used as an alterntive to the injected-styles.css.
 
