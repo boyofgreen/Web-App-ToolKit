@@ -36,15 +36,15 @@ The following table describes the supported features for each of the platforms.
 |:--------------|:-----------:|:-----------:|:-----------:|
 |[wat_navigation](#wat_navigation)  |   yes   |         |         |
 |[wat_share](#wat_share)       |   yes   |         |         |
-|[wat_customScript](#wat_customScript)|   yes   |   yes   |   yes   |
-|[wat_appBar](#wat_appBar)      |   yes   |         |         |
-|[wat_navBar](#wat_navBar)      |   yes   |         |         |
+|[wat_customScript](#wat_customscript)|   yes   |   yes   |   yes   |
+|[wat_appBar](#wat_appbar)      |   yes   |         |         |
+|[wat_navBar](#wat_navbar)      |   yes   |         |         |
 |[wat_livetile](#wat_livetile)    |   yes   |         |         |
 |[wat_redirects](#wat_redirects)   |   yes   |   yes   |   yes   |
 |[wat_settings](#wat_settings)    |   yes   |         |         |
 |[wat_styles](#wat_styles)      |   yes   |   yes   |   yes   |
 |[wat_header](#wat_header)      |   yes   |         |         |
-|[wat_secondaryPin](#wat_secondaryPin)|   yes   |         |         |
+|[wat_secondaryPin](#wat_secondarypin)|   yes   |         |         |
 
 
 ### wat_share
@@ -77,6 +77,7 @@ This controls the use of the share charm within the application.
 </pre>
 
 ### wat_customScript
+
 An array of custom script files stored within the app package that are injected into the DOM. Paths are relative to the root of the app package.
 
 #### Example
@@ -89,6 +90,7 @@ An array of custom script files stored within the app package that are injected 
 </pre>
 
 ### wat_appBar
+
 This controls the application bar at the bottom of the screen.
 
 |**Option**|**Description**|
@@ -128,6 +130,7 @@ This controls the application bar at the bottom of the screen.
 </pre>
 
 ### wat_navBar
+
 This controls the navigation bar at the top of the screen.
 
 |**Option**|**Description** |
@@ -208,6 +211,7 @@ children An array of nodes that are shown beneath the parent node. Children node
 
 
 ### wat_livetile
+
 This controls the applications live tile notifications on the users start screen.
 
 |**Option**|**Description**|
@@ -228,6 +232,7 @@ This controls the applications live tile notifications on the users start screen
 </pre>
 
 ### wat_redirects
+
 Enables you to specify which urls remain inside the app and which ones open in the browser. This feature is useful for those users who are already using the Web App Template and want to keep their configuration file unmodified.
 
 |**Option** | **Description** |
@@ -281,6 +286,7 @@ Enables you to specify which urls remain inside the app and which ones open in t
 
 
 ### wat_settings
+
 This controls the use of the settings charm within the application.
 
 |**Option**| **Description**|
