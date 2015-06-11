@@ -1,7 +1,7 @@
 
 "use strict";
 
-var configureBackButton, createBackButton, navigateBack, configureRedirects,
+var configureBackButton, createBackButton, navigateBack, configureRedirects, isWebViewEmpty,
     webViewNavStart, webViewNavComplete, addRedirectRule, processOldRedirectFormat,
     redirectShowMessage, redirectPopout, redirectUrl,
     loadWindowOpenSpy, loadWindowCloseSpy, handleWindowOpen, handleWindowClose, closeModalContent, getUriParameter,
@@ -31,7 +31,6 @@ var self = {
       WAT.components.webView.addEventListener("MSWebViewNavigationCompleted", webViewNavComplete);
 
       configureRedirects(WATref);
-      WinJS.Application.onbackclick = navigateBack;
     }
   },
 
@@ -75,8 +74,8 @@ var self = {
               }
               else {
                   // use base64 encoded bitmap to improve performance in Windows
-                  var capturePreview = WAT.options.webView.capturePreviewToBlobAsync();
-                  var blurImage = document.querySelector(".webview-overlay svg image");
+                  var capturePreview = WAT.components.webView.capturePreviewToBlobAsync();
+                  var blurImage = document.querySelector(".webview-overlay svg img");
                   if (!isWebViewEmpty()) {
                       capturePreview.oncomplete = function (completeEvent) {
                           var reader = new window.FileReader();
@@ -86,7 +85,7 @@ var self = {
                               if (!self.contentLoaded && WAT.components.stage.classList.contains("loading")) {
                                   clearOverlay.style.display = 'inline';
 
-                                  blurImage.setAttribute("xlink:href", reader.result);
+                                  blurImage.setAttribute("src", reader.result);
                                   blurOverlay.classList.remove("fadeOut");
                               }
                           };
@@ -109,6 +108,20 @@ var self = {
 };
 
 // Private methods
+isWebViewEmpty = function () {
+    var op = WAT.components.webView.invokeScriptAsync("eval", "if (document.body){ document.body.innerHTML.length.toString(); } else {'0'}");
+    op.oncomplete = function (e) {
+        if (e.target.result === "0") {
+            // No page loaded
+            return true;
+        }
+        else {
+            // Page loaded
+            return false;
+        }
+    }
+    op.start();
+};
 
 configureBackButton = function () {
     var hideBackRules = navConfig ? navConfig.hideBackButtonOnMatch : null;

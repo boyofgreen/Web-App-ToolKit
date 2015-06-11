@@ -2,7 +2,7 @@
 
   var WAT;
   var buildForWindows, buildForWindowsPhone;
-  var createHeaderElement, createStageElement, moveWebView, createWebViewForModalDialog;
+  var createHeaderElement, createStageElement, moveWebView, createWebViewForModalDialog, createTransitionOverlay;
 
   var self = {
       init: function (WATRef) {
@@ -32,19 +32,14 @@
                   buildForWindowsPhone();
               }
 
-              // hide cordova app div
-              document.getElementsByClassName("app")[0].style.display = "none";
-
-              // remove cordova's stylesheet
-              var cordovaStyles = document.getElementsByTagName("link")[0];
-              cordovaStyles.parentNode.removeChild(cordovaStyles);
-
               // add base wrapper styles
               var styles = document.createElement("link");
               styles.setAttribute("rel", "stylesheet");
               styles.setAttribute("type", "text/css");
               styles.href = "css/wrapper-styles.css";
               document.head.appendChild(styles);
+
+              createTransitionOverlay();
           }
       }
   };
@@ -125,6 +120,7 @@
 
       createHeaderElement();
       createWebViewForModalDialog(WAT.components.stage);
+
       moveWebView();
   };
 
@@ -215,6 +211,64 @@
 
        WAT.components.dialogView = webView;
        WAT.components.closeButton = button;
-   };
+  };
+
+  createTransitionOverlay = function () {
+      var overlay = document.createElement("div");
+      overlay.classList.add("webview-overlay");
+
+      if (WAT.environment.isWindows) {
+          overlay.style.zIndex = WAT.components.webView.style.zIndex + 1;
+          overlay.classList.add("fadeOut");
+
+          var svg = document.createElement("svg");
+          svg.setAttribute("preserveAspectRatio", true);
+
+          var defs = document.createElement("defs");
+          var filter = document.createElement("filter");
+          filter.id = "filtersPicture";
+
+          var blur = document.createElement("feGaussianBlur");
+          blur.setAttribute("stdDeviation", "2");
+
+          filter.appendChild(blur);
+          defs.appendChild(filter);
+
+          var image = new Image();
+          image.setAttribute("x", "0");
+          image.setAttribute("y", "0");
+          image.setAttribute("height", "100%");
+          image.setAttribute("width", "100%");
+          image.setAttribute("filter", "url(#filtersPicture)");
+
+          svg.appendChild(defs);
+          svg.appendChild(image);
+          overlay.appendChild(svg);
+      }
+
+      WAT.components.stage.appendChild(overlay);
+
+      var transparent = document.createElement("div");
+      transparent.classList.add("transparent-overlay");
+      transparent.style.zIndex = WAT.components.webView.style.zIndex + 200;
+
+
+      WAT.components.stage.appendChild(transparent);
+
+      var div = document.createElement("div");
+      div.classList.add("loading-wrapper");
+      div.id = "loading-wrapper";
+      div.style.zIndex = WAT.components.webView.style.zIndex + 200;
+
+      var progress = document.createElement("progress");
+      progress.id = "page-load-progress";
+      progress.classList.add("loading-progress");
+      progress.classList.add("win-ring");
+      progress.classList.add("win-large");
+      progress.style.zIndex = WAT.components.webView.style.zIndex + 200;
+
+      div.appendChild(progress);
+      WAT.components.stage.appendChild(div);
+  };
 
   module.exports = self; // export

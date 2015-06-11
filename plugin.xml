@@ -10,6 +10,8 @@
 
     <dependency id="cordova-plugin-hostedwebapp" version=">=0.1.0" />
 
+    <hook type="after_prepare" src="scripts/moveWindowsAssets.js" />
+
     <js-module src="www/webAppToolkit.js" name="webapptoolkit">
         <clobbers target="webapptoolkit" />
     </js-module>
@@ -50,7 +52,6 @@
 
     <!-- windows -->
     <platform name="windows">
-      <hook type="after_prepare" src="scripts/moveWindowsAssets.js" />
       <js-module src="src/windows/WebAppToolkitPluginProxy.js" name="WebAppToolkitPluginProxy">
         <merges target="" />
       </js-module>
@@ -104,19 +105,19 @@
 
     <header-file src="src/ios/Model/WATManifest.h" />
     <source-file src="src/ios/Model/WATManifest.m" />
-    
+
     <header-file src="src/ios/Model/Alert.h" />
     <source-file src="src/ios/Model/Alert.m" />
-    
+
     <header-file src="src/ios/Model/PopupViewController.h" />
     <source-file src="src/ios/Model/PopupViewController.m" />
-    
+
     <header-file src="src/ios/Modules/WATModule.h" />
     <source-file src="src/ios/Modules/WATModule.m" />
 
     <header-file src="src/ios/Modules/WATInjectionModule.h" />
     <source-file src="src/ios/Modules/WATInjectionModule.m" />
-    
+
     <header-file src="src/ios/Modules/WATRedirectsModule.h" />
     <source-file src="src/ios/Modules/WATRedirectsModule.m" />
 
@@ -125,10 +126,10 @@
 
     <header-file src="src/ios/Config/WATStyleInjection.h" />
     <source-file src="src/ios/Config/WATStyleInjection.m" />
-    
+
     <header-file src="src/ios/Config/WATRedirectRulesConfig.h" />
     <source-file src="src/ios/Config/WATRedirectRulesConfig.m" />
-    
+
     <header-file src="src/ios/Config/WATRedirectsConfig.h" />
     <source-file src="src/ios/Config/WATRedirectsConfig.m" />
   </platform>
