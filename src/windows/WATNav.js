@@ -31,7 +31,6 @@ var self = {
       WAT.components.webView.addEventListener("MSWebViewNavigationCompleted", webViewNavComplete);
 
       configureRedirects(WATref);
-      WinJS.Application.onbackclick = navigateBack;
     }
   },
 
