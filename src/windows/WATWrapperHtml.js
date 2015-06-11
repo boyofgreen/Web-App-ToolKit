@@ -32,13 +32,6 @@
                   buildForWindowsPhone();
               }
 
-              // hide cordova app div
-              document.getElementsByClassName("app")[0].style.display = "none";
-
-              // remove cordova's stylesheet
-              var cordovaStyles = document.getElementsByTagName("link")[0];
-              cordovaStyles.parentNode.removeChild(cordovaStyles);
-
               // add base wrapper styles
               var styles = document.createElement("link");
               styles.setAttribute("rel", "stylesheet");
