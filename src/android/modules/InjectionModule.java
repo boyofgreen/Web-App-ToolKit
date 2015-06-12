@@ -102,19 +102,18 @@ public class InjectionModule extends IModule{
 	}
 
 	private void injectStyleFile(String fileName) {
-		String fileContent = Assets.readEncoded(fileName,
-				this.activity);
-		this.injectStyle(fileContent);
+        if (fileName != null && fileName != "") {
+            String fileContent = Assets.readEncoded(fileName,
+                    this.activity);
+            this.injectStyle(fileContent);
+        }
 	}
 
 	private void injectStyles() {
         StylesConfig stylesConfig = this.webAppToolkit.getManifest().getStyles();
   
 		if (stylesConfig.isEnabled()) {
-			List<String> scriptFiles = stylesConfig.getCssFiles();
-			for (String file : scriptFiles) {
-				this.injectStyleFile(file);
-			}
+			this.injectStyleFile(stylesConfig.getCssFile());
 
 			String customString = stylesConfig.getInlineStyles();
             if (customString != null) {

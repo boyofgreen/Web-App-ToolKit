@@ -9,7 +9,7 @@ import org.json.JSONObject;
 import android.util.Log;
 
 public class StylesConfig {
-  private List<String> styleFiles = new ArrayList<String>();
+  private String customCssFile = "";
   private List<String> hiddenElements = new ArrayList<String>();
   private String customString = "";
   private boolean enabled = false;
@@ -19,16 +19,9 @@ public class StylesConfig {
 
   public StylesConfig(JSONObject manifestObject) {
     if (manifestObject != null) {
-      if (manifestObject.has("customCssFiles")) {
-        JSONArray files = manifestObject.optJSONArray("customCssFiles");
-
-        if (files != null && files.length() > 0) {
-          this.enabled = true;
-
-          for (int i = 0; i < files.length(); i++) {
-            this.styleFiles.add(files.optString(i));
-          }
-        }
+      if (manifestObject.has("customCssFile")) {
+        this.enabled = true;
+        this.customCssFile = manifestObject.optString("customCssFile");
       }
 
       if (manifestObject.has("hiddenElements")) {
@@ -50,8 +43,8 @@ public class StylesConfig {
     }
   }
 
-  public List<String> getCssFiles() {
-    return this.styleFiles;
+  public String getCssFile() {
+    return this.customCssFile;
   }
 
   public String getCustomString() {
