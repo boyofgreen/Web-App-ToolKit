@@ -90,16 +90,13 @@
         NSString *inlineScript = [self getScriptFromInlineStyle:styleInjection.customString];
         [self.webAppToolkit.webView performSelectorOnMainThread:@selector(stringByEvaluatingJavaScriptFromString:) withObject:inlineScript waitUntilDone:NO];
     }
-
-    NSArray *files = self.webAppToolkit.manifest.styleInjection.styleFiles;
-    NSString *styles;
-    for (NSString *value in files) {
-        styles = [NSString stringWithFormat:@"%@%@", (styles!=nil?styles:@""), [self getContentFromFile:value]];
-    }
-
-    if (styles != nil && [styles length] != 0) {
-        NSString *inlineScript = [self getScriptFromInlineStyle:styles];
-        [self.webAppToolkit.webView performSelectorOnMainThread:@selector(stringByEvaluatingJavaScriptFromString:) withObject:inlineScript waitUntilDone:NO];
+    
+    if (styleInjection.styleFile != nil && [styleInjection.styleFile length] != 0) {
+        NSString *styles = [self getContentFromFile:styleInjection.styleFile];
+        if (styles != nil && [styles length] != 0) {
+            NSString *inlineScript = [self getScriptFromInlineStyle:styles];
+            [self.webAppToolkit.webView performSelectorOnMainThread:@selector(stringByEvaluatingJavaScriptFromString:) withObject:inlineScript waitUntilDone:NO];
+        }
     }
     
     NSString *elementsToHide;
