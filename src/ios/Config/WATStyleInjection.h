@@ -4,13 +4,13 @@
 {
     BOOL enabled;
     NSString* customString;
-    NSArray* styleFiles;
+    NSString* styleFile;
     NSMutableArray *hiddenElements;
 }
 
 @property (nonatomic, assign, readonly) BOOL enabled;
 @property (nonatomic, strong, readonly) NSString *customString;
-@property (nonatomic, strong, readonly) NSArray *styleFiles;
+@property (nonatomic, strong, readonly) NSString *styleFile;
 @property (nonatomic, strong, readonly) NSMutableArray *hiddenElements;
 
 - (id)initFromManifest:(NSDictionary*)manifest;
