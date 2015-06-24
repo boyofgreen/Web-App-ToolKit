@@ -2,6 +2,8 @@
 
 This is an experimental branch to analyze and find fixes to the breaking changes introduced by WinJS 4 and reconcile compatibility issues with Windows 8.1.
 
+[WinJS 4 breaking changes](https://github.com/winjs/winjs/wiki/changelog#breaking-changes)
+
 ### Manual changes
 
 1. need to manually add WinJS 4 via nuget and overwrite the existing base.js file in the Windows 10 project.
@@ -10,13 +12,20 @@ This is an experimental branch to analyze and find fixes to the breaking changes
 
 1. need to remove base.css style conflicts between WinJS 2 and WinJS 4
 
+### WebAppToolkitPluginProxy.js changes
+
+1. add reference to corresponding WinJS 4 assets (ui.js and css)
+
 ### WATAppBar.js changes
 
 1. need to change the way the control is created in WinJS 4
 1. need to address breaking changes
 1. set zindex in wrapper-styles.css so that control is visible at all times
 
+### WATNavBar.js changes
 
+1. need to address breaking changes
+1. need to address conflicting styles with base.css
 
 # Web App Toolkit
 

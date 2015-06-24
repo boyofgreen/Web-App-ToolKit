@@ -340,10 +340,10 @@ setStickyBits = function () {
     if (navBarConfig && navBarConfig.enabled === true && navBarConfig.makeSticky) {
         WAT.components.navBar.disabled = false;
         WAT.components.navBar.parentNode.winControl.sticky = true;
-        WAT.components.navBar.parentNode.winControl.show();
+        WAT.components.navBar.parentNode.winControl.open();
 
-        WAT.components.navBar.parentNode.winControl.addEventListener("afterhide", function (e) {
-            WAT.components.navBar.parentNode.winControl.show();
+        WAT.components.navBar.parentNode.winControl.addEventListener("afterclose", function (e) {
+            WAT.components.navBar.parentNode.winControl.open();
         });
 
         navHeight = (parseInt(WAT.components.navBar.parentNode.offsetHeight) || 0);
@@ -371,10 +371,10 @@ setStickyBits = function () {
     if (WAT.manifest.wat_appBar && WAT.manifest.wat_appBar.enabled === true && WAT.manifest.wat_appBar.makeSticky) {
         WAT.components.appBar.disabled = false;
         WAT.components.appBar.winControl.sticky = true;
-        WAT.components.appBar.winControl.show();
+        WAT.components.appBar.winControl.open();
 
-        WAT.components.appBar.winControl.addEventListener("afterhide", function (e) {
-            WAT.components.appBar.winControl.show();
+        WAT.components.appBar.winControl.addEventListener("afterclose", function (e) {
+            WAT.components.appBar.winControl.open();
         });
 
         appBarHeight = (parseInt(WAT.components.appBar.offsetHeight) || 0);
@@ -446,7 +446,7 @@ setupNestedNav = function (menuItem, btn) {
 
     afterProcessAllActions.push(function () {
         // make sure the splittoggle button (arrow) is correct
-        flyout.winControl.addEventListener('beforehide', function () {
+        flyout.winControl.addEventListener('beforeclose', function () {
             btn.winControl.splitOpened = false;
         });
     });
@@ -505,11 +505,11 @@ navigateBack = function (e) {
     }
 
     if (WAT.manifest.wat_appBar && WAT.manifest.wat_appBar.enabled) {
-        WAT.components.appBar.winControl.hide();
+        WAT.components.appBar.winControl.close();
     }
 
     if (WAT.manifest.wat_navBar && WAT.manifest.wat_navBar.enabled && WAT.environment.isWindows) {
-        WAT.components.navBar.parentNode.winControl.hide();
+        WAT.components.navBar.parentNode.winControl.close();
     }
 
     return true;
