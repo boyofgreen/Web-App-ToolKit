@@ -1,3 +1,23 @@
+# Windows 10 experimental branch
+
+This is an experimental branch to analyze and find fixes to the breaking changes introduced by WinJS 4 and reconcile compatibility issues with Windows 8.1.
+
+### Manual changes
+
+1. need to manually add WinJS 4 via nuget and overwrite the existing base.js file in the Windows 10 project.
+
+### General styling conflicts
+
+1. need to remove base.css style conflicts between WinJS 2 and WinJS 4
+
+### WATAppBar.js changes
+
+1. need to change the way the control is created in WinJS 4
+1. need to address breaking changes
+1. set zindex in wrapper-styles.css so that control is visible at all times
+
+
+
 # Web App Toolkit
 
 The Web App Toolkit is a plugin for creating Windows, Android and iOS apps based on existing web content. It depends on the [Hosted Web App Plugin](http://plugins.cordova.io/#/package/com.manifoldjs.hostedwebapp). Used in the right way, it can facilitate the creation of compelling extensions to your web content for users across platforms.
