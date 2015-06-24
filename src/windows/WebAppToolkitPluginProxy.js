@@ -76,7 +76,10 @@ cordova.commandProxy.add("WebAppToolkit", module.exports);
     var linkElem = document.createElement("link");
     linkElem.setAttribute("rel", "stylesheet");
 
-    if (navigator.appVersion.indexOf("Windows Phone 8.1;") !== -1) {
+    if (navigator.appVersion.indexOf("MSAppHost/3.0") !== -1) {
+        linkElem.href = "/WinJS/css/ui-dark.css";
+    }
+    else if (navigator.appVersion.indexOf("Windows Phone 8.1;") !== -1) {
       // windows phone 8.1 + Mobile IE 11
       linkElem.href = "//Microsoft.Phone.WinJS.2.1/css/ui-dark.css";
     } else if (navigator.appVersion.indexOf("MSAppHost/2.0;") !== -1) {
@@ -93,7 +96,10 @@ cordova.commandProxy.add("WebAppToolkit", module.exports);
 
   var scriptElem = document.createElement("script");
 
-  if (navigator.appVersion.indexOf("Windows Phone 8.1;") !== -1) {
+  if (navigator.appVersion.indexOf("MSAppHost/3.0") !== -1) {
+        scriptElem.src = "/WInJS/js/ui.js";
+  }
+  else if (navigator.appVersion.indexOf("Windows Phone 8.1;") !== -1) {
     // windows phone 8.1 + Mobile IE 11
     scriptElem.src = "//Microsoft.Phone.WinJS.2.1/js/ui.js";
   } else if (navigator.appVersion.indexOf("MSAppHost/2.0;") !== -1) {
