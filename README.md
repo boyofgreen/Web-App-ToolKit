@@ -15,6 +15,7 @@ This is an experimental branch to analyze and find fixes to the breaking changes
 ### WebAppToolkitPluginProxy.js changes
 
 1. add reference to corresponding WinJS 4 assets (ui.js and css)
+1. binding WinJS control after initializing plugin modules.
 
 ### WATAppBar.js changes
 
@@ -26,6 +27,11 @@ This is an experimental branch to analyze and find fixes to the breaking changes
 
 1. need to address breaking changes
 1. need to address conflicting styles with base.css
+
+### WATShare.js changes
+
+1. always adding share button to the appbar
+1. workaround to WinRT error "The parameter is incorrect" when retrieving appId
 
 # Web App Toolkit
 
