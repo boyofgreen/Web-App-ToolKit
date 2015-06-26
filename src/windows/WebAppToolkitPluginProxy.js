@@ -145,6 +145,8 @@ function initialize() {
       require('com.microsoft.webapptoolkit.WATSettings').init(WAT);
       require('com.microsoft.webapptoolkit.WATSecondaryPins').init(WAT);
 
+      // in Windows 10, we need to wait to bind WinJS controls to the last possible moment, otherwise there are issues modifying previously initialized controls.
+      WinJS.UI.processAll();
     }
   }
 }

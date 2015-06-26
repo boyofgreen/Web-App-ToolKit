@@ -38,8 +38,6 @@ addAppBar = function () {
     WAT.components.appBar = div;
 
     setupAppBar();
-
-    WinJS.UI.processAll();
 };
 
 setupAppBar = function () {
