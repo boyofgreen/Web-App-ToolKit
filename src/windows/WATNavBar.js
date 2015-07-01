@@ -1,7 +1,7 @@
 "use strict";
 var navDrawerList = new WinJS.Binding.List();
 var WAT;
-var navBarConfig, createNavBarElement, setupNavBar, createNavBarButton, setButtonAction, initUIDeclarations, setStickyBits,
+var navBarConfig, createNavBarElement, setupNavBar, createNavBarButton, setButtonAction, initUIDeclarations,
     navDrawerInit, returnToContent, navigateBack, toggleMenu, itemInvokedHandler, disableNavDrawer, barActions, handleBarEval, handleBarNavigate, setupNestedNav, toggleNestedNav,
     barActions = {},
     backButtons = [],
@@ -41,7 +41,7 @@ var self = {
             var container = new WinJS.UI.NavBarContainer(WAT.components.navBar);
             container.maxRows = navBarConfig.maxRows;
 
-            WAT.components.webView.addEventListener("MSWebViewDOMContentLoaded", setStickyBits);
+            WAT.components.stage.style.top = "25px";
         }
     }
   }
@@ -327,64 +327,6 @@ itemInvokedHandler = function (eventObject) {
         }
         toggleMenu();
     });
-};
-
-setStickyBits = function () {
-
-
-    var appBarHeight, navHeight,
-        height = (parseInt(document.body.offsetHeight) || 0);
-
-    WAT.components.webView.removeEventListener("MSWebViewDOMContentLoaded", setStickyBits);
-
-    if (navBarConfig && navBarConfig.enabled === true && navBarConfig.makeSticky) {
-        WAT.components.navBar.disabled = false;
-        WAT.components.navBar.parentNode.winControl.sticky = true;
-        WAT.components.navBar.parentNode.winControl.open();
-
-        WAT.components.navBar.parentNode.winControl.addEventListener("afterclose", function (e) {
-            WAT.components.navBar.parentNode.winControl.open();
-        });
-
-        navHeight = (parseInt(WAT.components.navBar.parentNode.offsetHeight) || 0);
-
-        height -= navHeight;
-        WAT.components.stage.style.paddingTop = '30px';
-        WAT.components.stage.style.top = navHeight + "px";
-
-        if (WAT.manifest.wat_header && WAT.manifest.wat_header.enabled) {
-            var logoArea = document.querySelector(".logoarea");
-            logoArea.style.marginTop = 30 + navHeight + "px";
-
-            var header = document.getElementById("header");
-            header.style.height = header.clientHeight + navHeight + "px";
-
-            var title = document.getElementById("title");
-            title.style.marginTop = 37 + navHeight + "px";
-
-            height -= navHeight;
-        }
-
-        WAT.components.backButton.parentNode.style.top = navHeight + "px";
-    }
-
-    if (WAT.manifest.wat_appBar && WAT.manifest.wat_appBar.enabled === true && WAT.manifest.wat_appBar.makeSticky) {
-        WAT.components.appBar.disabled = false;
-        WAT.components.appBar.winControl.sticky = true;
-        WAT.components.appBar.winControl.open();
-
-        WAT.components.appBar.winControl.addEventListener("afterclose", function (e) {
-            WAT.components.appBar.winControl.open();
-        });
-
-        appBarHeight = (parseInt(WAT.components.appBar.offsetHeight) || 0);
-
-        height -= appBarHeight;
-    }
-
-    WAT.components.stage.style.height = height + "px";
-    WAT.components.webView.style.height = height + "px";
-    // WAT.components.offlineView.style.height = height + "px";
 };
 
 // app and nav bar action handlers
