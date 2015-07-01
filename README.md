@@ -33,6 +33,10 @@ This is an experimental branch to analyze and find fixes to the breaking changes
 1. always adding share button to the appbar
 1. workaround to WinRT error "The parameter is incorrect" when retrieving appId
 
+### WATSettings.js changes
+
+1. replacing settings charm app commands with appbar secondary commands
+
 # Web App Toolkit
 
 The Web App Toolkit is a plugin for creating Windows, Android and iOS apps based on existing web content. It depends on the [Hosted Web App Plugin](http://plugins.cordova.io/#/package/com.manifoldjs.hostedwebapp). Used in the right way, it can facilitate the creation of compelling extensions to your web content for users across platforms.

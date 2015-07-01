@@ -54,10 +54,10 @@ var WAT = {
       //here we'll close the menus when we start to navigate
 
       if (WAT.manifest.wat_appBar && WAT.components.appBar.winControl && WAT.manifest.wat_appBar.enabled) {
-          WAT.components.appBar.winControl.hide();
+          WAT.components.appBar.winControl.close();
       }
       if (WAT.manifest.wat_navBar && WAT.manifest.wat_navBar.enabled && WAT.components.navBar.parentNode && WAT.components.navBar.parentNode.winControl) {
-          WAT.components.navBar.parentNode.winControl.hide();
+          WAT.components.navBar.parentNode.winControl.close();
       }
   }
 };
