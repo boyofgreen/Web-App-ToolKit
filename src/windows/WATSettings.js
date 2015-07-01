@@ -2,7 +2,7 @@
 "use strict";
 
 // Private method declaration
-var WAT, settingsConfig;
+var WAT, settingsConfig,
 addSetting,
 addSettings,
 logger = window.console;
