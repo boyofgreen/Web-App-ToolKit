@@ -36,7 +36,7 @@ addSetting = function (label, callback) {
   }
 
   var btn = document.createElement("button");
-  var cmd = new WinJS.UI.AppBarCommand(btn, { label: label, section: "selection" });
+  var cmd = new WinJS.UI.AppBarCommand(btn, { label: label, section: "secondary" });
   cmd.onclick = callback;
 
   WAT.components.appBar.appendChild(btn);
