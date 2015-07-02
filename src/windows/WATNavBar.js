@@ -1,3 +1,4 @@
+
 "use strict";
 var navDrawerList = new WinJS.Binding.List();
 var WAT;
@@ -25,108 +26,39 @@ var self = {
         navBarConfig = (WAT.manifest.wat_navBar || {});
 
         if (!navBarConfig || !navBarConfig.enabled) {
-            if (WAT.environment.isWindowsPhone) {
-                disableNavDrawer();
-            }
-
             return;
         }
 
         createNavBarElement();
         setupNavBar();
 
-        if (WAT.environment.isWindows) {
-            // create the navbar controls from the previously created html
-            new WinJS.UI.NavBar(WAT.components.navBar.parentNode);
-            var container = new WinJS.UI.NavBarContainer(WAT.components.navBar);
-            container.maxRows = navBarConfig.maxRows;
+        // create the navbar controls from the previously created html
+        new WinJS.UI.NavBar(WAT.components.navBar.parentNode);
+        var container = new WinJS.UI.NavBarContainer(WAT.components.navBar);
+        container.maxRows = navBarConfig.maxRows;
 
-            WAT.components.stage.style.top = "25px";
-        }
+        WAT.components.stage.style.top = "25px";
     }
   }
 };
 
 // Private methods
 createNavBarElement = function () {
-    if (WAT.environment.isWindows) {
-        var div = document.createElement("div");
-        div.id = "navBar"
-        div.classList.add("customColor");
+    var div = document.createElement("div");
+    div.id = "navBar"
+    div.classList.add("customColor");
 
-        var parent = document.createElement("div");
-        parent.style.zIndex = WAT.components.webView.style.zIndex + 101;
-        parent.appendChild(div);
+    var parent = document.createElement("div");
+    parent.style.zIndex = WAT.components.webView.style.zIndex + 101;
+    parent.appendChild(div);
 
-        WAT.components.content.appendChild(parent);
-        WAT.components.navBar = div;
-    }
-    else {
-        var parentDiv = document.createElement("div");
-        parentDiv.style.zIndex = WAT.components.webView.style.zIndex + 101;
-        var navBar = document.createElement("div");
-        navBar.id = "navBar";
-        navBar.classList.add("customColor");
-        parentDiv.appendChild(navBar);
-        WAT.components.stage.appendChild(parentDiv);
-        WAT.components.navBar = navBar;
-
-        var listview = document.getElementById("navDrawerListView");
-        var navDrawerIconTextTemplate = document.getElementById("navDrawerIconTextTemplate");
-        var template = new WinJS.Binding.Template(navDrawerIconTextTemplate);
-
-        var list = new WinJS.UI.ListView(listview, { itemDataSource: navDrawerList.dataSource, itemTemplate: navDrawerIconTextTemplate, selectionMode: 'none', tapBehavior: 'invoke', layout: { type: WinJS.UI.ListLayout } });
-        list.itemTemplate = function (itemPromise) {
-            return itemPromise.then(function (item) {
-                var navDrawerIconTextTemplate = document.createElement("div");
-                navDrawerIconTextTemplate.id = "navDrawerIconTextTemplate";
-
-                var navDrawerIconTextItem = document.createElement("div");
-                navDrawerIconTextItem.id = "navDrawerIconTextItem";
-                navDrawerIconTextItem.classList.add("navDrawerIconTextItem");
-
-                if (WAT.manifest.wat_navBar.backgroundColor) {
-                    navDrawerIconTextItem.style.backgroundColor = WAT.manifest.wat_navBar.backgroundColor;
-                }
-
-                var navDrawerIconTextImage = document.createElement("img");
-                navDrawerIconTextImage.classList.add("navDrawerIconTextItem-Image");
-                navDrawerIconTextImage.setAttribute("src", item.data.icon);
-
-                var navDrawerIconTextDetail = document.createElement("div");
-                navDrawerIconTextDetail.classList.add("navDrawerIconTextItem-Detail");
-
-                var h4title = document.createElement("h4");
-                h4title.innerText = item.data.label;
-
-                navDrawerIconTextDetail.appendChild(h4title);
-
-                navDrawerIconTextItem.appendChild(navDrawerIconTextImage);
-                navDrawerIconTextItem.appendChild(navDrawerIconTextDetail);
-
-                navDrawerIconTextTemplate.appendChild(navDrawerIconTextItem);
-
-                return navDrawerIconTextTemplate;
-            });
-
-        }
-    }
+    WAT.components.content.appendChild(parent);
+    WAT.components.navBar = div;
 };
 
 setupNavBar = function () {
     var needSplitEvent = false,
         navBarEl = WAT.components.navBar;
-
-    //we are checking to see if the elemnt of navbar exists, if it doesn't then we are probably building for phone and we just want to change this setting to false, so that we don't have to change the other code in the app
-    //if (!WinJS.UI.NavBarCommand) {
-    //    navBarConfig.enabled = false;
-    //    navBarEl.enabled = false;
-    //}
-
-    // for phone, if navbar is enabled and header is disabled, enable header (disable navbar if you don't want header)
-    if (WAT.environment.isWindowsPhone && WAT.manifest.header && !WAT.manifest.header.enabled && navBarConfig.enabled) {
-        WAT.manifest.header.enabled = true;
-    }
 
     if (!navBarConfig.enabled || !navBarEl) {
         if (navBarEl && navBarEl.parentNode.parentNode) {
@@ -134,10 +66,6 @@ setupNavBar = function () {
             // "navBar" option passes in the WinJS.UI.NavBarConatiner
             navBarEl.parentNode.parentNode.removeChild(navBarEl.parentNode);
             navBarEl = null;
-
-            if (WAT.environment.isWindowsPhone) {
-                disableNavDrawer();
-            }
         }
         return;
     }
@@ -147,43 +75,13 @@ setupNavBar = function () {
     // Add explicit buttons first...
     if (navBarConfig.buttons) {
         navBarConfig.buttons.forEach(function (menuItem) {
-            if (WAT.environment.isWindows) {
-                var btn = createNavBarButton(menuItem);
+            var btn = createNavBarButton(menuItem);
 
-                if (btn) {
-                    navBarEl.appendChild(btn);
-                }
-                if (menuItem.children && menuItem.children.length) {
-                    needSplitEvent = true;
-                }
+            if (btn) {
+                navBarEl.appendChild(btn);
             }
-            else if (WAT.environment.isWindowsPhone) { // initializing navdrawer for phone
-                navDrawerInit();
-                if (menuItem.icon && menuItem.icon != "" && menuItem.icon.substring(0, 2) != "ms") {
-                    menuItem.icon = "ms-appx:///www/images/enums/" + menuItem.icon + ".png";
-                }
-
-                // adding buttons to the navdrawer list
-                if (menuItem.children) {
-                    navDrawerList.push(menuItem); //TODO: nested items
-                    menuItem.children.forEach(function (childItem) {
-                        if (WAT.manifest.cortana && WAT.manifest.cortana.navBar) {
-                            phraseList.push(childItem.label);  //adding child items to cortana phrases
-                        }
-
-                        if (childItem.icon && childItem.icon != "" && childItem.icon.substring(0, 2) != "ms") {
-                            childItem.icon = "ms-appx:///www/images/enums/" + childItem.icon + ".png";
-                        }
-                        childItem.label = '  ' + childItem.label;
-                        navDrawerList.push(childItem);
-                    });
-                }
-                else {
-                    if (WAT.manifest.cortana && WAT.manifest.cortana.navBar) {
-                        phraseList.push(menuItem.label); //adding to cortana phrases
-                    }
-                    navDrawerList.push(menuItem);
-                }
+            if (menuItem.children && menuItem.children.length) {
+                needSplitEvent = true;
             }
         });
     }

@@ -9,8 +9,8 @@ var WAT = {
   manifest: undefined,
   components: {  },
   environment: {
-    isWindowsPhone: !!(cordova.platformId === 'windows' && navigator.appVersion.indexOf("Windows Phone 8.1;") !== -1),
-    isWindows: !!(cordova.platformId === 'windows' && navigator.appVersion.indexOf("Windows Phone 8.1;") === -1)
+    isWindowsPhone: !!(cordova.platformId === 'windows' && navigator.appVersion.indexOf("Windows Phone 10.0;") !== -1),
+    isWindows: !!(cordova.platformId === 'windows' && navigator.appVersion.indexOf("Windows Phone 10.0;") === -1)
   },
   isFunction: function (f) {
     return Object.prototype.toString.call(f) == '[object Function]';

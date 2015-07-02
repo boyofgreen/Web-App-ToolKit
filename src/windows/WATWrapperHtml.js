@@ -16,21 +16,15 @@
               base.href = "css/base.css";
               document.head.appendChild(base);
 
-              if (WAT.environment.isWindows) {
-                  // build wrapper html for windows
-                  var content = document.createElement("div");
-                  content.id = "content";
-                  content.classList.add("content");
-                  content.classList.add("customColor");
-                  document.body.appendChild(content);
-                  WAT.components.content = content;
+              // build wrapper html for windows
+              var content = document.createElement("div");
+              content.id = "content";
+              content.classList.add("content");
+              content.classList.add("customColor");
+              document.body.appendChild(content);
+              WAT.components.content = content;
 
-                  buildForWindows();
-              }
-              else {
-                  // build wrapper html for windows phone
-                  buildForWindowsPhone();
-              }
+              buildForWindows();
 
               // add base wrapper styles
               var styles = document.createElement("link");
@@ -48,79 +42,6 @@
       createHeaderElement();
       createStageElement();
       createWebViewForModalDialog(document.body);
-      moveWebView();
-  };
-
-  buildForWindowsPhone = function () {
-      // add theme styles for Windows Phone
-      var theme = document.createElement("link");
-      theme.setAttribute("rel", "stylesheet");
-      theme.setAttribute("type", "text/css");
-      theme.href = "css/ui-themed.theme-dark.css";
-      document.head.appendChild(theme);
-
-      // add wrapper styles for windows phone
-      var linkElem = document.createElement("link");
-      linkElem.setAttribute("rel", "stylesheet");
-      linkElem.setAttribute("type", "text/css");
-      linkElem.href = "css/wrapper-phone.css";
-      document.head.appendChild(linkElem);
-
-      // viewport parent div
-      var viewport = document.createElement("div");
-      viewport.id = "viewport";
-      viewport.classList.add("viewport");
-
-      // surface div
-      var surface = document.createElement("div");
-      surface.id = "surface";
-      surface.classList.add("surface");
-      surface.style.zIndex = WAT.components.webView.zIndex + 100;
-
-      // nav drawer div
-      var navDrawer = document.createElement("div");
-      navDrawer.id = "navDrawer";
-      navDrawer.classList.add("navDrawer");
-
-      // search box
-      var searchBox = document.createElement("input");
-      searchBox.type = "text";
-      searchBox.name = "search-box";
-      searchBox.id = "search-box";
-      searchBox.classList.add("search-box");
-
-      // TODO: enable search box when wat_search is implemented.
-      searchBox.style.display = "none";
-
-      navDrawer.appendChild(searchBox);
-      WAT.components.navDrawer = navDrawer;
-
-      // navdrawer list view
-      var listview = document.createElement("div");
-      listview.id = "navDrawerListView";
-      listview.classList.add("win-selectionstylefilled");
-
-      navDrawer.appendChild(listview);
-
-      surface.appendChild(navDrawer);
-
-      // up a level
-      var content = document.createElement("div");
-      content.id = "content";
-      content.classList.add("content");
-      document.body.appendChild(content);
-      WAT.components.content = content;
-
-      createStageElement();
-
-      surface.appendChild(content);
-
-      viewport.appendChild(surface);
-      document.body.appendChild(viewport);
-
-      createHeaderElement();
-      createWebViewForModalDialog(WAT.components.stage);
-
       moveWebView();
   };
 

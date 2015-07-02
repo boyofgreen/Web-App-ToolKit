@@ -45,15 +45,13 @@ setupAppBar = function () {
 
   //appBarEl.winControl.sticky = appBarConfig.makeSticky;
 
-  // Determine whether to build the app bar only for the privacy button in Windows Phone
-  var privacyOnly = WAT.environment.isWindowsPhone &&
-  WAT.manifest.wat_settings &&
+  // Determine whether to build the app bar only for the privacy button.
+  var privacyOnly = WAT.manifest.wat_settings &&
   WAT.manifest.wat_settings.enabled &&
   WAT.manifest.wat_settings.privacyUrl != "";
 
   // Determine whether the share button should be shown
-  var showShare = WAT.environment.isWindowsPhone &&
-  WAT.manifest.wat_share &&
+  var showShare = WAT.manifest.wat_share &&
   WAT.manifest.wat_share.enabled &&
   WAT.manifest.wat_share.showButton;
 
