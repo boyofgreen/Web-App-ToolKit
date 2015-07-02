@@ -10,11 +10,11 @@
               WAT = WATRef;
 
               // add base stylesheet
-              // var base = document.createElement("link");
-              // base.setAttribute("rel", "stylesheet");
-              // base.setAttribute("type", "text/css");
-              // base.href = "css/base.css";
-              // document.head.appendChild(base);
+              var base = document.createElement("link");
+              base.setAttribute("rel", "stylesheet");
+              base.setAttribute("type", "text/css");
+              base.href = "css/base.css";
+              document.head.appendChild(base);
 
               if (WAT.environment.isWindows) {
                   // build wrapper html for windows
