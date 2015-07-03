@@ -50,6 +50,7 @@ var self = {
             // add hamburger to header.
             var toggle = document.createElement("button");
             toggle.classList.add("win-splitviewpanetoggle");
+            toggle.style.marginTop = "11px";
             var tog = new WinJS.UI.SplitViewPaneToggle(toggle);
             tog.splitView = document.querySelector(".splitView");
             WAT.components.header.appendChild(toggle);
