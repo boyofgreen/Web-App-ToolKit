@@ -56,7 +56,7 @@ var WAT = {
       if (WAT.manifest.wat_appBar && WAT.components.appBar.winControl && WAT.manifest.wat_appBar.enabled) {
           WAT.components.appBar.winControl.close();
       }
-      if (WAT.manifest.wat_navBar && WAT.manifest.wat_navBar.enabled && WAT.components.navBar.parentNode && WAT.components.navBar.parentNode.winControl) {
+      if (WAT.environment.isWindows && WAT.manifest.wat_navBar && WAT.manifest.wat_navBar.enabled && WAT.components.navBar.parentNode && WAT.components.navBar.parentNode.winControl) {
           WAT.components.navBar.parentNode.winControl.close();
       }
   }
