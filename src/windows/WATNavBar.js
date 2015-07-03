@@ -66,7 +66,7 @@ buildSplitView = function () {
     div.classList.add("splitView");
     div.setAttribute("data-win-control", "WinJS.UI.SplitView");
     div.setAttribute("data-win-options", "{closedDisplayMode: 'none'}");
-    div.style.zIndex = "10000";
+    div.style.zIndex = WAT.components.webView.style.zIndex;
 
     var pane = document.createElement("div");
 
@@ -88,12 +88,23 @@ buildSplitView = function () {
                 divCommands.appendChild(btn);
             }
             if (menuItem.children && menuItem.children.length) {
-                needSplitEvent = true;
+                // add children commands to the splitview
+                menuItem.children.forEach(function (subItem) {
+                    var nestedBtn = document.createElement("div");
+                    nestedBtn.setAttribute("role", "menuitem");
+
+                    new WinJS.UI.NavBarCommand(nestedBtn, {
+                        label: subItem.label,
+                    });
+
+                    setButtonAction(nestedBtn, subItem);
+                    divCommands.appendChild(nestedBtn);
+                });
             }
         });
     }
 
-    // TOOO: implement pageElements option.
+    // TOOO: implement pageElements option for Windows Phone.
 
     div.appendChild(pane);
 
