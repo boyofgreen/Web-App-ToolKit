@@ -53,14 +53,6 @@
       header.classList.add("header");
       header.style.zIndex = WAT.components.webView.style.zIndex + 100;
 
-      if (!WAT.environment.isWindows) {
-          // hamburger
-          var hamburger = document.createElement("div");
-          hamburger.id = "hamburger";
-          hamburger.classList.add("hamburger");
-          header.appendChild(hamburger);
-      }
-
       // logo div
       var logoArea = document.createElement("div");
       logoArea.classList.add("logoarea");
