@@ -260,6 +260,10 @@ handleBarNavigate = function () {
     var url = (this.dataset.barActionData || this.parentNode.dataset.barActionData || WAT.manifest.start_url);
     var target = new Windows.Foundation.Uri(url);
     WAT.components.webView.navigate(target.toString());
+    
+    if (WAT.environment.isWindowsPhone) {
+        WAT.components.splitView.winControl.closePane();
+    }
 };
 
 setupNestedNav = function (menuItem, btn) {
