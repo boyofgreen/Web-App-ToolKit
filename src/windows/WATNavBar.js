@@ -66,7 +66,6 @@ buildSplitView = function () {
     div.classList.add("splitView");
     div.setAttribute("data-win-control", "WinJS.UI.SplitView");
     div.setAttribute("data-win-options", "{closedDisplayMode: 'none'}");
-    div.style.zIndex = WAT.components.webView.style.zIndex;
 
     var pane = document.createElement("div");
 
@@ -260,7 +259,7 @@ handleBarNavigate = function () {
     var url = (this.dataset.barActionData || this.parentNode.dataset.barActionData || WAT.manifest.start_url);
     var target = new Windows.Foundation.Uri(url);
     WAT.components.webView.navigate(target.toString());
-    
+
     if (WAT.environment.isWindowsPhone) {
         WAT.components.splitView.winControl.closePane();
     }
