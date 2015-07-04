@@ -25,13 +25,21 @@
               WAT.components.content = content;
 
               buildForWindows();
+              
+              if (WAT.environment.isWindowsPhone) {
+                  var styles = document.createElement("link");
+                  styles.setAttribute("rel", "stylesheet");
+                  styles.setAttribute("type", "text/css");
+                  styles.href = "css/wrapper-phone.css";
+                  document.head.appendChild(styles);
+              }
 
               // add base wrapper styles
               var styles = document.createElement("link");
               styles.setAttribute("rel", "stylesheet");
               styles.setAttribute("type", "text/css");
               styles.href = "css/wrapper-styles.css";
-              document.head.appendChild(styles);
+              document.head.appendChild(styles);]]
 
               createTransitionOverlay();
           }

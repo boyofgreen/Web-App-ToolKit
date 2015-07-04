@@ -211,10 +211,10 @@ addNavAppBarCustomColorStyles = function () {
         if (appBarBackColor || appBarButtonColor) {
             /*App Bar custom colors*/
 
-            navBarScript += ".win-appbar.win-bottom.customColor {\n";
-            if (appBarBackColor) {
-                navBarScript += "background-color: " + appBarBackColor + ";\n";
-            }
+            navBarScript += ".customColor .win-commandingsurface .win-commandingsurface-actionarea, .customColor .win-commandingsurface .win-commandingsurface-overflowarea {\n";
+              if (appBarBackColor) {
+                  navBarScript += "background-color: " + appBarBackColor + ";\n";
+              }
 
             navBarScript += "}\n" +
                 ".customColor .win-commandimage{\n";
