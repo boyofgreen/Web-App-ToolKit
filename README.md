@@ -7,6 +7,7 @@ This is an experimental branch to analyze and find fixes to the breaking changes
 ### Manual changes
 
 1. need to manually add WinJS 4 via nuget and overwrite the existing base.js file in the Windows 10 project.
+1. Changing the TargetDeviceFamily values to 10.0069.0 in the appxmanifest.
 
 ### General styling conflicts
 
@@ -15,7 +16,7 @@ This is an experimental branch to analyze and find fixes to the breaking changes
 ### WebAppToolkitPluginProxy.js changes
 
 1. added reference to corresponding WinJS 4 assets (ui.js and css)
-1. binding WinJS control after initializing plugin modules.
+1. binding WinJS controls after initializing plugin modules.
 
 ### WATAppBar.js changes
 
@@ -27,11 +28,12 @@ This is an experimental branch to analyze and find fixes to the breaking changes
 
 1. addressed breaking changes
 1. addressed conflicting styles with base.css
+1. replacing old custom navdrawer with WinJS's SplitView control in Windows Phone
 
 ### WATShare.js changes
 
 1. always adding share button to the appbar
-1. workaround to WinRT error "The parameter is incorrect" when retrieving appId
+1. workaround to WinRT error "The parameter is incorrect" when retrieving appId (using CurrentAppSimulator instead of CurrentApp)
 
 ### WATSettings.js changes
 
