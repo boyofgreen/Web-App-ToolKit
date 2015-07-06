@@ -75,9 +75,6 @@ var headerConfig, setupHeader, setPageTitle, webviewNavComplete,
 
           if (WAT.environment.isWindowsPhone && WAT.manifest.wat_navBar && WAT.manifest.wat_navBar.enabled) {
               var navBgColor = WAT.manifest.wat_navBar.backgroundColor ? WAT.manifest.wat_navBar.backgroundColor : headerConfig.navDrawerBackgroundColor;
-
-              WAT.components.navDrawer.style.background = navBgColor;
-              //document.getElementById("navDrawerIconTextItem").style.background = navBgColor;
           }
 
           if (headerConfig.logo) {

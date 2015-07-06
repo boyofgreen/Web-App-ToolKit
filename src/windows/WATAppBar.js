@@ -38,6 +38,13 @@ addAppBar = function () {
     WAT.components.appBar = div;
 
     setupAppBar();
+
+    div.style.visibility = "hidden";
+
+    // show the appBar only when the page contents are loaded, in sync with the extended splash screen
+    WAT.components.webView.addEventListener("MSWebViewDOMContentLoaded", function (e) {
+       WAT.components.appBar.style.visibility = "visible";
+    });
 };
 
 setupAppBar = function () {

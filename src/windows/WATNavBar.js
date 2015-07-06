@@ -1,9 +1,7 @@
-
 "use strict";
-var navDrawerList = new WinJS.Binding.List();
 var WAT;
-var navBarConfig, createNavBarElement, setupNavBar, createNavBarButton, setButtonAction, initUIDeclarations,
-    navDrawerInit, returnToContent, navigateBack, toggleMenu, itemInvokedHandler, disableNavDrawer, barActions, handleBarEval, handleBarNavigate, setupNestedNav, toggleNestedNav,
+var buildSplitView, navBarConfig, createNavBarElement, setupNavBar, createNavBarButton, setButtonAction, initUIDeclarations,
+    returnToContent, navigateBack, barActions, handleBarEval, handleBarNavigate, setupNestedNav, toggleNestedNav,
     barActions = {},
     backButtons = [],
     afterProcessAllActions = [];
@@ -29,20 +27,102 @@ var self = {
             return;
         }
 
-        createNavBarElement();
-        setupNavBar();
+        if (WAT.environment.isWindows) {
+            createNavBarElement();
+            setupNavBar();
 
-        // create the navbar controls from the previously created html
-        new WinJS.UI.NavBar(WAT.components.navBar.parentNode);
-        var container = new WinJS.UI.NavBarContainer(WAT.components.navBar);
-        container.maxRows = navBarConfig.maxRows;
+            // create the navbar controls from the previously created html
+            new WinJS.UI.NavBar(WAT.components.navBar.parentNode);
+            var container = new WinJS.UI.NavBarContainer(WAT.components.navBar);
+            container.maxRows = navBarConfig.maxRows;
 
-        WAT.components.stage.style.top = "25px";
+            WAT.components.stage.style.top = "25px";
+        }
+        else {
+            // build splitview for Windows Phone
+            buildSplitView();
+
+            // for phone, if navbar is enabled and header is disabled, enable header (disable navbar if you don't want header)
+            if (WAT.manifest.header && !WAT.manifest.header.enabled && navBarConfig.enabled) {
+                WAT.manifest.header.enabled = true;
+            }
+
+            // add hamburger to header.
+            var toggle = document.createElement("button");
+            toggle.classList.add("win-splitviewpanetoggle");
+            toggle.style.marginTop = "11px";
+            var tog = new WinJS.UI.SplitViewPaneToggle(toggle);
+            tog.splitView = document.querySelector(".splitView");
+            WAT.components.header.appendChild(toggle);
+        }
     }
   }
 };
 
 // Private methods
+buildSplitView = function () {
+    var needSplitEvent = false;
+    var div = document.createElement("div");
+    div.classList.add("splitView");
+    div.setAttribute("data-win-control", "WinJS.UI.SplitView");
+    div.setAttribute("data-win-options", "{closedDisplayMode: 'none'}");
+
+    var pane = document.createElement("div");
+
+    var header = document.createElement("div");
+    header.classList.add("header");
+
+    var divCommands = document.createElement("div");
+    divCommands.classList.add("nav-commands");
+
+    pane.appendChild(header);
+    pane.appendChild(divCommands);
+
+    // Add explicit buttons first...
+    if (navBarConfig.buttons) {
+        navBarConfig.buttons.forEach(function (menuItem) {
+            var btn = createNavBarButton(menuItem);
+
+            if (btn) {
+                divCommands.appendChild(btn);
+            }
+            if (menuItem.children && menuItem.children.length) {
+                // add children commands to the splitview
+                menuItem.children.forEach(function (subItem) {
+                    var nestedBtn = document.createElement("div");
+                    nestedBtn.setAttribute("role", "menuitem");
+
+                    new WinJS.UI.NavBarCommand(nestedBtn, {
+                        label: subItem.label,
+                    });
+
+                    setButtonAction(nestedBtn, subItem);
+                    divCommands.appendChild(nestedBtn);
+                });
+            }
+        });
+    }
+
+    // TOOO: implement pageElements option for Windows Phone.
+
+    div.appendChild(pane);
+
+    // content area
+    var content = document.createElement("div");
+    content.classList.add("sv-content");
+    content.style.overflowY = "scroll";
+    div.appendChild(content);
+
+    // move the webview inside the splitview's content area
+    var webView = WAT.components.webView;
+    content.appendChild(webView);
+
+    div.appendChild(content);
+
+    WAT.components.stage.appendChild(div);
+    WAT.components.splitView = div;
+};
+
 createNavBarElement = function () {
     var div = document.createElement("div");
     div.id = "navBar"
@@ -164,71 +244,7 @@ initUIDeclarations = function () {
     WAT.components.navBar.setAttribute("data-win-options", "{ maxRows: " + navBarConfig.maxRows + " }");
 };
 
-
-disableNavDrawer = function () {
-    // disabling navDrawer
-    var surface = document.getElementById("surface");
-    surface.style.display = "block";
-    surface.style.width = "100%";
-    document.getElementById("hamburger").style.display = "none";
-    document.getElementById("search-box").style.display = "none";
-    WAT.components.navDrawer = null;
-};
-
-    // initializing navdrawer
-navDrawerInit = function () {
-    document.querySelector(".header .hamburger").addEventListener("click", toggleMenu);
-    document.querySelector(".content").addEventListener("click", returnToContent);
-    document.querySelector(".viewport").scrollLeft = _menuWidth;
-    document.addEventListener("iteminvoked", itemInvokedHandler, false);
-};
-
-    // navdrawer scroll
-returnToContent = function (e) {
-    var viewport = document.querySelector(".viewport");
-    if (viewport.scrollLeft < _menuWidth || viewport.scrollLeft >= _menuWidth * 2) {
-        viewport.msZoomTo({
-            contentX: _menuWidth
-        });
-    }
-};
-
-    // toggles navdrawer
-toggleMenu = function (e) {
-    var viewport = document.querySelector(".viewport");
-    var scrollPos = (viewport.scrollLeft > 0) ? 0 : _menuWidth;
-    viewport.msZoomTo({
-        contentX: scrollPos
-    });
-};
-
-    // handles items in the navdrawer
-itemInvokedHandler = function (eventObject) {
-    eventObject.detail.itemPromise.done(function (invokedItem) {
-        switch (invokedItem.data.action) {
-            case "home":
-                WAT.components.webView.navigate(WAT.manifest.start_url);
-                break;
-            case "eval":
-                var scriptString = "(function() { " + invokedItem.data.data + " })();";
-                var exec = WAT.components.webView.invokeScriptAsync("eval", scriptString);
-                exec.start();
-                break;
-            case "back":
-                WAT.components.webView.goBack();
-                break;
-            case "nested":
-                break;
-            default:
-                WAT.components.webView.navigate(invokedItem.data.action);
-                break;
-        }
-        toggleMenu();
-    });
-};
-
 // app and nav bar action handlers
-
 handleBarEval = function () {
     var scriptString, exec;
 
@@ -243,6 +259,10 @@ handleBarNavigate = function () {
     var url = (this.dataset.barActionData || this.parentNode.dataset.barActionData || WAT.manifest.start_url);
     var target = new Windows.Foundation.Uri(url);
     WAT.components.webView.navigate(target.toString());
+
+    if (WAT.environment.isWindowsPhone) {
+        WAT.components.splitView.winControl.closePane();
+    }
 };
 
 setupNestedNav = function (menuItem, btn) {
@@ -350,6 +370,10 @@ navigateBack = function (e) {
 
     if (WAT.manifest.wat_navBar && WAT.manifest.wat_navBar.enabled && WAT.environment.isWindows) {
         WAT.components.navBar.parentNode.winControl.close();
+    }
+
+    if (WAT.manifest.wat_navBar && WAT.manifest.wat_navBar.enabled && WAT.environment.isWindowsPhone) {
+        WAT.components.splitView.winControl.closePane();
     }
 
     return true;

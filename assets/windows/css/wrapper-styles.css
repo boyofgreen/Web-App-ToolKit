@@ -67,6 +67,7 @@
         .content .header .titlearea {
             -ms-grid-column: 3;
             margin-top: 37px;
+            margin-left: 10px;
         }
 
         .content .header .search-box {

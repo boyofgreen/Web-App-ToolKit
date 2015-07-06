@@ -26,6 +26,14 @@
 
               buildForWindows();
 
+              if (WAT.environment.isWindowsPhone) {
+                  var styles = document.createElement("link");
+                  styles.setAttribute("rel", "stylesheet");
+                  styles.setAttribute("type", "text/css");
+                  styles.href = "css/wrapper-phone.css";
+                  document.head.appendChild(styles);
+              }
+
               // add base wrapper styles
               var styles = document.createElement("link");
               styles.setAttribute("rel", "stylesheet");
@@ -52,14 +60,6 @@
       header.id = "header";
       header.classList.add("header");
       header.style.zIndex = WAT.components.webView.style.zIndex + 100;
-
-      if (!WAT.environment.isWindows) {
-          // hamburger
-          var hamburger = document.createElement("div");
-          hamburger.id = "hamburger";
-          hamburger.classList.add("hamburger");
-          header.appendChild(hamburger);
-      }
 
       // logo div
       var logoArea = document.createElement("div");
