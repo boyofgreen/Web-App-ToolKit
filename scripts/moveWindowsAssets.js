@@ -68,7 +68,20 @@ module.exports = function (context) {
         }
 
         console.log("Finished copying js assets for the windows platform.");
-        return task.resolve();
+
+        sourcePath = path.resolve(__dirname, "..", "assets\\windows\\html");
+        destPath = path.resolve(__dirname, "..", "..", "..", "platforms\\windows\\www");
+
+        copyAssets(sourcePath, destPath, function (err) {
+          if (err) {
+            console.error(err);
+            return task.reject();
+          }
+
+          console.log("Finished copying html assets for the windows platform.");
+
+          return task.resolve();
+        });
       });
     });
   });
