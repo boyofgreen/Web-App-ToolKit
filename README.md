@@ -10,23 +10,23 @@ This is an experimental branch to analyze and find fixes to the breaking changes
 
 ### General styling conflicts
 
-1. need to remove base.css style conflicts between WinJS 2 and WinJS 4
+1. removed base.css style conflicts between WinJS 2 and WinJS 4
 
 ### WebAppToolkitPluginProxy.js changes
 
-1. add reference to corresponding WinJS 4 assets (ui.js and css)
+1. added reference to corresponding WinJS 4 assets (ui.js and css)
 1. binding WinJS control after initializing plugin modules.
 
 ### WATAppBar.js changes
 
-1. need to change the way the control is created in WinJS 4
-1. need to address breaking changes
+1. changed the way the control is created in WinJS 4
+1. addressed breaking changes
 1. set zindex in wrapper-styles.css so that control is visible at all times
 
 ### WATNavBar.js changes
 
-1. need to address breaking changes
-1. need to address conflicting styles with base.css
+1. addressed breaking changes
+1. addressed conflicting styles with base.css
 
 ### WATShare.js changes
 
