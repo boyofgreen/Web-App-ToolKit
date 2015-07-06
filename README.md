@@ -1,6 +1,6 @@
 # Windows 10 experimental branch
 
-This is an experimental branch to analyze and find fixes to the breaking changes introduced by WinJS 4 and reconcile compatibility issues with Windows 8.1.
+This is an experimental branch to analyze and find fixes to the breaking changes introduced by WinJS 4.
 
 [WinJS 4 breaking changes](https://github.com/winjs/winjs/wiki/changelog#breaking-changes)
 
