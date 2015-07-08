@@ -206,7 +206,7 @@ sharePage = function (dataReq, deferral, imageFile) {
     html = shareConfig.message;
 
   var displayName = (WAT.manifest.displayName || "");
-  var currentApp = Windows.ApplicationModel.Store.CurrentApp;
+  var currentApp = Windows.ApplicationModel.Store.CurrentAppSimulator;
 
   var appUri = "Unplublished App, no Store link is available";
 
