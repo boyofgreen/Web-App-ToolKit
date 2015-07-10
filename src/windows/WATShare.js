@@ -21,9 +21,8 @@ var self = {
       var dataTransferManager = Windows.ApplicationModel.DataTransfer.DataTransferManager.getForCurrentView();
       dataTransferManager.addEventListener("datarequested", handleShareRequest);
 
-      if (shareConfig.showButton && WAT.environment.isWindowsPhone) {
-        addShareButton();
-      }
+      // we need to add the share button to the appbar since there is no more share charm
+      addShareButton();
     }
   }
 };
@@ -38,20 +37,17 @@ addShareButton = function () {
     return;
   }
 
-  var section = (shareConfig.buttonSection || "global");
+  var section = (shareConfig.buttonSection || "primary");
 
   btn = document.createElement("button");
-  btn.setAttribute("style", "-ms-high-contrast-adjust:none");
+  btn.setAttribute("data-win-control", "WinJS.UI.AppBarCommand");
+  btn.setAttribute("data-win-options", "{ id: 'shareButton', label: '" + buttonText + "', icon: 'reshare', section: '" + section + "' }");
+
   btn.addEventListener("click", function shareClickHandler() {
     Windows.ApplicationModel.DataTransfer.DataTransferManager.showShareUI();
   });
 
-  new WinJS.UI.AppBarCommand(btn, { id: 'shareButton', label: buttonText, icon: 'url(/www/images/share.png)', section: section });
-
   WAT.components.appBar.appendChild(btn);
-
-  WAT.components.appBar.winControl.disabled = true;
-  WAT.components.appBar.winControl.disabled = false;
 };
 
 handleShareRequest = function (e) {
@@ -210,13 +206,18 @@ sharePage = function (dataReq, deferral, imageFile) {
     html = shareConfig.message;
 
   var displayName = (WAT.manifest.displayName || "");
-  var currentApp = Windows.ApplicationModel.Store.CurrentApp;
-  var appUri;
+  var currentApp = Windows.ApplicationModel.Store.CurrentAppSimulator;
 
-  if (currentApp.appId != "00000000-0000-0000-0000-000000000000") {
-    appUri = currentApp.linkUri.absoluteUri;
-  } else {
-    appUri = "Unplublished App, no Store link is available";
+  var appUri = "Unplublished App, no Store link is available";
+
+  try {
+    if (currentApp.appId != "00000000-0000-0000-0000-000000000000") {
+      appUri = currentApp.linkUri.absoluteUri;
+    }
+  } catch (e) {
+      // TODO: getting WinRTError "The parameter is incorrect" for appId and linkUri. Needs further investigation
+      console.log(e.message);
+      appUri = "Unable to retrieve application id.";
   }
 
   msg = msg.replace("{url}", shareConfig.url).replace("{currentURL}", shareUrl).replace("{appUrl}", appUri).replace("{appLink}", displayName);

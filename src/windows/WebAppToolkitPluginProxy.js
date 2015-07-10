@@ -9,8 +9,8 @@ var WAT = {
   manifest: undefined,
   components: {  },
   environment: {
-    isWindowsPhone: !!(cordova.platformId === 'windows' && navigator.appVersion.indexOf("Windows Phone 8.1;") !== -1),
-    isWindows: !!(cordova.platformId === 'windows' && navigator.appVersion.indexOf("Windows Phone 8.1;") === -1)
+    isWindowsPhone: !!(cordova.platformId === 'windows' && navigator.appVersion.indexOf("Windows Phone") !== -1),
+    isWindows: !!(cordova.platformId === 'windows' && navigator.appVersion.indexOf("Windows Phone") === -1)
   },
   isFunction: function (f) {
     return Object.prototype.toString.call(f) == '[object Function]';
@@ -54,10 +54,10 @@ var WAT = {
       //here we'll close the menus when we start to navigate
 
       if (WAT.manifest.wat_appBar && WAT.components.appBar.winControl && WAT.manifest.wat_appBar.enabled) {
-          WAT.components.appBar.winControl.hide();
+          WAT.components.appBar.winControl.close();
       }
-      if (WAT.manifest.wat_navBar && WAT.manifest.wat_navBar.enabled && WAT.components.navBar.parentNode && WAT.components.navBar.parentNode.winControl) {
-          WAT.components.navBar.parentNode.winControl.hide();
+      if (WAT.environment.isWindows && WAT.manifest.wat_navBar && WAT.manifest.wat_navBar.enabled && WAT.components.navBar.parentNode && WAT.components.navBar.parentNode.winControl) {
+          WAT.components.navBar.parentNode.winControl.close();
       }
   }
 };
@@ -70,46 +70,53 @@ module.exports = {
 
 cordova.commandProxy.add("WebAppToolkit", module.exports);
 
-// The following code loads WinJS ui modules
-(function(onReady) {
-  function loadWinJScss () {
-    var linkElem = document.createElement("link");
-    linkElem.setAttribute("rel", "stylesheet");
 
-    if (navigator.appVersion.indexOf("Windows Phone 8.1;") !== -1) {
-      // windows phone 8.1 + Mobile IE 11
-      linkElem.href = "//Microsoft.Phone.WinJS.2.1/css/ui-dark.css";
-    } else if (navigator.appVersion.indexOf("MSAppHost/2.0;") !== -1) {
-      // windows 8.1 + IE 11
-      linkElem.href = "//Microsoft.WinJS.2.0/css/ui-dark.css";
-    } else {
-      // windows 8.0 + IE 10
-      linkElem.href = "//Microsoft.WinJS.1.0/css/ui-dark.css";
+// The following code loads WinJS ui modules
+(function (onReady) {
+    function loadWinJScss() {
+        var linkElem = document.createElement("link");
+        linkElem.setAttribute("rel", "stylesheet");
+        linkElem.href = "/WinJS/css/ui-dark.css";
+        linkElem.addEventListener("load", onReady);
+        document.head.appendChild(linkElem);
     }
 
-    linkElem.addEventListener("load", onReady);
-    document.head.appendChild(linkElem);
-  }
+    function loadWinJS4js(onReady) {
+        var scriptElem = document.createElement("script");
+        scriptElem.src = "/WinJS/js/ui.js";
+        scriptElem.addEventListener("load", loadWinJScss);
+        document.head.appendChild(scriptElem);
+    }
 
-  var scriptElem = document.createElement("script");
+    // we'll delete the reference to base.js of WinJS 2 (added by cordova) and replace it with a reference to base.js of WinJS 4.
+    var scriptElem;
+    var selector;
 
-  if (navigator.appVersion.indexOf("Windows Phone 8.1;") !== -1) {
-    // windows phone 8.1 + Mobile IE 11
-    scriptElem.src = "//Microsoft.Phone.WinJS.2.1/js/ui.js";
-  } else if (navigator.appVersion.indexOf("MSAppHost/2.0;") !== -1) {
-    // windows 8.1 + IE 11
-    scriptElem.src = "//Microsoft.WinJS.2.0/js/ui.js";
-  } else {
-    // windows 8.0 + IE 10
-    scriptElem.src = "//Microsoft.WinJS.1.0/js/ui.js";
-  }
-  scriptElem.addEventListener("load", loadWinJScss);
-  document.head.appendChild(scriptElem);
-})(function () {
-  document.addEventListener('manifestLoaded', function (evt) {
+    if (navigator.appVersion.indexOf("Windows Phone") !== -1) {
+        // it's phone
+        selector = "script[src='//Microsoft.Phone.WinJS.2.1/js/base.js']"
+    }
+    else {
+        // not phone
+        selector = "script[src='//Microsoft.WinJS.2.0/js/base.js']"
+    }
+
+    scriptElem = document.querySelector(selector);
+
+    if (scriptElem) {
+        scriptElem.parentNode.removeChild(scriptElem);
+    }
+
+    scriptElem = document.createElement("script");
+    scriptElem.src = "/WinJS/js/base.js";
+    scriptElem.addEventListener("load", loadWinJS4js);
+
+    document.head.appendChild(scriptElem);})(function () {
+    document.addEventListener('manifestLoaded', function (evt) {
     WAT.manifest = evt.manifest;
     initialize();
   }, false);
+
   document.addEventListener('webviewCreated', function () {
     initialize();
   }, false);
@@ -121,7 +128,6 @@ cordova.commandProxy.add("WebAppToolkit", module.exports);
     });
   }
 });
-
 
 function initialize() {
   if (WAT.manifest) {
@@ -139,6 +145,8 @@ function initialize() {
       require('com.microsoft.webapptoolkit.WATSettings').init(WAT);
       require('com.microsoft.webapptoolkit.WATSecondaryPins').init(WAT);
 
+      // in Windows 10, we need to wait to bind WinJS controls to the last possible moment, otherwise there are issues modifying previously initialized controls.
+      WinJS.UI.processAll();
     }
   }
 }

@@ -1,3 +1,4 @@
+
 # Web App Toolkit
 
 The Web App Toolkit is a plugin for creating Windows, Android and iOS apps based on existing web content. It depends on the [Hosted Web App Plugin](http://plugins.cordova.io/#/package/com.manifoldjs.hostedwebapp). Used in the right way, it can facilitate the creation of compelling extensions to your web content for users across platforms.
@@ -26,6 +27,19 @@ The plugin leverages the functionality from the [Hosted WebApp Plugin](http://pl
 
 1. Build the application.  
 	`cordova build`
+
+### Known Issues [Windows only]
+1. The  `cordova build ` command will fail on a machine that does not have the SDK and tools for Windows 8.1 because WinJS 2 is not installed. For the plugin to work correctly, and if you are on Windows 10, before running the build command, open the Visual Studio solution and remove the references to WinJS 2 in the Windows 8.1 and Windows Phone 8.1 projects. The `cordova build` command should succeed after this.
+
+### Manual steps required [Windows only]
+In order to make the project work there are a few things that need to be taken care of:
+
+1. Add **WinJS 4** via nuget and **overwrite the existing base.js file in the Windows 10 project when prompted**.
+1. Changing the TargetDeviceFamily values to 10.0069.0 in the appxmanifest (optional, depending on the current version of your Windows 10 SDK )
+
+### Before you submit your app [Windows only]
+
+Make sure you replace the reference to Windows.ApplicationModel.Store.CurrentAppSimulator with Windows.Applicationmodel.Store.CurrentApp, which is located in WATShare.js
 
 ## Features
 The following section shows examples of how you can enable the plugin's features in the **manifest.json** file.
@@ -56,7 +70,7 @@ This controls the use of the share charm within the application.
 | **enabled** | Toggles the share charm functionality on or off (true/false)
 | **showButton** |  Toggles visibility of a Share button on the app bar (true/false)
 | **buttonText** | Text used for the Share app bar button if it is enabled
-| **buttonSection** | This sets the sharebutton into a particular section of the app bar (if you have sections set up) the default is global http://msdn.microsoft.com/en-us/library/windows/apps/Hh700497.aspx
+| **buttonSection** | This sets the sharebutton into a particular section of the app bar (if you have sections set up) the default is primary http://msdn.microsoft.com/en-us/library/windows/apps/Hh700497.aspx
 | **title** | Defines the title passed into the share charm
 | **url** | Defines a url that is shared via the share contract. You can use {currentURL} to share the current URL of the webview.
 | **screenshot** | Enables the sharing of a screenshot (true/false)
@@ -68,7 +82,7 @@ This controls the use of the share charm within the application.
   	"enabled": true,
     "showButton": true,
     "buttonText": "Share",
-    "buttonSection": "global",
+    "buttonSection": "primary",
   	"title": "Web App Tooklit Documentation",
   	"url": "{currentURL}",
   	"screenshot": true,
@@ -137,7 +151,7 @@ This controls the navigation bar at the top of the screen.
 |----------|----------------|
 | **enabled** | Toggles the navigation bar visibility (true/false)
 | **maxRows** |  Sets the maximum number of rows that are used to display buttons before the nav bar starts paging
-| **makeSticky** | Toggles whether the app bar is always visible or not (true/false)
+| **makeSticky** | Toggles whether the app bar is always visible or not (true/false) (No longer supported in the Windows version)
 | **buttons** | An array of objects, each of which represent a button within the navigation bar.Each object has three parameters:
 | &nbsp;&nbsp;&nbsp;&nbsp; **label** | The text for the button. Leave this blank to omit the text
 | &nbsp;&nbsp;&nbsp;&nbsp; **icon** | The icon for the button. A list of available icons is at dev.windows.com. Leave this blank to omit the icon
@@ -150,7 +164,6 @@ children An array of nodes that are shown beneath the parent node. Children node
   "wat_navBar": {
       "enabled": true,
       "maxRows": 1,
-      "makeSticky": false,
       "buttons": [
           {
               "label": "Back",
@@ -389,7 +402,7 @@ This option sets the secondary pin functionality in the app bar.
 |**enabled**| Toggles the secondary pin functionality (true/false)
 |**buttonText**| Text that is used on the pin button
 |**tileTextTheme**| The visual theme for the tile (light/dark)
-|**buttonSection**| This sets the sharebutton into a particular section of the app bar (if you have secions set up) the default is global http://msdn.microsoft.com/en-us/library/windows/apps/Hh700497.aspx
+|**buttonSection**| This sets the sharebutton into a particular section of the app bar (if you have sections set up) the default is primary http://msdn.microsoft.com/en-us/library/windows/apps/Hh700497.aspx
 |**squareImage**| A path to a square image that is used for secondary tiles
 |**wideImage**| A path to a wide image that is used for secndary tiles
 
@@ -399,7 +412,7 @@ This option sets the secondary pin functionality in the app bar.
       "enabled": true,
   	  "buttonText": "Pin It!",
       "tileTextTheme": "light",
-      "buttonSection": "global",
+      "buttonSection": "primary",
   	  "squareImage": "/images/logo.scale-100.png",
   	  "wideImage": "/images/widelogo.scale-100.png"
   },

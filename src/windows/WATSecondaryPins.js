@@ -27,20 +27,15 @@ setupPinning = function () {
            buttonText = pinConfig.buttonText;
        }
 
-       var section = (pinConfig.buttonSection || "global");
+       var section = (pinConfig.buttonSection || "primary");
 
        btn = document.createElement("button");
 
-       new WinJS.UI.AppBarCommand(btn, { label: buttonText, icon: "pin", section: section });
-
-       btn.className = "win-disposable win-command win-global";
-       btn.setAttribute("role", "menuitem");
+       var cmd = new WinJS.UI.AppBarCommand(btn, { label: buttonText, icon: "pin", section: section });
+       cmd.onclick = pinHandler;
        btn.setAttribute("id", "pinButton");
-       btn.addEventListener("click", pinHandler);
 
        WAT.components.appBar.appendChild(btn);
-       WAT.components.appBar.winControl.disabled = true;
-       WAT.components.appBar.winControl.disabled = false;
    };
 
 pinHandler = function () {

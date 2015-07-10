@@ -10,7 +10,7 @@
 
     <dependency id="cordova-plugin-hostedwebapp" version=">=0.1.0" />
 
-    <hook type="after_prepare" src="scripts/moveWindowsAssets.js" />
+    <hook type="after_build" src="scripts/moveWindowsAssets.js" />
 
     <js-module src="www/webAppToolkit.js" name="webapptoolkit">
         <clobbers target="webapptoolkit" />

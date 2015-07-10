@@ -63,36 +63,13 @@ var self = {
 
       if (isLoading) {
           if (blurOverlay && clearOverlay) {
-              if (WAT.environment.isWindowsPhone) {
-                  if (!self.contentLoaded) {
-                      clearOverlay.style.display = 'inline';
-                      blurOverlay.classList.remove("fadeOut");
-                      if (!clearOverlay.classList.contains("overlay-wp")) {
-                          clearOverlay.classList.add("overlay-wp");
-                      }
-                  }
-              }
-              else {
-                  // use base64 encoded bitmap to improve performance in Windows
-                  var capturePreview = WAT.components.webView.capturePreviewToBlobAsync();
-                  var blurImage = document.querySelector(".webview-overlay svg img");
-                  if (!isWebViewEmpty()) {
-                      capturePreview.oncomplete = function (completeEvent) {
-                          var reader = new window.FileReader();
-                          reader.readAsDataURL(completeEvent.target.result);
-                          reader.onloadend = function () {
-                              // skip show blurred previous page if next page was already shown
-                              if (!self.contentLoaded && WAT.components.stage.classList.contains("loading")) {
-                                  clearOverlay.style.display = 'inline';
-
-                                  blurImage.setAttribute("src", reader.result);
-                                  blurOverlay.classList.remove("fadeOut");
-                              }
-                          };
-                      };
-                      capturePreview.start();
-                  }
-              }
+            if (!self.contentLoaded) {
+                clearOverlay.style.display = 'inline';
+                blurOverlay.classList.remove("fadeOut");
+                if (!clearOverlay.classList.contains("overlay-wp")) {
+                    clearOverlay.classList.add("overlay-wp");
+                }
+            }
           }
 
           WAT.components.stage.classList.add("loading");
