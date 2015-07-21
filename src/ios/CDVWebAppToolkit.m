@@ -10,7 +10,7 @@
 
 @implementation CDVWebAppToolkit
 
-@synthesize manifest;
+@synthesize manifest, navItem;
 
 - (void)pluginInitialize
 {
@@ -28,15 +28,17 @@
                                                  name:kCDVHostedWebAppWebViewDidFinishLoad
                                                object:nil];
 
-
     CDVHostedWebApp* plugin = [self.commandDelegate getCommandInstance:@"HostedWebApp"];
 
     [self initializeWithManifest:[plugin manifest]];
-
+    
+    [self setNavBar];
+    
     if (self.modules == nil) {
         self.modules = [[NSMutableArray alloc] init];
         [self.modules addObject:[[WATInjectionModule alloc] initWithPlugin:self]];
         [self.modules addObject:[[WATRedirectsModule alloc] initWithPlugin:self]];
+        [self.modules addObject:[[WATNavigationModule alloc] initWithPlugin:self]];
     }
 }
 
@@ -74,6 +76,21 @@
     }
     
     return NO;
+}
+
+- (void) setNavBar {
+    if (!self.manifest.navigationConfig.hideOnPageBackButton) {
+        UINavigationBar *navBar = [[UINavigationBar alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, kNavigationBarHeight)];
+    
+        self.navItem = [[UINavigationItem alloc] init];
+    
+        [navBar pushNavigationItem:self.navItem animated:NO];
+        [[[self viewController] view] addSubview: navBar];
+    
+        // Resize the webview
+        [self.webView sizeToFit];
+        [self.webView setFrame:CGRectMake(self.webView.frame.origin.x, self.webView.frame.origin.y + kNavigationBarHeight, self.webView.frame.size.width, self.webView.frame.size.height - kNavigationBarHeight)];
+    }
 }
 
 @end
