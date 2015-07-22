@@ -271,12 +271,12 @@ Enables you to specify which urls remain inside the app and which ones open in t
   		    "message": "Sorry, but you can't access this feature in the native app, please visit us online at http://wat-docs.azurewebsites.net"
   	    },
   	    {
-  		    "pattern": "\*.microsoft.com*",
+  		    "pattern": "*.microsoft.com*",
   		    "action": "showMessage",
   		    "message": "Redirecting you to the Microsoft website..."
   	    },
   	    {
-  		    "pattern": "http://msdn.microsoft.com/\*",
+  		    "pattern": "http://msdn.microsoft.com/*",
   		    "action": "popout"
   	    },
   	    {
@@ -285,10 +285,10 @@ Enables you to specify which urls remain inside the app and which ones open in t
   		    "url": "http://bing.com"
   	    },
   	    {
-  		    "pattern": "\*/drive_api/calculator/login",
+  		    "pattern": "*/drive_api/calculator/login",
   		    "action": "modal",
   		    "hideCloseButton": true,
-  		    "closeOnMatch": "\*/drive_api/calculator/complete_login"
+  		    "closeOnMatch": "*/drive_api/calculator/complete_login"
   	    }
       ]
   },
@@ -379,7 +379,7 @@ This enables use of a native page header within the application. This can make t
 <pre>
   "wat_header": {
       "enabled": true,
-      "backgroundColor": "\#7fba00",
+      "backgroundColor": "#7fba00",
       "logo": "/images/widelogo.scale-100.png",
       "title": {
           "enabled": true,
