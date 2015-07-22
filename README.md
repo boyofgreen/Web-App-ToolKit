@@ -300,11 +300,11 @@ Enables you to specify which urls remain inside the app and which ones open in t
 
 ### wat_settings
 
-This controls the use of the settings charm within the application.
+This controls the use of the setting items within the application bar. Note that this option requires the `wat_appBar` feature to be enabled. 
 
 |**Option**| **Description**|
 |----------|----------------|
-| **enabled** | Toggles the settings charm functionality (true/false)
+| **enabled** | Toggles the settings functionality (true/false)
 | **privacyUrl** | Defines a url link to the application's privacy policy. A privacy policy is typically required for app to pass store certification.
 | **items** | Defines an array of item that are used in the settings charm
 | **title** | Defines the text for the settings item
@@ -313,6 +313,9 @@ This controls the use of the settings charm within the application.
 
 #### Example
 <pre>
+  "wat_appBar": {
+  "enabled": true
+  },
   "wat_settings": {
   "enabled": true,
   "privacyUrl": "http://wat-docs.azurewebsites.net/Privacy",
