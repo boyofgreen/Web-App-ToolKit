@@ -110,7 +110,6 @@ This controls the application bar at the bottom of the screen.
 |**Option**|**Description**|
 |:---------|:--------------|
 | **enabled** | Toggles the app bar visibility (true/false)
-| **makeSticky** |  Toggles whether the app bar is always visible or not (true/false)
 | **buttons** | An array of objects, each of which represent a button within the application bar. Each object has three parameters:
 | &nbsp;&nbsp;&nbsp;&nbsp; **label** | the text for the button. Leave this blank to omit the text
 | &nbsp;&nbsp;&nbsp;&nbsp; **icon** | the icon for the button. A list of available icons is at dev.windows.com. Leave this blank to omit the icon
