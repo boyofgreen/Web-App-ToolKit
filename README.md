@@ -8,7 +8,7 @@ The Web App Toolkit is a plugin for creating Windows, Android and iOS apps based
 The following tutorial requires you to install the [Cordova Command-Line Inteface](http://cordova.apache.org/docs/en/4.0.0/guide_cli_index.md.html#The%20Command-Line%20Interface).
 
 ### Hosting a Web Application
-The plugin leverages the functionality from the [Hosted WebApp Plugin](http://plugins.cordova.io/#/package/com.manifoldjs.hostedwebapp). The following steps describe how you can create and configure a sample application and use it with the Web App Toolkit.
+The plugin leverages the functionalimaty from the [Hosted WebApp Plugin](http://plugins.cordova.io/#/package/com.manifoldjs.hostedwebapp). The following steps describe how you can create and configure a sample application and use it with the Web App Toolkit.
 
 1. Create a new Cordova application.  
 	`cordova create sampleapp yourdomain.sampleapp SampleHostedApp`
@@ -120,7 +120,6 @@ This controls the application bar at the bottom of the screen.
 <pre>
   "wat_appBar": {
       "enabled": true,
-      "makeSticky": false,
       "buttons": [
           {
               "label":"Help",
