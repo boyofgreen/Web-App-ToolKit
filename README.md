@@ -337,9 +337,6 @@ This allows the user to configure the application's view of their website.
 
 |**Option**|**Description**|
 |----------|---------------|
-|**setViewport**| (_Windows only_) Toggles whether the CSS is created to set the –ms-viewport setting (true/false) |
-|**targetWidth**| (_Windows only_) The target width value that is passed into viewport settings (pixels). This can be blank. NOTE: do not use this for websites that already have a responsive base.
-|**targetHeight**| (_Windows only_) The target height value that is passed into viewport settings (pixels). This can be blank. NOTE: do not use this for websites that already have a responsive base.
 |**suppressTouchAction**| (_Windows only_) Toggles whether the top level touch events are surpressed or not. This is quite helpful with SPA where you don’t want to be able to see scrolling or ruberbanding of the page (true/false)
 |**hiddenElements**| An array of strings that reference HTML elements. This enables you to hide any website HTML elements from your application. This is ideal for removing any unwanted top navigation, footers etc from the application view
 |**backButton**| (_Windows only_) An array of style rules that are applied to the back button
@@ -350,17 +347,14 @@ This allows the user to configure the application's view of their website.
 #### Example
 <pre>
   "wat_styles": {
-      "setViewport": true,
-      "targetWidth": "",
-      "targetHeight": "800px",
       "suppressTouchAction": false,
-      "extendedSplashScreenBackground": "\#464646",
+      "extendedSplashScreenBackground": "#464646",
       "hiddenElements":[
   	    "header", ".bs-header"
       ],
       "backButton": {
-  	    "borderColor": "\#FFFFFF",
-  	    "color": "\#FFFFFF"
+  	    "borderColor": "#FFFFFF",
+  	    "color": "#FFFFFF"
       },
       "wrapperCssFile": "/css/wrapper-styles.css",
       "customCssFile": "/css/injected-styles.css",
