@@ -58,7 +58,7 @@ The following table describes the supported features for each of the platforms.
 |[wat_styles](#wat_styles)      |   yes   |   yes   |   yes   |
 |[wat_header](#wat_header)      |   yes   |         |         |
 |[wat_secondaryPin](#wat_secondarypin)|   yes   |         |         |
-|[wat_navigation](#wat_navigation)  |   yes   |         |         |
+|[wat_navigation](#wat_navigation)  |   yes   |   yes   |         |
 
 
 ### wat_share
@@ -419,13 +419,17 @@ This option sets the secondary pin functionality in the app bar.
 </pre>
 
 ### wat_navigation
-Controls options on how users navigate around the app
+Controls options on how users navigate around the app.
+
+|**Option**|**Description**
+|----------|---------------|
+|**hideOnPageBackButton**| This toggles visibility of the back button on the main canvas across the entire application (true/false)
+|**hideBackButtonOnMatch**| This toggles visibility of the back button on specific pages. An array of objects, each of which is a url on which back button will be hidden. You can use {baseUrl} to signify the url defined in 'start_url'
 
 #### Example
 <pre>
   "wat_navigation": {
       "hideOnPageBackButton": false,
-      "hideBackButtonOnMatch": ["http://www.wat.com/privacy.htm","{baseURL}/contactus/"],
-      "pageLoadingPartial": "/template/partials/page-loading.html"
+      "hideBackButtonOnMatch": ["http://www.wat.com/privacy.htm","{baseURL}/contactus/"]
   }
 </pre>

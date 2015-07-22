@@ -121,6 +121,9 @@
     <header-file src="src/ios/Modules/WATRedirectsModule.h" />
     <source-file src="src/ios/Modules/WATRedirectsModule.m" />
 
+    <header-file src="src/ios/Modules/WATNavigationModule.h" />
+    <source-file src="src/ios/Modules/WATNavigationModule.m" />
+    
     <header-file src="src/ios/Config/WATScriptInjection.h" />
     <source-file src="src/ios/Config/WATScriptInjection.m" />
 
@@ -132,6 +135,11 @@
 
     <header-file src="src/ios/Config/WATRedirectsConfig.h" />
     <source-file src="src/ios/Config/WATRedirectsConfig.m" />
+    
+    <header-file src="src/ios/Config/WATNavigationConfig.h" />
+    <source-file src="src/ios/Config/WATNavigationConfig.m" />
+    
+    <resource-file src="assets/ios/back_arrow.png"/>
   </platform>
 
 </plugin>
