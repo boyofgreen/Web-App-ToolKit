@@ -149,7 +149,6 @@ This controls the navigation bar at the top of the screen.
 |----------|----------------|
 | **enabled** | Toggles the navigation bar visibility (true/false)
 | **maxRows** |  Sets the maximum number of rows that are used to display buttons before the nav bar starts paging
-| **makeSticky** | Toggles whether the app bar is always visible or not (true/false) (No longer supported in the Windows version)
 | **buttons** | An array of objects, each of which represent a button within the navigation bar.Each object has three parameters:
 | &nbsp;&nbsp;&nbsp;&nbsp; **label** | The text for the button. Leave this blank to omit the text
 | &nbsp;&nbsp;&nbsp;&nbsp; **icon** | The icon for the button. A list of available icons is at dev.windows.com. Leave this blank to omit the icon
