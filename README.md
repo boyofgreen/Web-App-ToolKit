@@ -404,7 +404,8 @@ This option sets the secondary pin functionality in the app bar.
 |**tileTextTheme**| The visual theme for the tile (light/dark)
 |**buttonSection**| This sets the sharebutton into a particular section of the app bar (if you have sections set up) the default is primary http://msdn.microsoft.com/en-us/library/windows/apps/Hh700497.aspx
 |**squareImage**| A path to a square image that is used for secondary tiles
-|**wideImage**| A path to a wide image that is used for secndary tiles
+|**wideImage**| A path to a wide image that is used for secondary tiles
+|**customImageSelector**| A CSS selector that specifies the **img** element corresponding to the image that will be used for the tile.
 
 #### Example
 <pre>
