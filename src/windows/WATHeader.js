@@ -63,21 +63,18 @@ var headerConfig, setupHeader, setPageTitle, webviewNavComplete,
   };
 
   setupHeader = function () {
-      if (!headerConfig || headerConfig.enabled !== true) {
+      if ((!headerConfig || headerConfig.enabled !== true) &&
+          (!WAT.environment.isWindowsPhone || !WAT.manifest.wat_navBar || WAT.manifest.wat_navBar.enabled !== true)) {
           WAT.components.header.style.background = "transparent";
           WAT.components.stage.style.msGridRow = 1;
           WAT.components.stage.style.msGridRowSpan = 2;
       }
       else {
-          if (headerConfig.backgroundColor) {
+          if (headerConfig && headerConfig.backgroundColor) {
               WAT.components.header.style.background = headerConfig.backgroundColor;
           }
 
-          if (WAT.environment.isWindowsPhone && WAT.manifest.wat_navBar && WAT.manifest.wat_navBar.enabled) {
-              var navBgColor = WAT.manifest.wat_navBar.backgroundColor ? WAT.manifest.wat_navBar.backgroundColor : headerConfig.navDrawerBackgroundColor;
-          }
-
-          if (headerConfig.logo) {
+          if (headerConfig && headerConfig.logo) {
               WAT.components.logo.src = headerConfig.logo;
           }
       }
