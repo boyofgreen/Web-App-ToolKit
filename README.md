@@ -145,8 +145,6 @@ This controls the application bar at the bottom of the screen.
 
 This controls the navigation bar at the top of the screen.
 
-> Note: In Windows Phone, this feature requires the `wat_header` feature to be enabled.
-
 |**Option**|**Description** |
 |----------|----------------|
 | **enabled** | Toggles the navigation bar visibility (true/false)
@@ -300,9 +298,6 @@ Enables you to specify which urls remain inside the app and which ones open in t
 ### wat_settings
 
 This controls the use of the setting items within the application bar.
-
-> Note: In Windows, this feature requires the `wat_appBar` feature to be enabled.
-
 
 |**Option**| **Description**|
 |----------|----------------|
