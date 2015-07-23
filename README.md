@@ -151,12 +151,12 @@ This controls the navigation bar at the top of the screen.
 |----------|----------------|
 | **enabled** | Toggles the navigation bar visibility (true/false)
 | **maxRows** |  Sets the maximum number of rows that are used to display buttons before the nav bar starts paging
-| **buttons** | An array of objects, each of which represent a button within the navigation bar.Each object has three parameters:
+| **buttons** | An array of objects, each of which represent a button within the navigation bar.Each object has the following parameters:
 | &nbsp;&nbsp;&nbsp;&nbsp; **label** | The text for the button. Leave this blank to omit the text
 | &nbsp;&nbsp;&nbsp;&nbsp; **icon** | The icon for the button. A list of available icons is at dev.windows.com. Leave this blank to omit the icon
 | &nbsp;&nbsp;&nbsp;&nbsp; **action** | The action for the button. This defines either the url location that the button links to or a special keyword. back Takes the app back to the most recent page. home Takes the app to the base url. nested Allows the inclusion of children node. eval Executes the javascript defined in the 'data' field
 | &nbsp;&nbsp;&nbsp;&nbsp; **data** | Javascript that gets executed if the action is set to 'eval'
-children An array of nodes that are shown beneath the parent node. Children nodes take the same format as parent nodes. Only used if the parent node's action is set to 'nested'.
+| &nbsp;&nbsp;&nbsp;&nbsp; **children** | An array of nodes that are shown beneath the parent node. Children nodes take the same format as parent nodes. Only used if the parent node's action is set to 'nested'.
 
 #### Example
 <pre>
