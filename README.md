@@ -145,6 +145,8 @@ This controls the application bar at the bottom of the screen.
 
 This controls the navigation bar at the top of the screen.
 
+> Note: In Windows Phone, this feature requires the `wat_header` feature to be enabled.
+
 |**Option**|**Description** |
 |----------|----------------|
 | **enabled** | Toggles the navigation bar visibility (true/false)
