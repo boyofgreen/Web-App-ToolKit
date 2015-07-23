@@ -8,7 +8,7 @@ The Web App Toolkit is a plugin for creating Windows, Android and iOS apps based
 The following tutorial requires you to install the [Cordova Command-Line Inteface](http://cordova.apache.org/docs/en/4.0.0/guide_cli_index.md.html#The%20Command-Line%20Interface).
 
 ### Hosting a Web Application
-The plugin leverages the functionality from the [Hosted WebApp Plugin](http://plugins.cordova.io/#/package/com.manifoldjs.hostedwebapp). The following steps describe how you can create and configure a sample application and use it with the Web App Toolkit.
+The plugin leverages the functionalimaty from the [Hosted WebApp Plugin](http://plugins.cordova.io/#/package/com.manifoldjs.hostedwebapp). The following steps describe how you can create and configure a sample application and use it with the Web App Toolkit.
 
 1. Create a new Cordova application.  
 	`cordova create sampleapp yourdomain.sampleapp SampleHostedApp`
@@ -110,7 +110,6 @@ This controls the application bar at the bottom of the screen.
 |**Option**|**Description**|
 |:---------|:--------------|
 | **enabled** | Toggles the app bar visibility (true/false)
-| **makeSticky** |  Toggles whether the app bar is always visible or not (true/false)
 | **buttons** | An array of objects, each of which represent a button within the application bar. Each object has three parameters:
 | &nbsp;&nbsp;&nbsp;&nbsp; **label** | the text for the button. Leave this blank to omit the text
 | &nbsp;&nbsp;&nbsp;&nbsp; **icon** | the icon for the button. A list of available icons is at dev.windows.com. Leave this blank to omit the icon
@@ -121,7 +120,6 @@ This controls the application bar at the bottom of the screen.
 <pre>
   "wat_appBar": {
       "enabled": true,
-      "makeSticky": false,
       "buttons": [
           {
               "label":"Help",
@@ -151,13 +149,12 @@ This controls the navigation bar at the top of the screen.
 |----------|----------------|
 | **enabled** | Toggles the navigation bar visibility (true/false)
 | **maxRows** |  Sets the maximum number of rows that are used to display buttons before the nav bar starts paging
-| **makeSticky** | Toggles whether the app bar is always visible or not (true/false) (No longer supported in the Windows version)
-| **buttons** | An array of objects, each of which represent a button within the navigation bar.Each object has three parameters:
+| **buttons** | An array of objects, each of which represent a button within the navigation bar.Each object has the following parameters:
 | &nbsp;&nbsp;&nbsp;&nbsp; **label** | The text for the button. Leave this blank to omit the text
 | &nbsp;&nbsp;&nbsp;&nbsp; **icon** | The icon for the button. A list of available icons is at dev.windows.com. Leave this blank to omit the icon
 | &nbsp;&nbsp;&nbsp;&nbsp; **action** | The action for the button. This defines either the url location that the button links to or a special keyword. back Takes the app back to the most recent page. home Takes the app to the base url. nested Allows the inclusion of children node. eval Executes the javascript defined in the 'data' field
 | &nbsp;&nbsp;&nbsp;&nbsp; **data** | Javascript that gets executed if the action is set to 'eval'
-children An array of nodes that are shown beneath the parent node. Children nodes take the same format as parent nodes. Only used if the parent node's action is set to 'nested'.
+| &nbsp;&nbsp;&nbsp;&nbsp; **children** | An array of nodes that are shown beneath the parent node. Children nodes take the same format as parent nodes. Only used if the parent node's action is set to 'nested'.
 
 #### Example
 <pre>
@@ -274,12 +271,12 @@ Enables you to specify which urls remain inside the app and which ones open in t
   		    "message": "Sorry, but you can't access this feature in the native app, please visit us online at http://wat-docs.azurewebsites.net"
   	    },
   	    {
-  		    "pattern": "\*.microsoft.com*",
+  		    "pattern": "*.microsoft.com*",
   		    "action": "showMessage",
   		    "message": "Redirecting you to the Microsoft website..."
   	    },
   	    {
-  		    "pattern": "http://msdn.microsoft.com/\*",
+  		    "pattern": "http://msdn.microsoft.com/*",
   		    "action": "popout"
   	    },
   	    {
@@ -288,10 +285,10 @@ Enables you to specify which urls remain inside the app and which ones open in t
   		    "url": "http://bing.com"
   	    },
   	    {
-  		    "pattern": "\*/drive_api/calculator/login",
+  		    "pattern": "*/drive_api/calculator/login",
   		    "action": "modal",
   		    "hideCloseButton": true,
-  		    "closeOnMatch": "\*/drive_api/calculator/complete_login"
+  		    "closeOnMatch": "*/drive_api/calculator/complete_login"
   	    }
       ]
   },
@@ -300,11 +297,11 @@ Enables you to specify which urls remain inside the app and which ones open in t
 
 ### wat_settings
 
-This controls the use of the settings charm within the application.
+This controls the use of the setting items within the application bar.
 
 |**Option**| **Description**|
 |----------|----------------|
-| **enabled** | Toggles the settings charm functionality (true/false)
+| **enabled** | Toggles the settings functionality (true/false)
 | **privacyUrl** | Defines a url link to the application's privacy policy. A privacy policy is typically required for app to pass store certification.
 | **items** | Defines an array of item that are used in the settings charm
 | **title** | Defines the text for the settings item
@@ -337,9 +334,6 @@ This allows the user to configure the application's view of their website.
 
 |**Option**|**Description**|
 |----------|---------------|
-|**setViewport**| (_Windows only_) Toggles whether the CSS is created to set the –ms-viewport setting (true/false) |
-|**targetWidth**| (_Windows only_) The target width value that is passed into viewport settings (pixels). This can be blank. NOTE: do not use this for websites that already have a responsive base.
-|**targetHeight**| (_Windows only_) The target height value that is passed into viewport settings (pixels). This can be blank. NOTE: do not use this for websites that already have a responsive base.
 |**suppressTouchAction**| (_Windows only_) Toggles whether the top level touch events are surpressed or not. This is quite helpful with SPA where you don’t want to be able to see scrolling or ruberbanding of the page (true/false)
 |**hiddenElements**| An array of strings that reference HTML elements. This enables you to hide any website HTML elements from your application. This is ideal for removing any unwanted top navigation, footers etc from the application view
 |**backButton**| (_Windows only_) An array of style rules that are applied to the back button
@@ -350,17 +344,14 @@ This allows the user to configure the application's view of their website.
 #### Example
 <pre>
   "wat_styles": {
-      "setViewport": true,
-      "targetWidth": "",
-      "targetHeight": "800px",
       "suppressTouchAction": false,
-      "extendedSplashScreenBackground": "\#464646",
+      "extendedSplashScreenBackground": "#464646",
       "hiddenElements":[
   	    "header", ".bs-header"
       ],
       "backButton": {
-  	    "borderColor": "\#FFFFFF",
-  	    "color": "\#FFFFFF"
+  	    "borderColor": "#FFFFFF",
+  	    "color": "#FFFFFF"
       },
       "wrapperCssFile": "/css/wrapper-styles.css",
       "customCssFile": "/css/injected-styles.css",
@@ -385,7 +376,7 @@ This enables use of a native page header within the application. This can make t
 <pre>
   "wat_header": {
       "enabled": true,
-      "backgroundColor": "\#7fba00",
+      "backgroundColor": "#7fba00",
       "logo": "/images/widelogo.scale-100.png",
       "title": {
           "enabled": true,
@@ -404,7 +395,8 @@ This option sets the secondary pin functionality in the app bar.
 |**tileTextTheme**| The visual theme for the tile (light/dark)
 |**buttonSection**| This sets the sharebutton into a particular section of the app bar (if you have sections set up) the default is primary http://msdn.microsoft.com/en-us/library/windows/apps/Hh700497.aspx
 |**squareImage**| A path to a square image that is used for secondary tiles
-|**wideImage**| A path to a wide image that is used for secndary tiles
+|**wideImage**| A path to a wide image that is used for secondary tiles
+|**customImageSelector**| A CSS selector that specifies the **img** element corresponding to the image that will be used for the tile.
 
 #### Example
 <pre>
