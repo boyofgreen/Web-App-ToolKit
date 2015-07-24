@@ -1,0 +1,33 @@
+{
+  "name": "cordova-plugin-webapptoolkit",
+  "version": "0.0.1",
+  "description": "Hosted Web App Plugin",
+  "cordova": {
+    "id": "cordova-plugin-webapptoolkit",
+    "platforms": [
+      "android",
+      "windows",
+      "ios"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/manifoldjs/Web-App-ToolKit"
+  },
+  "keywords": [
+    "cordova",
+    "manifest",
+    "hosted",
+    "web",
+    "ecosystem:cordova",
+    "cordova-android",
+    "cordova-windows",
+    "cordova-ios"
+  ],
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/manifoldjs/Web-App-ToolKit/issues"
+  },
+  "homepage": "https://github.com/manifoldjs/Web-App-ToolKit"
+}
