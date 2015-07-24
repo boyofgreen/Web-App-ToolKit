@@ -1,14 +1,14 @@
 
 # Web App Toolkit
 
-The Web App Toolkit is a plugin for creating Windows, Android and iOS apps based on existing web content. It depends on the [Hosted Web App Plugin](http://plugins.cordova.io/#/package/com.manifoldjs.hostedwebapp). Used in the right way, it can facilitate the creation of compelling extensions to your web content for users across platforms.
+The Web App Toolkit is a plugin for creating Windows, Android and iOS apps based on existing web content. It depends on the [Hosted Web App Plugin](https://github.com/manifoldjs/ManifoldCordova). Used in the right way, it can facilitate the creation of compelling extensions to your web content for users across platforms.
 
 ## Getting Started
 
 The following tutorial requires you to install the [Cordova Command-Line Inteface](http://cordova.apache.org/docs/en/4.0.0/guide_cli_index.md.html#The%20Command-Line%20Interface).
 
 ### Hosting a Web Application
-The plugin leverages the functionalimaty from the [Hosted WebApp Plugin](http://plugins.cordova.io/#/package/com.manifoldjs.hostedwebapp). The following steps describe how you can create and configure a sample application and use it with the Web App Toolkit.
+The plugin leverages the functionalimaty from the [Hosted WebApp Plugin](https://github.com/manifoldjs/ManifoldCordova). The following steps describe how you can create and configure a sample application and use it with the Web App Toolkit.
 
 1. Create a new Cordova application.  
 	`cordova create sampleapp yourdomain.sampleapp SampleHostedApp`
@@ -20,7 +20,7 @@ The plugin leverages the functionalimaty from the [Hosted WebApp Plugin](http://
 	> **Note:** You can find a sample manifest file at the start of this document.
 
 1. Add the **Web App Toolkit** plugin to the project.  
-	`cordova plugin add https://github.com/boyofgreen/web-app-toolkit`
+	`cordova plugin add cordova-plugin-webapptoolkit`
 
 1. Add one or more platforms, for example, to support Android.  
 	`cordova platform add android`

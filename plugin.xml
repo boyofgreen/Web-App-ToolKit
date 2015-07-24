@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
     id="cordova-plugin-webapptoolkit"
-    version="0.0.1">
+    version="0.0.2">
     <name>WebAppToolkit</name>
     <description>Web Applicaton Toolkit Plugin</description>
-    <license>Apache 2.0</license>
+    <license>MIT License</license>
     <keywords>cordova,manifest,hosted,web</keywords>
     <repo></repo>
 
