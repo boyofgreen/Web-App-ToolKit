@@ -1,4 +1,4 @@
-
+﻿
 # Web App Toolkit
 
 The Web App Toolkit is a plugin for creating Windows, Android and iOS apps based on existing web content. It depends on the [Hosted Web App Plugin](https://github.com/manifoldjs/ManifoldCordova). Used in the right way, it can facilitate the creation of compelling extensions to your web content for users across platforms.
@@ -34,8 +34,8 @@ The plugin leverages the functionalimaty from the [Hosted WebApp Plugin](https:/
 ### Manual steps required [Windows only]
 In order to make the project work there are a few things that need to be taken care of:
 
-1. Add **WinJS 4** via nuget and **overwrite the existing base.js file in the Windows 10 project when prompted**.
-1. Changing the TargetDeviceFamily values to 10.0069.0 in the appxmanifest (optional, depending on the current version of your Windows 10 SDK )
+1. Add **WinJS 4** via NuGet **in the solution** and **overwrite the existing base.js file in the Windows 10 project when prompted**.
+1. Changing the **TargetDeviceFamily** values to 10.0069.0 in the appxmanifest (optional, depending on the current version of your Windows 10 SDK )
 
 ### Before you submit your app [Windows only]
 
