@@ -133,17 +133,17 @@ function initialize() {
   if (WAT.manifest) {
     WAT.components.webView = hostedWebApp.getWebView();
     if (WAT.components.webView) {
-      require('com.microsoft.webapptoolkit.WATWrapperHtml').init(WAT);
-      require('com.microsoft.webapptoolkit.WATAppBar').init(WAT);
-      require('com.microsoft.webapptoolkit.WATShare').init(WAT);
-      require('com.microsoft.webapptoolkit.WATNavigation').init(WAT);
-      require('com.microsoft.webapptoolkit.WATNavBar').init(WAT);
-      require('com.microsoft.webapptoolkit.WATStyles').init(WAT);
-      require('com.microsoft.webapptoolkit.WATCustomScript').init(WAT);
-      require('com.microsoft.webapptoolkit.WATHeader').init(WAT);
-      require('com.microsoft.webapptoolkit.WATLiveTiles').init(WAT);
-      require('com.microsoft.webapptoolkit.WATSettings').init(WAT);
-      require('com.microsoft.webapptoolkit.WATSecondaryPins').init(WAT);
+      require('cordova-plugin-webapptoolkit.WATWrapperHtml').init(WAT);
+      require('cordova-plugin-webapptoolkit.WATAppBar').init(WAT);
+      require('cordova-plugin-webapptoolkit.WATShare').init(WAT);
+      require('cordova-plugin-webapptoolkit.WATNavigation').init(WAT);
+      require('cordova-plugin-webapptoolkit.WATNavBar').init(WAT);
+      require('cordova-plugin-webapptoolkit.WATStyles').init(WAT);
+      require('cordova-plugin-webapptoolkit.WATCustomScript').init(WAT);
+      require('cordova-plugin-webapptoolkit.WATHeader').init(WAT);
+      require('cordova-plugin-webapptoolkit.WATLiveTiles').init(WAT);
+      require('cordova-plugin-webapptoolkit.WATSettings').init(WAT);
+      require('cordova-plugin-webapptoolkit.WATSecondaryPins').init(WAT);
 
       // in Windows 10, we need to wait to bind WinJS controls to the last possible moment, otherwise there are issues modifying previously initialized controls.
       WinJS.UI.processAll();
