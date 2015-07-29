@@ -1,4 +1,4 @@
-package com.microsoft.webapptoolkit.modules;
+package com.manifoldjs.webapptoolkit.modules;
 
 import java.util.regex.Matcher;
 
@@ -12,11 +12,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.microsoft.webapptoolkit.Constants;
-import com.microsoft.webapptoolkit.ModalActivity;
-import com.microsoft.webapptoolkit.WebAppToolkit;
-import com.microsoft.webapptoolkit.config.RedirectRulesConfig;
-import com.microsoft.webapptoolkit.config.RedirectsConfig;
+import com.manifoldjs.webapptoolkit.Constants;
+import com.manifoldjs.webapptoolkit.ModalActivity;
+import com.manifoldjs.webapptoolkit.WebAppToolkit;
+import com.manifoldjs.webapptoolkit.config.RedirectRulesConfig;
+import com.manifoldjs.webapptoolkit.config.RedirectsConfig;
 
 public class RedirectsModule extends IModule {
 

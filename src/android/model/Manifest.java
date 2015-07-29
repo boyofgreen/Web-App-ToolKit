@@ -1,10 +1,10 @@
-package com.microsoft.webapptoolkit.model;
+package com.manifoldjs.webapptoolkit.model;
 
 import org.json.JSONObject;
 
-import com.microsoft.webapptoolkit.config.CustomScriptConfig;
-import com.microsoft.webapptoolkit.config.RedirectsConfig;
-import com.microsoft.webapptoolkit.config.StylesConfig;
+import com.manifoldjs.webapptoolkit.config.CustomScriptConfig;
+import com.manifoldjs.webapptoolkit.config.RedirectsConfig;
+import com.manifoldjs.webapptoolkit.config.StylesConfig;
 
 public class Manifest {
 

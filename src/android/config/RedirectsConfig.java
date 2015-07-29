@@ -1,4 +1,4 @@
-package com.microsoft.webapptoolkit.config;
+package com.manifoldjs.webapptoolkit.config;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,7 +6,7 @@ import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import com.microsoft.webapptoolkit.model.Manifest;
+import com.manifoldjs.webapptoolkit.model.Manifest;
 
 public class RedirectsConfig {
 

@@ -1,4 +1,4 @@
-package com.microsoft.webapptoolkit.modules;
+package com.manifoldjs.webapptoolkit.modules;
 
 public abstract class IModule {
 	public Object onMessage(String id, Object data) {

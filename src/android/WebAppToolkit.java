@@ -1,4 +1,4 @@
-package com.microsoft.webapptoolkit;
+package com.manifoldjs.webapptoolkit;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,8 +17,8 @@ import android.util.Log;
 import android.view.Window;
 
 import com.manifoldjs.hostedwebapp.HostedWebApp;
-import com.microsoft.webapptoolkit.model.Manifest;
-import com.microsoft.webapptoolkit.modules.*;
+import com.manifoldjs.webapptoolkit.model.Manifest;
+import com.manifoldjs.webapptoolkit.modules.*;
 
 /**
  * This class ...

@@ -1,4 +1,4 @@
-package com.microsoft.webapptoolkit;
+package com.manifoldjs.webapptoolkit;
 
 import java.util.regex.Pattern;
 
@@ -16,7 +16,7 @@ import android.webkit.WebView;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 
-import com.microsoft.webapptoolkit.ModalWebViewClient.WebViewCallbacks;
+import com.manifoldjs.webapptoolkit.ModalWebViewClient.WebViewCallbacks;
 
 public class ModalActivity extends Activity implements WebViewCallbacks {
 

@@ -1,4 +1,4 @@
-package com.microsoft.webapptoolkit;
+package com.manifoldjs.webapptoolkit;
 
 public final class Constants {
 
@@ -18,5 +18,5 @@ public final class Constants {
   public static final String ON_PAGE_FINISHED = "page-finished-event";
   public static final String ON_PAGE_STARTED = "page-started-event";
   public static final String ON_INITIALIZE = "on-initialize-event";
-  
+
 }

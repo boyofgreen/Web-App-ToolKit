@@ -1,6 +1,6 @@
 {
   "name": "cordova-plugin-webapptoolkit",
-  "version": "0.0.3",
+  "version": "0.1.0",
   "description": "Hosted Web App Plugin",
   "cordova": {
     "id": "cordova-plugin-webapptoolkit",

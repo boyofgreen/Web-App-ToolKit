@@ -20,33 +20,33 @@
     <platform name="android">
         <config-file target="res/xml/config.xml" parent="/*">
             <feature name="WAT" >
-                <param name="android-package" value="com.microsoft.webapptoolkit.WebAppToolkit"/>
+                <param name="android-package" value="com.manifoldjs.webapptoolkit.WebAppToolkit"/>
                 <param name="onload" value="true" />
             </feature>
             <preference name="ShowTitle" value="true"/>
         </config-file>
 
-        <source-file src="src/android/WebAppToolkit.java" target-dir="src/com/microsoft/webapptoolkit" />
-        <source-file src="src/android/Constants.java" target-dir="src/com/microsoft/webapptoolkit/" />
-        <source-file src="src/android/ModalActivity.java" target-dir="src/com/microsoft/webapptoolkit/" />
-        <source-file src="src/android/ModalWebViewClient.java" target-dir="src/com/microsoft/webapptoolkit/" />
+        <source-file src="src/android/WebAppToolkit.java" target-dir="src/com/manifoldjs/webapptoolkit" />
+        <source-file src="src/android/Constants.java" target-dir="src/com/manifoldjs/webapptoolkit/" />
+        <source-file src="src/android/ModalActivity.java" target-dir="src/com/manifoldjs/webapptoolkit/" />
+        <source-file src="src/android/ModalWebViewClient.java" target-dir="src/com/manifoldjs/webapptoolkit/" />
 
-        <source-file src="src/android/model/Manifest.java" target-dir="src/com/microsoft/webapptoolkit/model" />
+        <source-file src="src/android/model/Manifest.java" target-dir="src/com/manifoldjs/webapptoolkit/model" />
 
-        <source-file src="src/android/config/CustomScriptConfig.java" target-dir="src/com/microsoft/webapptoolkit/config" />
-        <source-file src="src/android/config/StylesConfig.java" target-dir="src/com/microsoft/webapptoolkit/config" />
-        <source-file src="src/android/config/RedirectsConfig.java" target-dir="src/com/microsoft/webapptoolkit/config" />
-        <source-file src="src/android/config/RedirectRulesConfig.java" target-dir="src/com/microsoft/webapptoolkit/config" />
+        <source-file src="src/android/config/CustomScriptConfig.java" target-dir="src/com/manifoldjs/webapptoolkit/config" />
+        <source-file src="src/android/config/StylesConfig.java" target-dir="src/com/manifoldjs/webapptoolkit/config" />
+        <source-file src="src/android/config/RedirectsConfig.java" target-dir="src/com/manifoldjs/webapptoolkit/config" />
+        <source-file src="src/android/config/RedirectRulesConfig.java" target-dir="src/com/manifoldjs/webapptoolkit/config" />
 
-        <source-file src="src/android/utils/Assets.java" target-dir="src/com/microsoft/webapptoolkit/utils" />
-        <source-file src="src/android/utils/ResourceHelper.java" target-dir="src/com/microsoft/webapptoolkit/utils" />
+        <source-file src="src/android/utils/Assets.java" target-dir="src/com/manifoldjs/webapptoolkit/utils" />
+        <source-file src="src/android/utils/ResourceHelper.java" target-dir="src/com/manifoldjs/webapptoolkit/utils" />
 
-        <source-file src="src/android/modules/IModule.java" target-dir="src/com/microsoft/webapptoolkit/modules" />
-        <source-file src="src/android/modules/InjectionModule.java" target-dir="src/com/microsoft/webapptoolkit/modules" />
-        <source-file src="src/android/modules/RedirectsModule.java" target-dir="src/com/microsoft/webapptoolkit/modules" />
+        <source-file src="src/android/modules/IModule.java" target-dir="src/com/manifoldjs/webapptoolkit/modules" />
+        <source-file src="src/android/modules/InjectionModule.java" target-dir="src/com/manifoldjs/webapptoolkit/modules" />
+        <source-file src="src/android/modules/RedirectsModule.java" target-dir="src/com/manifoldjs/webapptoolkit/modules" />
 
         <config-file target="AndroidManifest.xml" parent="/manifest/application">
-            <activity android:name="com.microsoft.webapptoolkit.ModalActivity" />
+            <activity android:name="com.manifoldjs.webapptoolkit.ModalActivity" />
         </config-file>
     </platform>
 
@@ -123,7 +123,7 @@
 
     <header-file src="src/ios/Modules/WATNavigationModule.h" />
     <source-file src="src/ios/Modules/WATNavigationModule.m" />
-    
+
     <header-file src="src/ios/Config/WATScriptInjection.h" />
     <source-file src="src/ios/Config/WATScriptInjection.m" />
 
@@ -135,10 +135,10 @@
 
     <header-file src="src/ios/Config/WATRedirectsConfig.h" />
     <source-file src="src/ios/Config/WATRedirectsConfig.m" />
-    
+
     <header-file src="src/ios/Config/WATNavigationConfig.h" />
     <source-file src="src/ios/Config/WATNavigationConfig.m" />
-    
+
     <resource-file src="assets/ios/back_arrow.png"/>
   </platform>
 
