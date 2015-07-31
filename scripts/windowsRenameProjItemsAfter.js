@@ -5,6 +5,7 @@ var path = require('path'),
     fs = require('fs'),
     rename = require('./rename'),
     logger = require('./logger'),
+    winjsDownloader = require('./winjsDownloader'),
     Q;
 
 module.exports = function (context) {
@@ -24,14 +25,23 @@ module.exports = function (context) {
   var destPath = path.join(windowsPath, 'CordovaApp.projitems');
   logger.log('Renaming the CordovaApp.projitems.xml file to CordovaApp.projitems.');
 
+  var renameTask = Q.defer();
   rename(sourcePath, destPath, function (err) {
     if (err) {
       console.error(err);
-      return task.reject();
+      return renameTask.reject();
     }
 
     console.log("Finished renaming the CordovaApp.projitems.");
+    return renameTask.resolve();
+  });
 
+  var downloadTask = Q.defer();
+  winjsDownloader.downloadWinJSFiles(context, function() {
+    return downloadTask.resolve();
+  });
+
+  Q.allSettled([renameTask.promise, downloadTask.promise]).then(function () {
     return task.resolve();
   });
 

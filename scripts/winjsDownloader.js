@@ -1,13 +1,39 @@
 'use strict';
 
-var http = require('http');
-var https = require('https');
-var url = require('url');
-
-var path = require('path');
-var fs = require('fs');
+var http = require('http'),
+    https = require('https'),
+    url = require('url'),
+    path = require('path'),
+    fs = require('fs'),
+    logger = require('./logger');
 
 var Q;
+
+var baseUrl = 'https://cdnjs.cloudflare.com/ajax/libs/winjs/4.1.0/';
+
+var winjsFiles = {
+  css: [
+    'ui-dark.css',
+    'ui-dark.min.css',
+    'ui-light.css',
+    'ui-light.min.css'
+  ],
+  fonts : [
+    'Symbols.ttf'
+  ],
+  js: [
+    'WinJS.intellisense-setup.js',
+    'WinJS.intellisense.js',
+    'base.js',
+    'base.min.js',
+    'ui.js',
+    'ui.min.js'
+  ]
+};
+
+var jsUiStrings = {
+  'en-US': 'ui.strings.js'
+};
 
 function ensurePathExists(pathName, callback) {
   fs.mkdir(pathName, function (err) {
@@ -107,49 +133,31 @@ var downloadFile = function (inputUri, filePath, callback) {
   });
 }
 
-var baseUrl = 'https://cdnjs.cloudflare.com/ajax/libs/winjs/4.1.0/';
-
-var winjsFiles = {
-  css: [
-    'ui-dark.css',
-    'ui-dark.min.css',
-    'ui-light.css',
-    'ui-light.min.css'
-  ],
-  fonts : [
-    'Symbols.ttf'
-  ],
-  js: [
-    'WinJS.intellisense-setup.js',
-    'WinJS.intellisense.js',
-    'base.js',
-    'base.min.js',
-    'ui.js',
-    'ui.min.js'
-  ]
-};
-
-var jsUiStrings = {
-  'en-US': 'ui.strings.js'
-};
-
 function downloadFileTo(fileUrl, filePath) {
+  var task = Q.defer();
   ensurePathExists(path.dirname(filePath), function() {
-    downloadFile(fileUrl, filePath, function (err) {
+    downloadFile(fileUrl, filePath, function (err, data) {
       if (err) {
-        console.log(err);
+        logger.log(err);
+        return task.reject();
       }
 
-      console.log('Downloaded: ' + filePath);
+      if (data.statusCode !== 304){
+        logger.log('Downloaded: ' + path.basename(filePath));
+      }
+
+      return task.resolve();
     })
   });
+
+  return task.promise;
 }
 
 function downloadWinJSFiles(context, callback) {
   Q = context.requireCordovaModule('q');
-  var task = Q.defer();
+  var pendingTasks = [];
 
-  var projectRoot = __dirname; //context.opts.projectRoot;
+  var projectRoot = context.opts.projectRoot;
   var winjsPath = path.join('platforms', 'windows', 'WinJS');
 
   for (var type in winjsFiles) {
@@ -160,7 +168,7 @@ function downloadWinJSFiles(context, callback) {
         var fileName = files[i];
         var fileUrl = url.resolve(baseUrl, type + '/' + fileName);
         var filePath = path.join(projectRoot, winjsPath, type, fileName);
-        downloadFileTo(fileUrl, filePath);
+        pendingTasks.push(downloadFileTo(fileUrl, filePath));
       }
     }
   }
@@ -170,9 +178,11 @@ function downloadWinJSFiles(context, callback) {
       var fileName = jsUiStrings[lang];
       var fileUrl = url.resolve(baseUrl, 'js/' + lang + '/' + fileName);
       var filePath = path.join(projectRoot, winjsPath, 'js', lang, fileName);
-      downloadFileTo(fileUrl, filePath);
+      pendingTasks.push(downloadFileTo(fileUrl, filePath));
     }
   }
+
+  Q.allSettled(pendingTasks).then(callback);
 }
 
 module.exports = {
