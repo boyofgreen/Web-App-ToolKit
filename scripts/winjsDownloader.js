@@ -117,11 +117,20 @@ var downloadFile = function (inputUri, filePath, callback) {
 
 function downloadFileTo(fileUrl, filePath) {
   var task = Q.defer();
+
+  var fileExist = fs.existsSync(filePath);
+
   ensurePathExists(path.dirname(filePath), function() {
     downloadFile(fileUrl, filePath, function (err, data) {
       if (err) {
         logger.log(err);
         return task.reject();
+      }
+
+      if (fileExist) {
+        logger.log(path.basename(filePath) + ' was replaced.');
+      } else {
+        logger.log(path.basename(filePath) + ' was added.');
       }
 
       return task.resolve();

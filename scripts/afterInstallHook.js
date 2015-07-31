@@ -36,7 +36,7 @@ module.exports = function (context) {
   });
 
   var downloadTask = Q.defer();
-  logger.log('Downloading WinJS.');
+  logger.log('Downloading and replacing WinJS.');
   winjsDownloader.downloadWinJSFiles(context, function() {
     return downloadTask.resolve();
   });
