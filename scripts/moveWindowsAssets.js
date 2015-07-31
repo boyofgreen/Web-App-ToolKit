@@ -3,10 +3,8 @@
 var fs = require('fs'),
     path = require('path'),
     url = require('url'),
-    copyFiles = require('./copyFiles');
+    copyFiles = require('./copyFiles'),
     logger = require('./logger'),
-    currentPath,
-    targetPath,
     Q;
 
 module.exports = function (context) {

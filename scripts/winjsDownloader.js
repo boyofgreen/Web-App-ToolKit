@@ -13,21 +13,21 @@ var baseUrl = 'https://cdnjs.cloudflare.com/ajax/libs/winjs/4.1.0/';
 
 var winjsFiles = {
   css: [
-    'ui-dark.css',
-    'ui-dark.min.css',
-    'ui-light.css',
-    'ui-light.min.css'
+    { name :'ui-dark.css' },
+    { name :'ui-dark.min.css' },
+    { name :'ui-light.css' },
+    { name :'ui-light.min.css' }
   ],
   fonts : [
-    'Symbols.ttf'
+    { name :'Symbols.ttf' },
   ],
   js: [
-    'WinJS.intellisense-setup.js',
-    'WinJS.intellisense.js',
-    'base.js',
-    'base.min.js',
-    'ui.js',
-    'ui.min.js'
+    { name :'WinJS.intellisense-setup.js' },
+    { name :'WinJS.intellisense.js' },
+    { name :'base.js', force: true},
+    { name :'base.min.js' },
+    { name :'ui.js' },
+    { name :'ui.min.js' }
   ]
 };
 
@@ -58,7 +58,7 @@ function ensurePathExists(pathName, callback) {
   });
 };
 
-var downloadFile = function (inputUri, filePath, callback) {
+var downloadFile = function (inputUri, filePath, force, callback) {
   var uri = url.parse(inputUri);
 
   if (inputUri.indexOf('http://') !== 0 && inputUri.indexOf('https://') !== 0) {
@@ -81,7 +81,7 @@ var downloadFile = function (inputUri, filePath, callback) {
 
   var lastModified;
 
-  if (fs.existsSync(filePath)) {
+  if (fs.existsSync(filePath) && !force) {
     var stats = fs.lstatSync(filePath);
     lastModified = new Date(stats.mtime);
   }
@@ -133,16 +133,16 @@ var downloadFile = function (inputUri, filePath, callback) {
   });
 }
 
-function downloadFileTo(fileUrl, filePath) {
+function downloadFileTo(fileUrl, filePath, force) {
   var task = Q.defer();
   ensurePathExists(path.dirname(filePath), function() {
-    downloadFile(fileUrl, filePath, function (err, data) {
+    downloadFile(fileUrl, filePath, force, function (err, data) {
       if (err) {
         logger.log(err);
         return task.reject();
       }
 
-      if (data.statusCode !== 304){
+      if (data.statusCode !== 304) {
         logger.log('Downloaded: ' + path.basename(filePath));
       }
 
@@ -165,10 +165,11 @@ function downloadWinJSFiles(context, callback) {
       var files = winjsFiles[type];
 
       for (var i = 0; i < files.length; i++) {
-        var fileName = files[i];
+        var file = files[i];
+        var fileName = file.name;
         var fileUrl = url.resolve(baseUrl, type + '/' + fileName);
         var filePath = path.join(projectRoot, winjsPath, type, fileName);
-        pendingTasks.push(downloadFileTo(fileUrl, filePath));
+        pendingTasks.push(downloadFileTo(fileUrl, filePath, file.force));
       }
     }
   }
