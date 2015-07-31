@@ -31,8 +31,6 @@ module.exports = function (context) {
       return task.reject();
     }
 
-    logger.log('Finished temporal renaming of CordovaApp.projitems.xml.');
-
     return task.resolve();
   });
 

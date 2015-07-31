@@ -13,21 +13,21 @@ var baseUrl = 'https://cdnjs.cloudflare.com/ajax/libs/winjs/4.1.0/';
 
 var winjsFiles = {
   css: [
-    { name :'ui-dark.css' },
-    { name :'ui-dark.min.css' },
-    { name :'ui-light.css' },
-    { name :'ui-light.min.css' }
+    'ui-dark.css',
+    'ui-dark.min.css',
+    'ui-light.css',
+    'ui-light.min.css'
   ],
   fonts : [
-    { name :'Symbols.ttf' },
+    'Symbols.ttf',
   ],
   js: [
-    { name :'WinJS.intellisense-setup.js' },
-    { name :'WinJS.intellisense.js' },
-    { name :'base.js', force: true},
-    { name :'base.min.js' },
-    { name :'ui.js' },
-    { name :'ui.min.js' }
+    'WinJS.intellisense-setup.js',
+    'WinJS.intellisense.js',
+    'base.js',
+    'base.min.js',
+    'ui.js',
+    'ui.min.js'
   ]
 };
 
@@ -58,7 +58,7 @@ function ensurePathExists(pathName, callback) {
   });
 };
 
-var downloadFile = function (inputUri, filePath, force, callback) {
+var downloadFile = function (inputUri, filePath, callback) {
   var uri = url.parse(inputUri);
 
   if (inputUri.indexOf('http://') !== 0 && inputUri.indexOf('https://') !== 0) {
@@ -79,25 +79,12 @@ var downloadFile = function (inputUri, filePath, force, callback) {
     return callback(new Error('Invalid download directory: ' + downloadDir));
   }
 
-  var lastModified;
-
-  if (fs.existsSync(filePath) && !force) {
-    var stats = fs.lstatSync(filePath);
-    lastModified = new Date(stats.mtime);
-  }
-
   var options = {
     host: uri.hostname,
     port: uri.port || (uri.protocol === 'https:' ? 443 : 80),
     path: uri.path,
     agent : false
   };
-
-  if (lastModified) {
-    options.headers = {
-      'if-modified-since': lastModified.toUTCString()
-    }
-  }
 
   var protocol = uri.protocol === 'https:' ? https : http;
   protocol.get(options, function(res) {
@@ -109,11 +96,6 @@ var downloadFile = function (inputUri, filePath, force, callback) {
     // If not OK or Not Modified, throw error
     if ([200, 304].indexOf(res.statusCode) === -1) {
       return callback(new Error('Invalid status code: ' + res.statusCode + ' - ' + res.statusMessage))
-    }
-
-    // If Not Modified, ignore
-    if (res.statusCode === 304) {
-      return callback(undefined, { 'path': filePath, 'statusCode': res.statusCode, 'statusMessage': res.statusMessage });
     }
 
     // Else save
@@ -133,17 +115,13 @@ var downloadFile = function (inputUri, filePath, force, callback) {
   });
 }
 
-function downloadFileTo(fileUrl, filePath, force) {
+function downloadFileTo(fileUrl, filePath) {
   var task = Q.defer();
   ensurePathExists(path.dirname(filePath), function() {
-    downloadFile(fileUrl, filePath, force, function (err, data) {
+    downloadFile(fileUrl, filePath, function (err, data) {
       if (err) {
         logger.log(err);
         return task.reject();
-      }
-
-      if (data.statusCode !== 304) {
-        logger.log('Downloaded: ' + path.basename(filePath));
       }
 
       return task.resolve();
@@ -165,11 +143,10 @@ function downloadWinJSFiles(context, callback) {
       var files = winjsFiles[type];
 
       for (var i = 0; i < files.length; i++) {
-        var file = files[i];
-        var fileName = file.name;
+        var fileName = files[i];
         var fileUrl = url.resolve(baseUrl, type + '/' + fileName);
         var filePath = path.join(projectRoot, winjsPath, type, fileName);
-        pendingTasks.push(downloadFileTo(fileUrl, filePath, file.force));
+        pendingTasks.push(downloadFileTo(fileUrl, filePath));
       }
     }
   }
