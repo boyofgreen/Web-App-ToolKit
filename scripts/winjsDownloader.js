@@ -7,6 +7,8 @@ var url = require('url');
 var path = require('path');
 var fs = require('fs');
 
+var Q;
+
 function ensurePathExists(pathName, callback) {
   fs.mkdir(pathName, function (err) {
     if (err) {
@@ -143,7 +145,10 @@ function downloadFileTo(fileUrl, filePath) {
   });
 }
 
-function downloadWinJSFiles(callback) {
+function downloadWinJSFiles(context, callback) {
+  Q = context.requireCordovaModule('q');
+  var task = Q.defer();
+
   var projectRoot = __dirname; //context.opts.projectRoot;
   var winjsPath = path.join('platforms', 'windows', 'WinJS');
 
