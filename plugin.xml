@@ -12,9 +12,9 @@
 
     <hook type="after_build" src="scripts/moveWindowsAssets.js" />
 
-    <hook type="before_plugin_install" src="scripts/windowsRenameProjItemsBefore.js" />
-    <hook type="after_plugin_install" src="scripts/windowsRenameProjItemsAfter.js" />
-    
+    <hook type="before_plugin_install" src="scripts/beforeInstallHook.js" />
+    <hook type="after_plugin_install" src="scripts/afterInstallHook.js" />
+
     <js-module src="www/webAppToolkit.js" name="webapptoolkit">
         <clobbers target="webapptoolkit" />
     </js-module>
