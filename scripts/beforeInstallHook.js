@@ -11,7 +11,7 @@ module.exports = function (context) {
   var projectRoot = context.opts.projectRoot;
 
   // if the windows folder does not exist, cancell the script
-  var windowsPath = path.join(projectRoot, "platforms","windows");
+  var windowsPath = path.join(projectRoot, 'platforms','windows');
   if (!fs.existsSync(windowsPath) || context.opts.plugin.platform !== 'windows') {
     return;
   }
@@ -22,15 +22,16 @@ module.exports = function (context) {
   // move contents of the assets folder to the windows platform dir
   var sourcePath = path.join(windowsPath, 'CordovaApp.projitems');
   var destPath = path.join(windowsPath, 'CordovaApp.projitems.xml');
-  logger.log('Renaming the CordovaApp.projitems file to CordovaApp.projitems.xml.');
+  logger.log('Adding WinJS to the solution.');
+  logger.log('Temporarily renaming the CordovaApp.projitems file to CordovaApp.projitems.xml.');
 
   rename(sourcePath, destPath, function (err) {
     if (err) {
-      console.error(err);
+      logger.error(err);
       return task.reject();
     }
 
-    console.log("Finished renaming the CordovaApp.projitems.");
+    logger.log('Finished temporal renaming of CordovaApp.projitems.xml.');
 
     return task.resolve();
   });
