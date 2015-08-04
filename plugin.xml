@@ -12,6 +12,9 @@
 
     <hook type="after_build" src="scripts/moveWindowsAssets.js" />
 
+    <hook type="before_plugin_install" src="scripts/beforeInstallHook.js" />
+    <hook type="after_plugin_install" src="scripts/afterInstallHook.js" />
+
     <js-module src="www/webAppToolkit.js" name="webapptoolkit">
         <clobbers target="webapptoolkit" />
     </js-module>
@@ -52,6 +55,21 @@
 
     <!-- windows -->
     <platform name="windows">
+      <config-file target="CordovaApp.projitems.xml" parent="/Project/ItemGroup">
+        <Content Include="$(MSBuildThisFileDirectory)WinJS\css\ui-dark.css" />
+        <Content Include="$(MSBuildThisFileDirectory)WinJS\css\ui-dark.min.css" />
+        <Content Include="$(MSBuildThisFileDirectory)WinJS\css\ui-light.css" />
+        <Content Include="$(MSBuildThisFileDirectory)WinJS\css\ui-light.min.css" />
+        <Content Include="$(MSBuildThisFileDirectory)WinJS\fonts\Symbols.ttf" />
+        <Content Include="$(MSBuildThisFileDirectory)WinJS\js\base.js" />
+        <Content Include="$(MSBuildThisFileDirectory)WinJS\js\base.min.js" />
+        <Content Include="$(MSBuildThisFileDirectory)WinJS\js\en-US\ui.strings.js" />
+        <Content Include="$(MSBuildThisFileDirectory)WinJS\js\ui.js" />
+        <Content Include="$(MSBuildThisFileDirectory)WinJS\js\ui.min.js" />
+        <Content Include="$(MSBuildThisFileDirectory)WinJS\js\WinJS.intellisense-setup.js" />
+        <Content Include="$(MSBuildThisFileDirectory)WinJS\js\WinJS.intellisense.js" />
+      </config-file>
+
       <js-module src="src/windows/WebAppToolkitPluginProxy.js" name="WebAppToolkitPluginProxy">
         <merges target="" />
       </js-module>

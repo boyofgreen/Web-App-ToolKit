@@ -31,11 +31,12 @@ The plugin leverages the functionalimaty from the [Hosted WebApp Plugin](https:/
 ### Known Issues [Windows only]
 1. The  `cordova build ` command will fail on a machine that does not have the SDK and tools for Windows 8.1 because WinJS 2 is not installed. For the plugin to work correctly, and if you are on Windows 10, before running the build command, open the Visual Studio solution and remove the references to WinJS 2 in the Windows 8.1 and Windows Phone 8.1 projects. The `cordova build` command should succeed after this.
 
+1. Uninstalling the plugin will not remove the WinJS files that were added during the installation process.
+
 ### Manual steps required [Windows only]
 In order to make the project work there are a few things that need to be taken care of:
 
-1. Add **WinJS 4** via NuGet **in the solution** and **overwrite the existing base.js file in the Windows 10 project when prompted**.
-1. Changing the **TargetDeviceFamily** values to 10.0069.0 in the appxmanifest (optional, depending on the current version of your Windows 10 SDK )
+1. Changing the **TargetDeviceFamily**'s **MaxVersionTested** and **MinVersion** values to 10.0.00000.0 in the appxmanifest.
 
 ### Before you submit your app [Windows only]
 
