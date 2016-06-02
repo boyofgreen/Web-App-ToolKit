@@ -23,7 +23,7 @@ module.exports = function (context) {
   var sourcePath = path.join(windowsPath, 'CordovaApp.projitems');
   var destPath = path.join(windowsPath, 'CordovaApp.projitems.xml');
   logger.log('Adding WinJS to the solution.');
-  logger.log('Temporarily renaming the CordovaApp.projitems file to CordovaApp.projitems.xml.');
+  logger.log('Temporarily copying the CordovaApp.projitems file to CordovaApp.projitems.xml.');
 
   copyFiles(sourcePath, destPath, function (err) {
     if (err) {
