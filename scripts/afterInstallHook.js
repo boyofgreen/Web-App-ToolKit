@@ -23,7 +23,7 @@ module.exports = function (context) {
   // move contents of the assets folder to the windows platform dir
   var sourcePath = path.join(windowsPath, 'CordovaApp.projitems.xml');
   var destPath = path.join(windowsPath, 'CordovaApp.projitems');
-  logger.log('Reverting temporal rename of the CordovaApp.projitems file.');
+  logger.log('Removing temporal copy of the CordovaApp.projitems file.');
 
   var renameTask = Q.defer();
   rename(sourcePath, destPath, function (err) {

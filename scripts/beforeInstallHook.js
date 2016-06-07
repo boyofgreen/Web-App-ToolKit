@@ -3,7 +3,7 @@
 var path = require('path'),
     url = require('url'),
     fs = require('fs'),
-    rename = require('./rename'),
+    copyFiles = require('./copyFiles'),
     logger = require('./logger'),
     Q;
 
@@ -23,9 +23,9 @@ module.exports = function (context) {
   var sourcePath = path.join(windowsPath, 'CordovaApp.projitems');
   var destPath = path.join(windowsPath, 'CordovaApp.projitems.xml');
   logger.log('Adding WinJS to the solution.');
-  logger.log('Temporarily renaming the CordovaApp.projitems file to CordovaApp.projitems.xml.');
+  logger.log('Temporarily copying the CordovaApp.projitems file to CordovaApp.projitems.xml.');
 
-  rename(sourcePath, destPath, function (err) {
+  copyFiles(sourcePath, destPath, function (err) {
     if (err) {
       logger.error(err);
       return task.reject();
